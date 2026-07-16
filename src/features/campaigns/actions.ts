@@ -9,6 +9,19 @@ import type {
 import { campaignDraftSchema } from "@/schemas/campaign";
 import { campaignService } from "@/services/campaign-service-instance";
 
+function reportPersistenceError(
+  operation: "create" | "update" | "archive",
+  error: unknown,
+): void {
+  const technicalError = error as { code?: unknown; name?: unknown };
+  const name =
+    typeof technicalError?.name === "string" ? technicalError.name : "UnknownError";
+  const code =
+    typeof technicalError?.code === "string" ? technicalError.code : "no-code";
+
+  console.error(`[campaigns] ${operation} failed (${name}, ${code})`);
+}
+
 function readText(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
@@ -50,7 +63,8 @@ export async function createCampaignAction(
   try {
     const campaign = await campaignService.create(result.data);
     campaignId = campaign.id;
-  } catch {
+  } catch (error) {
+    reportPersistenceError("create", error);
     return {
       message: "save_error",
       errors: normalizeErrors({}),
@@ -77,7 +91,8 @@ export async function updateCampaignAction(
 
   try {
     await campaignService.update(campaignId, result.data);
-  } catch {
+  } catch (error) {
+    reportPersistenceError("update", error);
     return {
       message: "save_error",
       errors: normalizeErrors({}),
@@ -93,7 +108,8 @@ export async function updateCampaignAction(
 export async function archiveCampaignAction(campaignId: string): Promise<void> {
   try {
     await campaignService.archive(campaignId);
-  } catch {
+  } catch (error) {
+    reportPersistenceError("archive", error);
     redirect("/campaigns");
   }
 

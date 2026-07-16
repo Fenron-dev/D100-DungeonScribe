@@ -78,9 +78,14 @@ jobs:
             codesign --verify --strict "$NATIVE_MODULE"
           done < <(find "$BUNDLE_ROOT" -type f -name "*.node" -print0)
 
+      - name: Install browser for packaged persistence test
+        if: matrix.label == 'Apple Silicon'
+        run: npx playwright install chromium
+
       - name: Smoke-test packaged application
         env:
           ARCHIVE_NAME: ${{ matrix.archive }}
+          RUN_BROWSER_TEST: ${{ matrix.label == 'Apple Silicon' }}
         run: |
           BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
           TEST_HOME="$RUNNER_TEMP/package-smoke-home"
@@ -98,13 +103,11 @@ jobs:
           START_PID=$!
           trap 'kill "$START_PID" 2>/dev/null || true' EXIT
 
+          READY="0"
           for attempt in {1..40}; do
             if curl --silent --fail "http://127.0.0.1:3210" >/dev/null; then
-              if xattr -p com.apple.quarantine "$NATIVE_MODULE" >/dev/null 2>&1; then
-                echo "Start.command did not remove the quarantine attribute."
-                exit 1
-              fi
-              exit 0
+              READY="1"
+              break
             fi
             if ! kill -0 "$START_PID" 2>/dev/null; then
               cat "$RUNNER_TEMP/package-server.log"
@@ -113,8 +116,29 @@ jobs:
             sleep 0.5
           done
 
-          cat "$RUNNER_TEMP/package-server.log"
-          exit 1
+          if [[ "$READY" != "1" ]]; then
+            cat "$RUNNER_TEMP/package-server.log"
+            exit 1
+          fi
+
+          if xattr -p com.apple.quarantine "$NATIVE_MODULE" >/dev/null 2>&1; then
+            echo "Start.command did not remove the quarantine attribute."
+            exit 1
+          fi
+
+          if [[ "$RUN_BROWSER_TEST" == "true" ]]; then
+            if ! PLAYWRIGHT_BASE_URL="http://127.0.0.1:3210" \
+              npx playwright test e2e/campaigns.spec.ts --project=chromium; then
+              cat "$RUNNER_TEMP/package-server.log"
+              exit 1
+            fi
+
+            TEST_DATABASE="$TEST_HOME/Library/Application Support/D100 DungeonScribe/dungeonscribe.db"
+            CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
+            EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
+            test "$CAMPAIGN_COUNT" = "1"
+            test "$EVENT_COUNT" = "3"
+          fi
 
       - name: Create archive and checksum
         env:
