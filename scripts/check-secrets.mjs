@@ -6,7 +6,7 @@ const excludedPaths = new Set([
   "scripts/check-secrets.mjs",
 ]);
 
-const textFilePattern = /(?:\.(?:c?js|mjs|ts|tsx|json|md|css|scss|prisma|sql|toml|ya?ml|txt|example)|(?:^|\/)\.git(?:ignore|attributes))$/i;
+const textFilePattern = /(?:\.(?:c?js|mjs|ts|tsx|json|md|css|scss|prisma|sql|toml|ya?ml|txt|example|command|sh)|(?:^|\/)\.git(?:ignore|attributes))$/i;
 
 const checks = [
   {

@@ -1,0 +1,124 @@
+name: macOS Test Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "test-build-*"
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  build:
+    name: Build ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            label: Apple Silicon
+            archive: D100-DungeonScribe-macOS-Apple-Silicon
+          - runner: macos-15-intel
+            label: Intel
+            archive: D100-DungeonScribe-macOS-Intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scan source for secrets
+        run: npm run security:scan
+
+      - name: Generate Prisma client
+        env:
+          DATABASE_URL: file:${{ runner.temp }}/build.db
+        run: npm run db:generate
+
+      - name: Build standalone application
+        env:
+          DATABASE_URL: file:${{ runner.temp }}/build.db
+        run: npm run build
+
+      - name: Assemble self-contained test package
+        env:
+          ARCHIVE_NAME: ${{ matrix.archive }}
+        run: |
+          BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
+          mkdir -p "$BUNDLE_ROOT/.next" "$BUNDLE_ROOT/runtime"
+          cp -R .next/standalone/. "$BUNDLE_ROOT/"
+          cp -R .next/static "$BUNDLE_ROOT/.next/static"
+          cp -R prisma "$BUNDLE_ROOT/prisma"
+          cp scripts/macos/migrate.mjs "$BUNDLE_ROOT/migrate.mjs"
+          cp scripts/macos/Start.command "$BUNDLE_ROOT/Start.command"
+          cp scripts/macos/README.txt "$BUNDLE_ROOT/README.txt"
+
+          NODE_BINARY="$(command -v node)"
+          NODE_ROOT="$(cd "$(dirname "$NODE_BINARY")/.." && pwd)"
+          cp "$NODE_BINARY" "$BUNDLE_ROOT/runtime/node"
+          cp "$NODE_ROOT/LICENSE" "$BUNDLE_ROOT/runtime/NODE-LICENSE.txt"
+          chmod 755 "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/Start.command"
+
+      - name: Smoke-test packaged application
+        env:
+          ARCHIVE_NAME: ${{ matrix.archive }}
+        run: |
+          BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
+          TEST_DATABASE="$RUNNER_TEMP/package-smoke.db"
+          export DUNGEONSCRIBE_DB_PATH="$TEST_DATABASE"
+          export DATABASE_URL="file:$TEST_DATABASE"
+          export HOSTNAME="127.0.0.1"
+          export PORT="3210"
+
+          "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/migrate.mjs"
+          cd "$BUNDLE_ROOT"
+          "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/server.js" >"$RUNNER_TEMP/package-server.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for attempt in {1..40}; do
+            if curl --silent --fail "http://127.0.0.1:3210" >/dev/null; then
+              exit 0
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              cat "$RUNNER_TEMP/package-server.log"
+              exit 1
+            fi
+            sleep 0.5
+          done
+
+          cat "$RUNNER_TEMP/package-server.log"
+          exit 1
+
+      - name: Create archive and checksum
+        env:
+          ARCHIVE_NAME: ${{ matrix.archive }}
+        run: |
+          mkdir -p dist
+          COPYFILE_DISABLE=1 tar -C "$RUNNER_TEMP" -czf "dist/$ARCHIVE_NAME.tar.gz" "$ARCHIVE_NAME"
+          cd dist
+          shasum -a 256 "$ARCHIVE_NAME.tar.gz" >"$ARCHIVE_NAME.tar.gz.sha256"
+
+      - name: Upload macOS test package
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.archive }}
+          path: |
+            dist/${{ matrix.archive }}.tar.gz
+            dist/${{ matrix.archive }}.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 14

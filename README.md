@@ -49,6 +49,7 @@ Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien au
 - [Domainmodell](docs/domain-model.md)
 - [Regel-Engine](docs/rules-engine.md)
 - [Entwicklungsprozess](docs/development-process.md)
+- [macOS-Testbuild](docs/macos-test-build.md)
 - [Verbindliche Regeln für Codex](AGENTS.md)
 
 ## Geplante Befehle
