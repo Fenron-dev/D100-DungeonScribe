@@ -15,6 +15,10 @@ Sie übernimmt:
 
 Nicht zu ihren Aufgaben gehören Szenenerzählung, Persistenz, Intent-Erkennung und Auswahl relevanter Kampagnendaten.
 
+## Implementierungsstand Phase 3
+
+Umgesetzt sind die vollständige W6-Pool-Probe, Ruleset-Validierung, kryptografische und feste Zufallsquellen, Poolgrenzen, Schwellenwerte, Erfolgsgrade sowie die Auflösung von „Erfolg mit Kosten“. Konsequenzen und erweiterte Herausforderungen bleiben gemäß Phasenplan spätere, getrennte Bausteine.
+
 ## Zufallsquelle
 
 Jeder Zufall wird injiziert:
@@ -75,11 +79,13 @@ interface CheckResult {
   effectLevel: number;
   appliedModifiers: Modifier[];
   availableChoices: MechanicalChoice[];
-  explanation: string;
+  explanation: CheckExplanation;
 }
 ```
 
-Die Erklärung wird aus strukturierten, lokalisierten Bausteinen erzeugt. Fachliche Ergebnisse bleiben sprachneutral; die Domain speichert keine UI-Sätze als Entscheidungsgrundlage.
+`CheckExplanation` enthält Basispool, angeforderten und begrenzten Pool, Schwelle, Erfolge, gewürfelte Einsen und Erfolgsgrad. Die Erklärung besteht damit aus strukturierten, lokalisierbaren Daten. Fachliche Ergebnisse bleiben sprachneutral; die Domain speichert keine UI-Sätze als Entscheidungsgrundlage.
+
+Ein normaler Fehlschlag kann eine mechanische Wahl `accept_cost` anbieten. Erst `resolveChoice` erzeugt daraus einen neuen Ergebniswert mit `success_with_cost`; das ursprüngliche Würfelergebnis bleibt unverändert.
 
 ## Modifikatoren
 
@@ -145,8 +151,9 @@ Unit-Tests decken mindestens ab:
 - kritischen Fehlschlag, Fehlschlag, Erfolg und starken Erfolg
 - außergewöhnliche Wirkung bei drei Erfolgen
 - freiwilligen Erfolg mit Kosten
-- Grenzen von Ressourcen, Fortschritt und Gefahr
 - reproduzierbare Würfelsequenzen
 - ungültige Rulesets
+
+Grenzen von Ressourcen, Fortschritt und Gefahr werden mit den späteren Konsequenz- und Herausforderungsbausteinen ergänzt.
 
 Property-basierte Tests sind später sinnvoll, aber keine Voraussetzung für den ersten vertikalen Regel-Engine-Baustein.

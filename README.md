@@ -6,9 +6,11 @@ Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb e
 
 ## Projektstatus
 
-Phase 0 und Phase 1 sind abgeschlossen. Das Projekt befindet sich in **Phase 2 – Kampagnenverwaltung** und wird ausschließlich über GitHub Actions gebaut und geprüft.
+Phase 0 bis Phase 2 sind abgeschlossen. Das Projekt befindet sich in **Phase 3 – Regel-Engine** und wird ausschließlich über GitHub Actions gebaut und geprüft.
 
 Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren. Jede verbindliche Änderung wird atomar mit einem Kampagnenereignis gespeichert.
+
+Die reine Regel-Engine wertet konfigurierbare W6-Pool-Proben mit Archetyp, Eigenschaften, Vor- und Nachteilen, Schwierigkeiten, Erfolgsgraden und der freiwilligen Wahl „Erfolg mit Kosten“ aus. Feste Zufallssequenzen machen jede Regelentscheidung reproduzierbar testbar.
 
 ## Festgelegte Leitlinien
 
