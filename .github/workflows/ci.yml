@@ -82,6 +82,9 @@ jobs:
       - name: Generate Prisma client
         run: npm run db:generate
 
+      - name: Apply browser test database migrations
+        run: npm run db:migrate
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 

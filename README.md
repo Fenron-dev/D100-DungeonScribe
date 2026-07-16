@@ -6,7 +6,9 @@ Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb e
 
 ## Projektstatus
 
-Phase 0 ist abgeschlossen. **Phase 1 – technisches Grundgerüst** ist vorbereitet und wird ausschließlich über GitHub Actions gebaut und geprüft.
+Phase 0 und Phase 1 sind abgeschlossen. Das Projekt befindet sich in **Phase 2 – Kampagnenverwaltung** und wird ausschließlich über GitHub Actions gebaut und geprüft.
+
+Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren. Jede verbindliche Änderung wird atomar mit einem Kampagnenereignis gespeichert.
 
 ## Festgelegte Leitlinien
 

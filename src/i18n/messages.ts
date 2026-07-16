@@ -24,6 +24,38 @@ export interface MessageCatalog {
     foundationsTitle: string;
     foundations: readonly string[];
   };
+  campaigns: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    newCampaign: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    activeSection: string;
+    archivedSection: string;
+    activeStatus: string;
+    archivedStatus: string;
+    premiseLabel: string;
+    nameLabel: string;
+    genreLabel: string;
+    moodLabel: string;
+    optionalHint: string;
+    createTitle: string;
+    createDescription: string;
+    createAction: string;
+    creatingAction: string;
+    editTitle: string;
+    editDescription: string;
+    editAction: string;
+    savingAction: string;
+    openAction: string;
+    archiveAction: string;
+    editLink: string;
+    backToList: string;
+    validationMessage: string;
+    saveError: string;
+    updatedLabel: string;
+  };
   placeholders: {
     playTitle: string;
     campaignsTitle: string;
@@ -62,6 +94,41 @@ const germanMessages = {
       "Prüfbare Änderungen und vollständig exportierbare Daten",
     ],
   },
+  campaigns: {
+    eyebrow: "Kampagnenbibliothek",
+    title: "Deine Kampagnen",
+    description:
+      "Jede Geschichte bleibt als eigener, nachvollziehbarer Kampagnenzustand erhalten.",
+    newCampaign: "Neue Kampagne",
+    emptyTitle: "Noch keine Kampagne",
+    emptyDescription:
+      "Lege deine erste Kampagne an und gib ihrer Welt einen Namen und eine Prämisse.",
+    activeSection: "Aktive Kampagnen",
+    archivedSection: "Archivierte Kampagnen",
+    activeStatus: "Aktiv",
+    archivedStatus: "Archiviert",
+    premiseLabel: "Kampagnenidee",
+    nameLabel: "Name",
+    genreLabel: "Genre",
+    moodLabel: "Stimmung",
+    optionalHint: "optional",
+    createTitle: "Eine neue Geschichte beginnen",
+    createDescription:
+      "Die Grundidee lässt sich später jederzeit weiterentwickeln.",
+    createAction: "Kampagne erstellen",
+    creatingAction: "Kampagne wird erstellt …",
+    editTitle: "Kampagne bearbeiten",
+    editDescription: "Passe die grundlegende Ausrichtung der Kampagne an.",
+    editAction: "Änderungen speichern",
+    savingAction: "Änderungen werden gespeichert …",
+    openAction: "Kampagne öffnen",
+    archiveAction: "Kampagne archivieren",
+    editLink: "Bearbeiten",
+    backToList: "Zur Kampagnenliste",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Die Kampagne konnte nicht gespeichert werden.",
+    updatedLabel: "Aktualisiert",
+  },
   placeholders: {
     playTitle: "Spielen",
     campaignsTitle: "Kampagnen",
@@ -99,6 +166,40 @@ const englishMessages = {
       "Deterministic rules and oracles without an AI dependency",
       "Reviewable changes and fully exportable data",
     ],
+  },
+  campaigns: {
+    eyebrow: "Campaign library",
+    title: "Your campaigns",
+    description:
+      "Every story remains available as its own traceable campaign state.",
+    newCampaign: "New campaign",
+    emptyTitle: "No campaigns yet",
+    emptyDescription:
+      "Create your first campaign and give its world a name and premise.",
+    activeSection: "Active campaigns",
+    archivedSection: "Archived campaigns",
+    activeStatus: "Active",
+    archivedStatus: "Archived",
+    premiseLabel: "Campaign premise",
+    nameLabel: "Name",
+    genreLabel: "Genre",
+    moodLabel: "Mood",
+    optionalHint: "optional",
+    createTitle: "Begin a new story",
+    createDescription: "You can refine the premise at any time later.",
+    createAction: "Create campaign",
+    creatingAction: "Creating campaign …",
+    editTitle: "Edit campaign",
+    editDescription: "Adjust the campaign's fundamental direction.",
+    editAction: "Save changes",
+    savingAction: "Saving changes …",
+    openAction: "Open campaign",
+    archiveAction: "Archive campaign",
+    editLink: "Edit",
+    backToList: "Back to campaigns",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The campaign could not be saved.",
+    updatedLabel: "Updated",
   },
   placeholders: {
     playTitle: "Play",

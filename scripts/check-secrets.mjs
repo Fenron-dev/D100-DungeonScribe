@@ -42,10 +42,14 @@ const checks = [
 
 function listTrackedFiles() {
   try {
-    const output = execFileSync("git", ["ls-files", "-z"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
+    const output = execFileSync(
+      "git",
+      ["ls-files", "-co", "--exclude-standard", "-z"],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      },
+    );
 
     return output.split("\0").filter(Boolean);
   } catch {

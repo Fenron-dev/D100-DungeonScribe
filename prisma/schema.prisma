@@ -13,3 +13,34 @@ model AppSetting {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Campaign {
+  id         String   @id @default(cuid())
+  name       String
+  premise    String
+  genre      String?
+  mood       String?
+  status     String   @default("active")
+  archivedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  events CampaignEvent[]
+
+  @@index([status, updatedAt])
+}
+
+model CampaignEvent {
+  id            String   @id @default(cuid())
+  campaignId    String
+  eventType     String
+  timestampReal DateTime @default(now())
+  summary       String
+  payload       Json
+  source        String
+  reversible    Boolean  @default(false)
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, timestampReal])
+}
