@@ -1,6 +1,7 @@
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaCharacterRepository } from "./prisma-character-repository";
 import { PrismaCampaignRepository } from "./prisma-campaign-repository";
 
 const testDatabaseUrl = process.env.DATABASE_URL;
@@ -13,6 +14,7 @@ const client = new PrismaClient({
   adapter: new PrismaBetterSqlite3({ url: testDatabaseUrl }),
 });
 const repository = new PrismaCampaignRepository(client);
+const characterRepository = new PrismaCharacterRepository(client);
 
 const draft = {
   name: "Die Straßen im Nebel",
@@ -72,5 +74,40 @@ describe("PrismaCampaignRepository", () => {
     await expect(repository.list({ includeArchived: false })).resolves.toEqual(
       [],
     );
+  });
+
+  it("persists character profiles with traceable events", async () => {
+    const campaign = await repository.create(draft);
+    const characterDraft = {
+      name: "Elara Venn",
+      concept: "Ehemalige Hofmagierin auf der Suche nach ihrem Bruder",
+      archetype: "insightful" as const,
+      traits: ["Gebildet", "Arkane Wahrnehmung"],
+      flaw: null,
+      notes: "",
+    };
+
+    const character = await characterRepository.create(campaign.id, characterDraft);
+    if (!character) {
+      throw new Error("Expected character creation to succeed.");
+    }
+    await characterRepository.update(campaign.id, character.id, {
+      ...characterDraft,
+      name: "Elara aus dem Nebel",
+    });
+
+    await expect(characterRepository.listByCampaign(campaign.id)).resolves.toMatchObject(
+      [{ name: "Elara aus dem Nebel", flaw: null }],
+    );
+    const eventTypes = await client.campaignEvent.findMany({
+      where: { campaignId: campaign.id },
+      orderBy: { timestampReal: "asc" },
+      select: { eventType: true },
+    });
+    expect(eventTypes.map(({ eventType }) => eventType)).toEqual([
+      "CAMPAIGN_CREATED",
+      "CHARACTER_CREATED",
+      "CHARACTER_UPDATED",
+    ]);
   });
 });

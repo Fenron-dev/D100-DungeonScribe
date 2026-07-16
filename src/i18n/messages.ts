@@ -56,6 +56,40 @@ export interface MessageCatalog {
     saveError: string;
     updatedLabel: string;
   };
+  characters: {
+    sectionTitle: string;
+    sectionDescription: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    newCharacter: string;
+    createTitle: string;
+    createDescription: string;
+    editTitle: string;
+    editDescription: string;
+    nameLabel: string;
+    conceptLabel: string;
+    archetypeLabel: string;
+    archetypePlaceholder: string;
+    archetypes: {
+      powerful: string;
+      agile: string;
+      insightful: string;
+    };
+    traitsLabel: string;
+    traitsHint: string;
+    traitLabel: string;
+    flawLabel: string;
+    notesLabel: string;
+    optionalHint: string;
+    createAction: string;
+    creatingAction: string;
+    editAction: string;
+    savingAction: string;
+    editLink: string;
+    backToCampaign: string;
+    validationMessage: string;
+    saveError: string;
+  };
   placeholders: {
     playTitle: string;
     campaignsTitle: string;
@@ -129,6 +163,43 @@ const germanMessages = {
     saveError: "Die Kampagne konnte nicht gespeichert werden.",
     updatedLabel: "Aktualisiert",
   },
+  characters: {
+    sectionTitle: "Charaktere",
+    sectionDescription:
+      "Die Figuren dieser Kampagne mit Konzept, Archetyp und prägenden Eigenschaften.",
+    emptyTitle: "Noch kein Charakter",
+    emptyDescription:
+      "Erschaffe die erste Spielfigur und halte fest, was sie besonders macht.",
+    newCharacter: "Charakter erstellen",
+    createTitle: "Eine Spielfigur erschaffen",
+    createDescription:
+      "Ein klares Konzept, ein breiter Archetyp und wenige Eigenschaften genügen für den Einstieg.",
+    editTitle: "Charakter bearbeiten",
+    editDescription: "Passe das Kernprofil der Spielfigur an.",
+    nameLabel: "Name",
+    conceptLabel: "Konzept",
+    archetypeLabel: "Archetyp",
+    archetypePlaceholder: "Archetyp auswählen",
+    archetypes: {
+      powerful: "Kraftvoll",
+      agile: "Beweglich",
+      insightful: "Scharfsinnig",
+    },
+    traitsLabel: "Eigenschaften",
+    traitsHint: "Eine bis drei frei formulierte Stärken oder Kompetenzen.",
+    traitLabel: "Eigenschaft",
+    flawLabel: "Schwäche",
+    notesLabel: "Notizen",
+    optionalHint: "optional",
+    createAction: "Charakter speichern",
+    creatingAction: "Charakter wird gespeichert …",
+    editAction: "Änderungen speichern",
+    savingAction: "Änderungen werden gespeichert …",
+    editLink: "Charakter bearbeiten",
+    backToCampaign: "Zur Kampagne",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Der Charakter konnte nicht gespeichert werden.",
+  },
   placeholders: {
     playTitle: "Spielen",
     campaignsTitle: "Kampagnen",
@@ -200,6 +271,43 @@ const englishMessages = {
     validationMessage: "Please check the highlighted fields.",
     saveError: "The campaign could not be saved.",
     updatedLabel: "Updated",
+  },
+  characters: {
+    sectionTitle: "Characters",
+    sectionDescription:
+      "The campaign's characters with their concept, archetype, and defining traits.",
+    emptyTitle: "No character yet",
+    emptyDescription:
+      "Create the first player character and record what makes them distinctive.",
+    newCharacter: "Create character",
+    createTitle: "Create a player character",
+    createDescription:
+      "A clear concept, one broad archetype, and a few traits are enough to begin.",
+    editTitle: "Edit character",
+    editDescription: "Adjust the player character's core profile.",
+    nameLabel: "Name",
+    conceptLabel: "Concept",
+    archetypeLabel: "Archetype",
+    archetypePlaceholder: "Choose an archetype",
+    archetypes: {
+      powerful: "Powerful",
+      agile: "Agile",
+      insightful: "Insightful",
+    },
+    traitsLabel: "Traits",
+    traitsHint: "One to three freely phrased strengths or competencies.",
+    traitLabel: "Trait",
+    flawLabel: "Flaw",
+    notesLabel: "Notes",
+    optionalHint: "optional",
+    createAction: "Save character",
+    creatingAction: "Saving character …",
+    editAction: "Save changes",
+    savingAction: "Saving changes …",
+    editLink: "Edit character",
+    backToCampaign: "Back to campaign",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The character could not be saved.",
   },
   placeholders: {
     playTitle: "Play",

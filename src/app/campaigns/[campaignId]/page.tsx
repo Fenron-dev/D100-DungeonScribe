@@ -1,13 +1,49 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Character } from "@/domain/character";
 import { archiveCampaignAction } from "@/features/campaigns/actions";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
+import { characterService } from "@/services/character-service-instance";
 
 export const dynamic = "force-dynamic";
 
 interface CampaignPageProps {
   params: Promise<{ campaignId: string }>;
+}
+
+function CharacterCard({ character }: { character: Character }) {
+  const copy = getMessages().characters;
+
+  return (
+    <article className="character-card">
+      <div className="character-card-heading">
+        <div>
+          <p className="character-archetype">
+            {copy.archetypes[character.archetype]}
+          </p>
+          <h3>{character.name}</h3>
+        </div>
+        <Link
+          className="text-link"
+          href={`/campaigns/${character.campaignId}/characters/${character.id}/edit`}
+        >
+          {copy.editLink}
+        </Link>
+      </div>
+      <p className="character-concept">{character.concept}</p>
+      <ul className="character-traits" aria-label={copy.traitsLabel}>
+        {character.traits.map((trait) => (
+          <li key={trait}>{trait}</li>
+        ))}
+      </ul>
+      {character.flaw ? (
+        <p className="character-flaw">
+          <strong>{copy.flawLabel}:</strong> {character.flaw}
+        </p>
+      ) : null}
+    </article>
+  );
 }
 
 export default async function CampaignPage({ params }: CampaignPageProps) {
@@ -17,7 +53,10 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
     notFound();
   }
 
-  const copy = getMessages().campaigns;
+  const characters = await characterService.list(campaign.id);
+  const messages = getMessages();
+  const copy = messages.campaigns;
+  const characterCopy = messages.characters;
   const archiveAction = archiveCampaignAction.bind(null, campaign.id);
 
   return (
@@ -69,6 +108,36 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
             </div>
           ) : null}
         </dl>
+      </section>
+
+      <section className="character-section" aria-labelledby="characters-title">
+        <div className="section-heading">
+          <div>
+            <h2 id="characters-title">{characterCopy.sectionTitle}</h2>
+            <p>{characterCopy.sectionDescription}</p>
+          </div>
+          {campaign.status === "active" ? (
+            <Link
+              className="button button-primary"
+              href={`/campaigns/${campaign.id}/characters/new`}
+            >
+              {characterCopy.newCharacter}
+            </Link>
+          ) : null}
+        </div>
+
+        {characters.length > 0 ? (
+          <div className="character-grid">
+            {characters.map((character) => (
+              <CharacterCard character={character} key={character.id} />
+            ))}
+          </div>
+        ) : (
+          <div className="character-empty">
+            <h3>{characterCopy.emptyTitle}</h3>
+            <p>{characterCopy.emptyDescription}</p>
+          </div>
+        )}
       </section>
     </article>
   );

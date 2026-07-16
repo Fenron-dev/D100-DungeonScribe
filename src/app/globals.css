@@ -479,7 +479,8 @@ h2 {
 }
 
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.form-field select {
   width: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
@@ -499,8 +500,14 @@ h2 {
   resize: vertical;
 }
 
+.form-field select {
+  min-height: 3rem;
+  padding: 0.65rem 2.5rem 0.65rem 0.8rem;
+}
+
 .form-field input:focus,
-.form-field textarea:focus {
+.form-field textarea:focus,
+.form-field select:focus {
   border-color: var(--color-accent-strong);
   outline: 3px solid rgb(212 168 95 / 16%);
 }
@@ -609,6 +616,110 @@ h2 {
   font-size: 1.2rem;
 }
 
+.trait-fields {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.trait-fields legend {
+  padding: 0 0.4rem;
+  font-weight: 750;
+}
+
+.trait-fields > p {
+  margin: -0.35rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.character-section {
+  margin-top: 3rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading h2 {
+  margin-bottom: 0.35rem;
+}
+
+.section-heading p {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+}
+
+.character-card,
+.character-empty {
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: linear-gradient(150deg, rgb(27 36 32 / 82%), rgb(17 23 20 / 92%));
+}
+
+.character-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.character-card h3,
+.character-empty h3 {
+  margin: 0;
+  font-size: 1.65rem;
+}
+
+.character-archetype {
+  margin: 0 0 0.35rem;
+  color: var(--color-accent-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.character-concept,
+.character-empty p,
+.character-flaw {
+  color: var(--color-muted);
+}
+
+.character-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.character-traits li {
+  padding: 0.3rem 0.65rem;
+  border-radius: 99rem;
+  background: rgb(255 255 255 / 6%);
+  font-size: 0.82rem;
+}
+
+.character-flaw {
+  margin-bottom: 0;
+}
+
 @media (max-width: 48rem) {
   .site-header {
     align-items: flex-start;
@@ -638,7 +749,8 @@ h2 {
   }
 
   .campaign-heading,
-  .campaign-detail-header {
+  .campaign-detail-header,
+  .section-heading {
     align-items: flex-start;
     flex-direction: column;
   }

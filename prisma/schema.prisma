@@ -26,8 +26,26 @@ model Campaign {
   updatedAt  DateTime @updatedAt
 
   events CampaignEvent[]
+  characters Character[]
 
   @@index([status, updatedAt])
+}
+
+model Character {
+  id         String   @id @default(cuid())
+  campaignId String
+  name       String
+  concept    String
+  archetype  String
+  traits     Json
+  flaw       String?
+  notes      String   @default("")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, updatedAt])
 }
 
 model CampaignEvent {
