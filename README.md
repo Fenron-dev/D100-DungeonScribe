@@ -1,0 +1,62 @@
+# D100 DungeonScribe
+
+D100 DungeonScribe ist eine private, lokal oder selbst gehostet betriebene Webanwendung für Solo-Rollenspiele. Sie verbindet Kampagnenzustand, Szenen, eine deterministische Regel-Engine, ein Solo-Orakel und später einen austauschbaren KI-Spielleiter.
+
+Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb einer Szene und niemals die alleinige Quelle der Wahrheit.
+
+## Projektstatus
+
+Phase 0 ist abgeschlossen. **Phase 1 – technisches Grundgerüst** ist vorbereitet und wird ausschließlich über GitHub Actions gebaut und geprüft.
+
+## Festgelegte Leitlinien
+
+- Einzelbenutzer-Anwendung ohne Konten oder Cloudzwang
+- Deutsch als Standardsprache; weitere Sprachen sind technisch vorbereitet
+- dunkle, atmosphärische und gut lesbare Oberfläche
+- Regeln, Würfel und Orakel funktionieren vollständig ohne KI
+- OpenAI ist der erste KI-Anbieter hinter einer anbieterneutralen Schnittstelle
+- KI-Ausgaben verändern keine Kampagnendaten direkt
+- vollständiger Export der Benutzerdaten bleibt ein Kernziel
+- keine Telemetrie und keine externen Analysewerkzeuge
+
+## Geplanter Stack
+
+- Next.js und React
+- TypeScript im Strict Mode
+- SQLite und Prisma
+- Zod
+- Vitest und React Testing Library
+- Playwright für zentrale Abläufe
+- CSS-Variablen und eine kleine, zugängliche Komponentenbasis
+
+Versionen werden beim technischen Grundgerüst festgelegt und in einer Lockdatei fixiert.
+
+## Entwicklung ohne lokale Build-Abhängigkeiten
+
+Auf dem lokalen Rechner werden aus Platzgründen keine Pakete installiert und keine Builds erzeugt. Insbesondere bleiben `node_modules`, Build-Ausgaben und lokale Datenbankdateien unversioniert. Installation, Tests, Typecheck, Lint, Prisma-Prüfungen und Builds werden später durch GitHub Actions ausgeführt.
+
+Bis ein GitHub-Repository eingerichtet ist, können Änderungen deshalb nur statisch geprüft werden. Dieser eingeschränkte Verifikationsstand muss bei jedem Arbeitspaket ausdrücklich genannt werden.
+
+Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien auf typische Zugangsdaten und persönliche Benutzerpfade. Echte `.env`-Dateien, Datenbanken, Exporte und Schlüsseldateien sind ausgeschlossen. Weitere Hinweise stehen in [SECURITY.md](SECURITY.md).
+
+## Dokumentation
+
+- [Architektur](docs/architecture.md)
+- [Domainmodell](docs/domain-model.md)
+- [Regel-Engine](docs/rules-engine.md)
+- [Entwicklungsprozess](docs/development-process.md)
+- [Verbindliche Regeln für Codex](AGENTS.md)
+
+## Geplante Befehle
+
+Diese Befehle werden mit dem Grundgerüst in Phase 1 eingerichtet und in GitHub Actions ausgeführt:
+
+```bash
+npm ci
+npm run test
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Für eine spätere lokale oder selbst gehostete Laufzeit wird die Anwendung voraussichtlich mit `npm run dev` beziehungsweise `npm run start` gestartet. Eine lokale Entwicklungsinstallation ist aktuell ausdrücklich nicht Teil des Arbeitsablaufs.

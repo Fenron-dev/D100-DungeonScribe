@@ -1,0 +1,50 @@
+# Dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+
+# Next.js and build output
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+credentials/
+
+# Local databases and user data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+data/
+exports/
+backups/
+private/
+
+# Test artifacts
+playwright-report/
+test-results/
+blob-report/
+
+# Logs and editor/OS state
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
