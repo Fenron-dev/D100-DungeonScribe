@@ -80,11 +80,14 @@ jobs:
 
       - name: Install browser for packaged persistence test
         if: matrix.label == 'Apple Silicon'
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
         run: npx playwright install chromium
 
       - name: Smoke-test packaged application
         env:
           ARCHIVE_NAME: ${{ matrix.archive }}
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
           RUN_BROWSER_TEST: ${{ matrix.label == 'Apple Silicon' }}
         run: |
           BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
