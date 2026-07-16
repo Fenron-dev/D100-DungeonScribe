@@ -24,4 +24,15 @@ describe("campaignDraftSchema", () => {
     expect(result.genre).toBeNull();
     expect(result.mood).toBeNull();
   });
+
+  it("accepts an already normalized draft", () => {
+    const normalizedDraft = campaignDraftSchema.parse({
+      name: "Die Straßen im Nebel",
+      premise: "Eine verschwundene Straße ist zurückgekehrt.",
+      genre: "",
+      mood: "",
+    });
+
+    expect(campaignDraftSchema.parse(normalizedDraft)).toEqual(normalizedDraft);
+  });
 });

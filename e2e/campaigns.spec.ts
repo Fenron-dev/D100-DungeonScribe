@@ -8,8 +8,6 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page
     .getByLabel("Kampagnenidee")
     .fill("Eine Kartografin sucht nach Straßen, die nachts ihren Verlauf ändern.");
-  await page.getByLabel(/Genre/).fill("Fantasy");
-  await page.getByLabel(/Stimmung/).fill("Geheimnisvoll");
   await page.getByRole("button", { name: "Kampagne erstellen" }).click();
 
   await expect(

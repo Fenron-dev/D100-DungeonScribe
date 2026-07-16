@@ -5,7 +5,8 @@ const optionalShortText = z
   .string()
   .trim()
   .max(60, "Darf höchstens 60 Zeichen enthalten.")
-  .transform((value) => (value.length > 0 ? value : null));
+  .transform((value) => (value.length > 0 ? value : null))
+  .nullable();
 
 export const campaignDraftSchema = z.object({
   name: z
