@@ -6,6 +6,15 @@ DATA_DIR="$HOME/Library/Application Support/D100 DungeonScribe"
 DATABASE_PATH="$DATA_DIR/dungeonscribe.db"
 PORT="${DUNGEONSCRIBE_PORT:-3210}"
 
+# Nach dem ausdrücklich bestätigten ersten Öffnen von Start.command kann macOS
+# weiterhin mitgelieferte native Module blockieren. Die Quarantäne wird nur für
+# dieses entpackte Testpaket entfernt, niemals für Downloads oder andere Ordner.
+if ! /usr/bin/xattr -dr com.apple.quarantine "$APP_DIR" 2>/dev/null; then
+  print -u2 "Die macOS-Downloadmarkierung konnte nicht vollständig entfernt werden."
+  print -u2 "Bitte verschiebe das Paket in einen beschreibbaren Ordner und starte es erneut."
+  exit 1
+fi
+
 mkdir -p "$DATA_DIR"
 export DUNGEONSCRIBE_DB_PATH="$DATABASE_PATH"
 export DATABASE_URL="file:$DATABASE_PATH"
@@ -28,7 +37,9 @@ SERVER_PID=$!
 
 for attempt in {1..40}; do
   if curl --silent --fail "http://127.0.0.1:$PORT" >/dev/null; then
-    open "http://127.0.0.1:$PORT"
+    if [[ "${DUNGEONSCRIBE_NO_OPEN:-0}" != "1" ]]; then
+      open "http://127.0.0.1:$PORT"
+    fi
     print "D100 DungeonScribe läuft. Dieses Fenster zum Beenden mit Ctrl+C schließen."
     wait "$SERVER_PID"
     exit 0

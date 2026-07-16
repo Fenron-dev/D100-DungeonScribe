@@ -32,7 +32,9 @@ Die Architektur steht unter **Apple-Menü → Über diesen Mac**.
 5. Der Browser öffnet `http://127.0.0.1:3210` automatisch.
 6. Zum Beenden im Terminalfenster `Ctrl+C` drücken.
 
-Der Build ist nicht mit einem Apple-Entwicklerzertifikat signiert oder notarisiert. Er ist ausschließlich als privater Entwicklungs- und Testweg gedacht.
+Nach dieser ausdrücklichen Bestätigung entfernt das Startskript die von macOS beim Download gesetzte Quarantänemarkierung innerhalb seines eigenen entpackten Paketordners. Das verhindert, dass Gatekeeper das mitgelieferte native SQLite-Modul separat blockiert. Andere Dateien oder Ordner werden nicht verändert.
+
+Der Build ist nicht mit einem Apple-Entwicklerzertifikat signiert oder notarisiert. Die nativen Module erhalten während des GitHub-Builds eine lokale Ad-hoc-Signatur. Das Paket ist ausschließlich als privater Entwicklungs- und Testweg gedacht.
 
 ## Lokale Daten
 
@@ -55,4 +57,4 @@ Jedes Artefakt enthält:
 - Startskript und Nutzungshinweise
 - Node.js-Lizenz
 
-Vor dem Upload führt der Workflow den Secret-Scan, den Produktions-Build, alle Datenbankmigrationen und einen Start-/HTTP-Smoke-Test des fertig zusammengestellten Pakets aus. Neben dem Archiv wird eine SHA-256-Prüfsumme erzeugt.
+Vor dem Upload führt der Workflow den Secret-Scan, den Produktions-Build, die Signaturprüfung nativer Module, alle Datenbankmigrationen und einen Start-/HTTP-Smoke-Test des fertig zusammengestellten Pakets aus. Für diesen Test wird das SQLite-Modul absichtlich mit einer Quarantänemarkierung versehen; der Start ist nur erfolgreich, wenn `Start.command` sie wieder entfernt. Neben dem Archiv wird eine SHA-256-Prüfsumme erzeugt.

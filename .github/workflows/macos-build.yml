@@ -73,28 +73,40 @@ jobs:
           cp "$NODE_ROOT/LICENSE" "$BUNDLE_ROOT/runtime/NODE-LICENSE.txt"
           chmod 755 "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/Start.command"
 
+          while IFS= read -r -d '' NATIVE_MODULE; do
+            codesign --force --sign - --timestamp=none "$NATIVE_MODULE"
+            codesign --verify --strict "$NATIVE_MODULE"
+          done < <(find "$BUNDLE_ROOT" -type f -name "*.node" -print0)
+
       - name: Smoke-test packaged application
         env:
           ARCHIVE_NAME: ${{ matrix.archive }}
         run: |
           BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
-          TEST_DATABASE="$RUNNER_TEMP/package-smoke.db"
-          export DUNGEONSCRIBE_DB_PATH="$TEST_DATABASE"
-          export DATABASE_URL="file:$TEST_DATABASE"
-          export HOSTNAME="127.0.0.1"
+          TEST_HOME="$RUNNER_TEMP/package-smoke-home"
+          NATIVE_MODULE="$(find "$BUNDLE_ROOT" -type f -name "better_sqlite3.node" -print -quit)"
+          mkdir -p "$TEST_HOME"
+
+          test -n "$NATIVE_MODULE"
+          xattr -w com.apple.quarantine "0081;00000000;GitHub Actions;" "$NATIVE_MODULE"
+
+          export HOME="$TEST_HOME"
+          export DUNGEONSCRIBE_NO_OPEN="1"
           export PORT="3210"
 
-          "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/migrate.mjs"
-          cd "$BUNDLE_ROOT"
-          "$BUNDLE_ROOT/runtime/node" "$BUNDLE_ROOT/server.js" >"$RUNNER_TEMP/package-server.log" 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          "$BUNDLE_ROOT/Start.command" >"$RUNNER_TEMP/package-server.log" 2>&1 &
+          START_PID=$!
+          trap 'kill "$START_PID" 2>/dev/null || true' EXIT
 
           for attempt in {1..40}; do
             if curl --silent --fail "http://127.0.0.1:3210" >/dev/null; then
+              if xattr -p com.apple.quarantine "$NATIVE_MODULE" >/dev/null 2>&1; then
+                echo "Start.command did not remove the quarantine attribute."
+                exit 1
+              fi
               exit 0
             fi
-            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+            if ! kill -0 "$START_PID" 2>/dev/null; then
               cat "$RUNNER_TEMP/package-server.log"
               exit 1
             fi

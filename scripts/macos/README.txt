@@ -14,6 +14,10 @@ Start
 4. Der Browser öffnet sich automatisch.
 5. Zum Beenden im geöffneten Terminalfenster Ctrl+C drücken.
 
+Nach der Bestätigung entfernt das Startskript die Download-Quarantäne nur aus
+diesem entpackten Paketordner. Dadurch kann macOS das enthaltene SQLite-Modul
+laden. Andere Ordner oder Downloads werden nicht verändert.
+
 Private Daten
 -------------
 
