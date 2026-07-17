@@ -23,5 +23,6 @@ Die Filterung verwendet stabile Ereignispräfixe:
 - `ENTITY_*`: Weltregister
 - `KNOWLEDGE_*`: Wissen
 - `THREAD_*`: Handlungsstränge
+- `SCENE_*`: Szenen
 
 Die ungefilterte Ansicht ist absteigend nach realem Ereigniszeitpunkt sortiert. Filter verändern ausschließlich die Ansicht, niemals das gespeicherte Ereignisprotokoll.

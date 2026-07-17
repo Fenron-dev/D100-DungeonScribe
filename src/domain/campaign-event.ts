@@ -12,6 +12,8 @@ export const campaignEventTypes = [
   "KNOWLEDGE_UPDATED",
   "THREAD_CREATED",
   "THREAD_UPDATED",
+  "SCENE_STARTED",
+  "SCENE_COMPLETED",
 ] as const;
 
 export type CampaignEventType = (typeof campaignEventTypes)[number];
@@ -33,6 +35,7 @@ export const campaignEventCategories = [
   "world",
   "knowledge",
   "threads",
+  "scenes",
 ] as const;
 
 export type CampaignEventCategory = (typeof campaignEventCategories)[number];
@@ -54,5 +57,6 @@ export function getCampaignEventCategory(
   if (eventType.startsWith("CHARACTER_")) return "characters";
   if (eventType.startsWith("ENTITY_")) return "world";
   if (eventType.startsWith("KNOWLEDGE_")) return "knowledge";
-  return "threads";
+  if (eventType.startsWith("THREAD_")) return "threads";
+  return "scenes";
 }

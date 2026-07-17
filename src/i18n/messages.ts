@@ -245,6 +245,58 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
   };
+  scenes: {
+    sectionTitle: string;
+    sectionDescription: string;
+    openScenes: string;
+    title: string;
+    description: string;
+    activeTitle: string;
+    completedTitle: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    newScene: string;
+    createTitle: string;
+    createDescription: string;
+    titleLabel: string;
+    locationLabel: string;
+    noLocation: string;
+    expectedSetupLabel: string;
+    actualSetupLabel: string;
+    actualSetupHint: string;
+    objectiveLabel: string;
+    optionalHint: string;
+    charactersLabel: string;
+    charactersHint: string;
+    entitiesLabel: string;
+    entitiesHint: string;
+    threadsLabel: string;
+    threadsHint: string;
+    noCharacters: string;
+    noEntities: string;
+    noThreads: string;
+    startAction: string;
+    startingAction: string;
+    openAction: string;
+    activeStatus: string;
+    completedStatus: string;
+    expectedSetupTitle: string;
+    actualSetupTitle: string;
+    objectiveTitle: string;
+    participantsTitle: string;
+    relatedThreadsTitle: string;
+    completeTitle: string;
+    completeDescription: string;
+    summaryLabel: string;
+    completeAction: string;
+    completingAction: string;
+    summaryTitle: string;
+    backToCampaign: string;
+    backToScenes: string;
+    validationMessage: string;
+    saveError: string;
+    activeExistsError: string;
+  };
   chronicle: {
     sectionTitle: string;
     sectionDescription: string;
@@ -259,7 +311,13 @@ export interface MessageCatalog {
     resultLabel: string;
     backToCampaign: string;
     categories: Record<
-      "all" | "campaign" | "characters" | "world" | "knowledge" | "threads",
+      | "all"
+      | "campaign"
+      | "characters"
+      | "world"
+      | "knowledge"
+      | "threads"
+      | "scenes",
       string
     >;
     eventTypes: Record<
@@ -275,7 +333,9 @@ export interface MessageCatalog {
       | "KNOWLEDGE_DISCOVERED"
       | "KNOWLEDGE_UPDATED"
       | "THREAD_CREATED"
-      | "THREAD_UPDATED",
+      | "THREAD_UPDATED"
+      | "SCENE_STARTED"
+      | "SCENE_COMPLETED",
       string
     >;
     sources: Record<"player" | "rule_engine" | "oracle" | "ai" | "manual", string>;
@@ -585,6 +645,62 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Der Handlungsstrang konnte nicht gespeichert werden.",
   },
+  scenes: {
+    sectionTitle: "Szenen",
+    sectionDescription:
+      "Beginne eine konkrete Spielsituation und schließe sie mit einer dauerhaften Zusammenfassung ab.",
+    openScenes: "Szenen öffnen",
+    title: "Szenen der Kampagne",
+    description:
+      "Eine Kampagne besitzt höchstens eine aktive Szene; abgeschlossene Szenen bleiben als Verlauf erhalten.",
+    activeTitle: "Aktive Szene",
+    completedTitle: "Abgeschlossene Szenen",
+    emptyTitle: "Noch keine Szenen",
+    emptyDescription: "Beginne die erste konkrete Spielsituation dieser Kampagne.",
+    newScene: "Neue Szene beginnen",
+    createTitle: "Eine Szene beginnen",
+    createDescription:
+      "Lege Ausgangssituation, tatsächlichen Beginn, Ort, Beteiligte und relevante Handlungsstränge fest.",
+    titleLabel: "Szenentitel",
+    locationLabel: "Ort",
+    noLocation: "Kein fester Ort",
+    expectedSetupLabel: "Erwartete Ausgangssituation",
+    actualSetupLabel: "Tatsächlicher Szenenbeginn",
+    actualSetupHint: "Ohne Orakel kann der tatsächliche Beginn der erwarteten Situation entsprechen.",
+    objectiveLabel: "Szenenziel",
+    optionalHint: "optional",
+    charactersLabel: "Beteiligte Charaktere",
+    charactersHint: "Wähle die Spielfiguren, die an dieser Szene teilnehmen.",
+    entitiesLabel: "Beteiligte Weltobjekte",
+    entitiesHint: "Wähle wichtige Personen, Orte, Fraktionen oder Gegenstände.",
+    threadsLabel: "Relevante Handlungsstränge",
+    threadsHint: "Diese Auswahl stellt einen Bezug her und verändert den Handlungsstrang nicht.",
+    noCharacters: "In dieser Kampagne gibt es noch keine Charaktere.",
+    noEntities: "Im Weltregister gibt es noch keine Objekte.",
+    noThreads: "Es gibt noch keine Handlungsstränge.",
+    startAction: "Szene beginnen",
+    startingAction: "Szene wird begonnen …",
+    openAction: "Szene öffnen",
+    activeStatus: "Aktiv",
+    completedStatus: "Abgeschlossen",
+    expectedSetupTitle: "Erwartete Situation",
+    actualSetupTitle: "Aktueller Szenenbeginn",
+    objectiveTitle: "Ziel",
+    participantsTitle: "Beteiligte",
+    relatedThreadsTitle: "Relevante Handlungsstränge",
+    completeTitle: "Szene abschließen",
+    completeDescription:
+      "Fasse die wichtigsten Geschehnisse zusammen. Einzelne Weltänderungen bleiben weiterhin eigene, nachvollziehbare Aktionen.",
+    summaryLabel: "Szenenzusammenfassung",
+    completeAction: "Szene abschließen",
+    completingAction: "Szene wird abgeschlossen …",
+    summaryTitle: "Zusammenfassung",
+    backToCampaign: "Zur Kampagne",
+    backToScenes: "Zu den Szenen",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Die Szene konnte nicht gespeichert werden.",
+    activeExistsError: "Diese Kampagne besitzt bereits eine aktive Szene.",
+  },
   chronicle: {
     sectionTitle: "Chronik",
     sectionDescription:
@@ -607,6 +723,7 @@ const germanMessages = {
       world: "Weltregister",
       knowledge: "Wissen",
       threads: "Handlungsstränge",
+      scenes: "Szenen",
     },
     eventTypes: {
       CAMPAIGN_CREATED: "Kampagne begonnen",
@@ -622,6 +739,8 @@ const germanMessages = {
       KNOWLEDGE_UPDATED: "Wissen geändert",
       THREAD_CREATED: "Handlungsstrang eröffnet",
       THREAD_UPDATED: "Handlungsstrang geändert",
+      SCENE_STARTED: "Szene begonnen",
+      SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
       player: "Spieler",
@@ -932,6 +1051,62 @@ const englishMessages = {
     validationMessage: "Please check the highlighted fields.",
     saveError: "The story thread could not be saved.",
   },
+  scenes: {
+    sectionTitle: "Scenes",
+    sectionDescription:
+      "Begin a concrete play situation and finish it with a persistent summary.",
+    openScenes: "Open scenes",
+    title: "Campaign scenes",
+    description:
+      "A campaign has at most one active scene; completed scenes remain as history.",
+    activeTitle: "Active scene",
+    completedTitle: "Completed scenes",
+    emptyTitle: "No scenes yet",
+    emptyDescription: "Begin this campaign's first concrete play situation.",
+    newScene: "Begin new scene",
+    createTitle: "Begin a scene",
+    createDescription:
+      "Define the expected and actual setup, location, participants, and relevant story threads.",
+    titleLabel: "Scene title",
+    locationLabel: "Location",
+    noLocation: "No fixed location",
+    expectedSetupLabel: "Expected setup",
+    actualSetupLabel: "Actual scene opening",
+    actualSetupHint: "Without an oracle, the actual opening can match the expected setup.",
+    objectiveLabel: "Scene objective",
+    optionalHint: "optional",
+    charactersLabel: "Participating characters",
+    charactersHint: "Select the player characters taking part in this scene.",
+    entitiesLabel: "Participating world entities",
+    entitiesHint: "Select important people, locations, factions, or items.",
+    threadsLabel: "Relevant story threads",
+    threadsHint: "This creates a reference and does not alter the story thread.",
+    noCharacters: "This campaign has no characters yet.",
+    noEntities: "The world registry has no entities yet.",
+    noThreads: "There are no story threads yet.",
+    startAction: "Begin scene",
+    startingAction: "Beginning scene …",
+    openAction: "Open scene",
+    activeStatus: "Active",
+    completedStatus: "Completed",
+    expectedSetupTitle: "Expected situation",
+    actualSetupTitle: "Current scene opening",
+    objectiveTitle: "Objective",
+    participantsTitle: "Participants",
+    relatedThreadsTitle: "Relevant story threads",
+    completeTitle: "Complete scene",
+    completeDescription:
+      "Summarize the important events. Individual world changes remain separate, traceable actions.",
+    summaryLabel: "Scene summary",
+    completeAction: "Complete scene",
+    completingAction: "Completing scene …",
+    summaryTitle: "Summary",
+    backToCampaign: "Back to campaign",
+    backToScenes: "Back to scenes",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The scene could not be saved.",
+    activeExistsError: "This campaign already has an active scene.",
+  },
   chronicle: {
     sectionTitle: "Chronicle",
     sectionDescription:
@@ -954,6 +1129,7 @@ const englishMessages = {
       world: "World registry",
       knowledge: "Knowledge",
       threads: "Story threads",
+      scenes: "Scenes",
     },
     eventTypes: {
       CAMPAIGN_CREATED: "Campaign started",
@@ -969,6 +1145,8 @@ const englishMessages = {
       KNOWLEDGE_UPDATED: "Knowledge changed",
       THREAD_CREATED: "Story thread opened",
       THREAD_UPDATED: "Story thread changed",
+      SCENE_STARTED: "Scene started",
+      SCENE_COMPLETED: "Scene completed",
     },
     sources: {
       player: "Player",

@@ -22,6 +22,8 @@ Der erste vertikale Charakterbaustein speichert Name, Konzept, einen der stabile
 
 Ist die zentrale Spieleinheit. Sie besitzt Status, Ausgangslage, Ort, Beteiligte, relevante Handlungsstränge, Nachrichten, Würfe, Ereignisse und eine optionale Zusammenfassung. Pro Kampagne darf im MVP höchstens eine Szene aktiv sein.
 
+Der erste vertikale Szenenbaustein unterstützt aktive und abgeschlossene Szenen. Er speichert erwartete und tatsächliche Ausgangslage getrennt, ein optionales Ziel, Ort, Charaktere, Weltobjekte und relevante Handlungsstränge sowie die bearbeitbare Abschlusszusammenfassung. Alle Referenzen müssen zur selben Kampagne gehören; der Ort muss ein Weltobjekt des Typs `location` sein. Ein partieller eindeutiger Datenbankindex erzwingt höchstens eine aktive Szene. Start und Abschluss erzeugen atomar `SCENE_STARTED` und `SCENE_COMPLETED`.
+
 ### World Entity
 
 Gemeinsame Basis für NPC, Ort, Region, Fraktion, Gegenstand, Quest und weitere definierte Typen. Kernfelder bleiben strukturiert; typspezifische Zusatzdaten werden separat validiert.

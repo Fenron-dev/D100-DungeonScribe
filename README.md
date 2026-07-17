@@ -6,9 +6,9 @@ Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb e
 
 ## Projektstatus
 
-Phase 0 bis Phase 5 sind abgeschlossen. Das Projekt befindet sich in **Phase 10 – Chronik und Wissen** und wird ausschließlich über GitHub Actions gebaut und geprüft.
+Phase 0 bis Phase 5 sind abgeschlossen. Das Projekt befindet sich in **Phase 6 – Szenen ohne KI**; erste Bausteine aus Chronik und Wissen sind bereits vorgezogen. Gebaut und geprüft wird ausschließlich über GitHub Actions.
 
-Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren, deren Charaktere verwalten sowie ein durchsuchbares Weltregister für Personen, Orte, Fraktionen und Gegenstände. Weltobjekte besitzen typspezifische Details und können über gerichtete, typisierte Beziehungen verknüpft werden. Kampagnenwissen trennt Fakten, Charakterwissen, Gerüchte, Geheimnisse, Vermutungen und Erinnerungen samt Wahrheitsstatus, bekannten Charakteren, Weltbezügen und Fixierung. Handlungsstränge erfassen offene Entwicklungen mit Status, Dringlichkeit, Fortschritt, Weltbezügen und möglichen nächsten Wendungen. Eine filterbare Chronik macht alle verbindlichen Änderungen verständlich sichtbar, ohne technische Ereignisdaten offenzulegen. Jede Änderung wird atomar mit einem Kampagnenereignis gespeichert.
+Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren, deren Charaktere verwalten sowie ein durchsuchbares Weltregister für Personen, Orte, Fraktionen und Gegenstände. Weltobjekte besitzen typspezifische Details und können über gerichtete, typisierte Beziehungen verknüpft werden. Kampagnenwissen trennt Fakten, Charakterwissen, Gerüchte, Geheimnisse, Vermutungen und Erinnerungen samt Wahrheitsstatus, bekannten Charakteren, Weltbezügen und Fixierung. Handlungsstränge erfassen offene Entwicklungen mit Status, Dringlichkeit, Fortschritt, Weltbezügen und möglichen nächsten Wendungen. Szenen verbinden Ort, Beteiligte und Handlungsstränge zu einer konkreten Spielsituation und werden mit einer dauerhaften Zusammenfassung abgeschlossen. Eine filterbare Chronik macht alle verbindlichen Änderungen verständlich sichtbar, ohne technische Ereignisdaten offenzulegen. Jede Änderung wird atomar mit einem Kampagnenereignis gespeichert.
 
 Die reine Regel-Engine wertet konfigurierbare W6-Pool-Proben mit Archetyp, Eigenschaften, Vor- und Nachteilen, Schwierigkeiten, Erfolgsgraden und der freiwilligen Wahl „Erfolg mit Kosten“ aus. Feste Zufallssequenzen machen jede Regelentscheidung reproduzierbar testbar.
 
@@ -53,6 +53,7 @@ Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien au
 - [Kampagnenwissen](docs/campaign-knowledge.md)
 - [Kampagnenchronik](docs/chronicle.md)
 - [Handlungsstränge](docs/story-threads.md)
+- [Szenen ohne KI](docs/scenes.md)
 - [Entwicklungsprozess](docs/development-process.md)
 - [macOS-Testbuild](docs/macos-test-build.md)
 - [Verbindliche Regeln für Codex](AGENTS.md)

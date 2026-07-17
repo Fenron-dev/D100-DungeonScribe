@@ -62,6 +62,7 @@ export default async function ChroniclePage({
             <option value="world">{copy.categories.world}</option>
             <option value="knowledge">{copy.categories.knowledge}</option>
             <option value="threads">{copy.categories.threads}</option>
+            <option value="scenes">{copy.categories.scenes}</option>
           </select>
         </div>
         <button className="button button-secondary" type="submit">

@@ -31,8 +31,32 @@ model Campaign {
   worldEntityRelations WorldEntityRelation[]
   knowledgeEntries KnowledgeEntry[]
   storyThreads StoryThread[]
+  scenes Scene[]
 
   @@index([status, updatedAt])
+}
+
+model Scene {
+  id                      String   @id @default(cuid())
+  campaignId              String
+  title                   String
+  status                  String   @default("active")
+  locationId              String?
+  expectedSetup           String
+  actualSetup             String
+  objective               String?
+  participantCharacterIds Json
+  participantEntityIds    Json
+  relevantThreadIds       Json
+  summary                 String?
+  startedAtReal           DateTime @default(now())
+  endedAtReal             DateTime?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, status, startedAtReal])
 }
 
 model StoryThread {
