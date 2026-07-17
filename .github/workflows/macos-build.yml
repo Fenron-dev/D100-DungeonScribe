@@ -131,7 +131,7 @@ jobs:
 
           if [[ "$RUN_BROWSER_TEST" == "true" ]]; then
             if ! PLAYWRIGHT_BASE_URL="http://127.0.0.1:3210" \
-              npx playwright test e2e/campaigns.spec.ts --project=chromium; then
+              npx playwright test e2e/campaigns.spec.ts --project=chromium --retries=0; then
               cat "$RUNNER_TEMP/package-server.log"
               exit 1
             fi
