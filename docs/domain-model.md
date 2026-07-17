@@ -40,6 +40,8 @@ Der erste vertikale Wissensbaustein speichert alle sechs Wissensarten, einen der
 
 Beschreibt einen offenen, ruhenden, gelösten oder gescheiterten Handlungsstrang mit Dringlichkeit, Fortschritt und möglichen Entwicklungen.
 
+Der erste vertikale Baustein begrenzt Dringlichkeit auf 1 bis 5 und Fortschrittsuhren auf maximal 12 Schritte. Der aktuelle Wert darf das Ziel nicht überschreiten. Bis zu fünf mögliche Entwicklungen bleiben ausdrücklich Optionen und werden nicht als Fakten behandelt. Referenzierte Weltobjekte müssen zur selben Kampagne gehören. Erstellen und Bearbeiten erzeugen atomar `THREAD_CREATED` beziehungsweise `THREAD_UPDATED`.
+
 ### CampaignEvent
 
 Unveränderlicher Nachweis einer verbindlichen Änderung. Korrekturen erzeugen neue Ereignisse, statt historische Ereignisse still zu überschreiben.

@@ -107,13 +107,38 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
   ).toBeVisible();
 
+  await page.getByRole("link", { name: "Handlungsstränge öffnen" }).click();
+  await page.getByRole("link", { name: "Handlungsstrang erstellen" }).click();
+  await page.getByLabel("Titel").fill("Die wiedergekehrte Straße");
+  await page
+    .getByLabel("Ausgangslage")
+    .fill("Eine verschwundene Straße ist nach zwanzig Jahren wieder aufgetaucht.");
+  await page.getByLabel("Dringlichkeit").selectOption("4");
+  await page.getByLabel("Aktueller Fortschritt").fill("1");
+  await page.getByLabel("Fortschrittsziel").fill("4");
+  await page.getByLabel("Die Nebelwacht · Ort").check();
+  await page.getByLabel("Entwicklung 1").fill("Der Nebel gibt einen weiteren Weg frei.");
+  await page.getByRole("button", { name: "Handlungsstrang speichern" }).click();
+  await expect(page.getByRole("heading", { name: "Die wiedergekehrte Straße" })).toBeVisible();
+  await expect(page.locator(".thread-progress strong")).toHaveText("1 / 4");
+  await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();
+  await page.getByLabel("Status").selectOption("dormant");
+  await page.getByLabel("Aktueller Fortschritt").fill("2");
+  await page.getByRole("button", { name: "Änderungen speichern" }).click();
+  await expect(page.getByText("Ruhend", { exact: true })).toBeVisible();
+  await expect(page.locator(".thread-progress strong")).toHaveText("2 / 4");
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
+  ).toBeVisible();
+
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText("9 Ereignisse")).toBeVisible();
-  await page.getByLabel("Chronik filtern").selectOption("knowledge");
+  await expect(page.getByText("11 Ereignisse")).toBeVisible();
+  await page.getByLabel("Chronik filtern").selectOption("threads");
   await page.getByRole("button", { name: "Filtern" }).click();
   await expect(page.getByText("2 Ereignisse")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Wissen festgehalten" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Wissen geändert" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Handlungsstrang eröffnet" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Handlungsstrang geändert" })).toBeVisible();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),

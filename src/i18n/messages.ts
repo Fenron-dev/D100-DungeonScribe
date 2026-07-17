@@ -204,6 +204,47 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
   };
+  storyThreads: {
+    sectionTitle: string;
+    sectionDescription: string;
+    openRegistry: string;
+    title: string;
+    description: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    newThread: string;
+    createTitle: string;
+    createDescription: string;
+    editTitle: string;
+    editDescription: string;
+    titleLabel: string;
+    premiseLabel: string;
+    descriptionLabel: string;
+    optionalHint: string;
+    statusLabel: string;
+    statuses: Record<"open" | "dormant" | "resolved" | "failed", string>;
+    urgencyLabel: string;
+    urgencyHint: string;
+    progressTitle: string;
+    progressCurrentLabel: string;
+    progressTargetLabel: string;
+    progressDisplay: string;
+    relatedEntitiesLabel: string;
+    relatedEntitiesHint: string;
+    noEntities: string;
+    developmentsLabel: string;
+    developmentsHint: string;
+    developmentLabel: string;
+    createAction: string;
+    creatingAction: string;
+    editAction: string;
+    savingAction: string;
+    editLink: string;
+    backToCampaign: string;
+    backToRegistry: string;
+    validationMessage: string;
+    saveError: string;
+  };
   chronicle: {
     sectionTitle: string;
     sectionDescription: string;
@@ -218,7 +259,7 @@ export interface MessageCatalog {
     resultLabel: string;
     backToCampaign: string;
     categories: Record<
-      "all" | "campaign" | "characters" | "world" | "knowledge",
+      "all" | "campaign" | "characters" | "world" | "knowledge" | "threads",
       string
     >;
     eventTypes: Record<
@@ -232,7 +273,9 @@ export interface MessageCatalog {
       | "ENTITY_RELATION_CREATED"
       | "ENTITY_RELATION_REMOVED"
       | "KNOWLEDGE_DISCOVERED"
-      | "KNOWLEDGE_UPDATED",
+      | "KNOWLEDGE_UPDATED"
+      | "THREAD_CREATED"
+      | "THREAD_UPDATED",
       string
     >;
     sources: Record<"player" | "rule_engine" | "oracle" | "ai" | "manual", string>;
@@ -492,6 +535,56 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Der Wissenseintrag konnte nicht gespeichert werden.",
   },
+  storyThreads: {
+    sectionTitle: "Handlungsstränge",
+    sectionDescription:
+      "Offene Fragen und drohende Entwicklungen geben der Kampagne Richtung und Bewegung.",
+    openRegistry: "Handlungsstränge öffnen",
+    title: "Handlungsstränge der Kampagne",
+    description:
+      "Verfolge offene, ruhende, gelöste und gescheiterte Entwicklungen samt Dringlichkeit und Fortschritt.",
+    emptyTitle: "Noch keine Handlungsstränge",
+    emptyDescription:
+      "Lege die erste offene Frage, Bedrohung oder Entwicklung dieser Kampagne an.",
+    newThread: "Handlungsstrang erstellen",
+    createTitle: "Einen Handlungsstrang anlegen",
+    createDescription:
+      "Beschreibe die Ausgangslage, ihre Dringlichkeit und mögliche nächste Entwicklungen.",
+    editTitle: "Handlungsstrang bearbeiten",
+    editDescription: "Aktualisiere Status, Fortschritt und mögliche Entwicklungen.",
+    titleLabel: "Titel",
+    premiseLabel: "Ausgangslage",
+    descriptionLabel: "Beschreibung",
+    optionalHint: "optional",
+    statusLabel: "Status",
+    statuses: {
+      open: "Offen",
+      dormant: "Ruhend",
+      resolved: "Gelöst",
+      failed: "Gescheitert",
+    },
+    urgencyLabel: "Dringlichkeit",
+    urgencyHint: "1 steht für gering, 5 für unmittelbar.",
+    progressTitle: "Fortschritt",
+    progressCurrentLabel: "Aktueller Fortschritt",
+    progressTargetLabel: "Fortschrittsziel",
+    progressDisplay: "Fortschritt",
+    relatedEntitiesLabel: "Verknüpfte Weltobjekte",
+    relatedEntitiesHint: "Optionaler Bezug zu wichtigen Personen, Orten, Fraktionen oder Gegenständen.",
+    noEntities: "Im Weltregister gibt es noch keine Objekte.",
+    developmentsLabel: "Mögliche nächste Entwicklungen",
+    developmentsHint: "Bis zu fünf Ideen; sie sind Möglichkeiten und noch keine Fakten.",
+    developmentLabel: "Entwicklung",
+    createAction: "Handlungsstrang speichern",
+    creatingAction: "Handlungsstrang wird gespeichert …",
+    editAction: "Änderungen speichern",
+    savingAction: "Änderungen werden gespeichert …",
+    editLink: "Bearbeiten",
+    backToCampaign: "Zur Kampagne",
+    backToRegistry: "Zu den Handlungssträngen",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Der Handlungsstrang konnte nicht gespeichert werden.",
+  },
   chronicle: {
     sectionTitle: "Chronik",
     sectionDescription:
@@ -513,6 +606,7 @@ const germanMessages = {
       characters: "Charaktere",
       world: "Weltregister",
       knowledge: "Wissen",
+      threads: "Handlungsstränge",
     },
     eventTypes: {
       CAMPAIGN_CREATED: "Kampagne begonnen",
@@ -526,6 +620,8 @@ const germanMessages = {
       ENTITY_RELATION_REMOVED: "Beziehung entfernt",
       KNOWLEDGE_DISCOVERED: "Wissen festgehalten",
       KNOWLEDGE_UPDATED: "Wissen geändert",
+      THREAD_CREATED: "Handlungsstrang eröffnet",
+      THREAD_UPDATED: "Handlungsstrang geändert",
     },
     sources: {
       player: "Spieler",
@@ -787,6 +883,55 @@ const englishMessages = {
     validationMessage: "Please check the highlighted fields.",
     saveError: "The knowledge entry could not be saved.",
   },
+  storyThreads: {
+    sectionTitle: "Story threads",
+    sectionDescription:
+      "Open questions and looming developments give the campaign direction and momentum.",
+    openRegistry: "Open story threads",
+    title: "Campaign story threads",
+    description:
+      "Track open, dormant, resolved, and failed developments with urgency and progress.",
+    emptyTitle: "No story threads yet",
+    emptyDescription: "Create the campaign's first open question, threat, or development.",
+    newThread: "Create story thread",
+    createTitle: "Create a story thread",
+    createDescription:
+      "Describe the premise, its urgency, and possible next developments.",
+    editTitle: "Edit story thread",
+    editDescription: "Update status, progress, and possible developments.",
+    titleLabel: "Title",
+    premiseLabel: "Premise",
+    descriptionLabel: "Description",
+    optionalHint: "optional",
+    statusLabel: "Status",
+    statuses: {
+      open: "Open",
+      dormant: "Dormant",
+      resolved: "Resolved",
+      failed: "Failed",
+    },
+    urgencyLabel: "Urgency",
+    urgencyHint: "1 is low, 5 is immediate.",
+    progressTitle: "Progress",
+    progressCurrentLabel: "Current progress",
+    progressTargetLabel: "Progress target",
+    progressDisplay: "Progress",
+    relatedEntitiesLabel: "Related world entities",
+    relatedEntitiesHint: "Optional links to important people, locations, factions, or items.",
+    noEntities: "The world registry has no entities yet.",
+    developmentsLabel: "Possible next developments",
+    developmentsHint: "Up to five ideas; they are possibilities, not established facts.",
+    developmentLabel: "Development",
+    createAction: "Save story thread",
+    creatingAction: "Saving story thread …",
+    editAction: "Save changes",
+    savingAction: "Saving changes …",
+    editLink: "Edit",
+    backToCampaign: "Back to campaign",
+    backToRegistry: "Back to story threads",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The story thread could not be saved.",
+  },
   chronicle: {
     sectionTitle: "Chronicle",
     sectionDescription:
@@ -808,6 +953,7 @@ const englishMessages = {
       characters: "Characters",
       world: "World registry",
       knowledge: "Knowledge",
+      threads: "Story threads",
     },
     eventTypes: {
       CAMPAIGN_CREATED: "Campaign started",
@@ -821,6 +967,8 @@ const englishMessages = {
       ENTITY_RELATION_REMOVED: "Relation removed",
       KNOWLEDGE_DISCOVERED: "Knowledge recorded",
       KNOWLEDGE_UPDATED: "Knowledge changed",
+      THREAD_CREATED: "Story thread opened",
+      THREAD_UPDATED: "Story thread changed",
     },
     sources: {
       player: "Player",
