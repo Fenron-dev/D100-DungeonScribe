@@ -1,12 +1,22 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useSyncExternalStore } from "react";
 import type { WorldEntityDraft } from "@/domain/world-entity";
 import type { WorldEntityFormAction } from "@/features/world-entities/form-state";
 import { initialWorldEntityFormState } from "@/features/world-entities/form-state";
 import type { getMessages } from "@/i18n/messages";
 
 type Messages = ReturnType<typeof getMessages>;
+
+const subscribeToHydration = () => () => undefined;
+
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false,
+  );
+}
 
 interface WorldEntityFormProps {
   action: WorldEntityFormAction;
@@ -31,6 +41,7 @@ export function WorldEntityForm({
   messages,
   mode,
 }: WorldEntityFormProps) {
+  const isHydrated = useHydrated();
   const [state, formAction, isPending] = useActionState(
     action,
     initialWorldEntityFormState,
@@ -56,6 +67,7 @@ export function WorldEntityForm({
             name="type"
             defaultValue={entity?.type ?? ""}
             aria-invalid={state.errors.type.length > 0}
+            disabled={!isHydrated || isPending}
             required
           >
             <option value="" disabled>{copy.typePlaceholder}</option>
@@ -74,6 +86,7 @@ export function WorldEntityForm({
             name="status"
             defaultValue={entity?.status ?? "active"}
             aria-invalid={state.errors.status.length > 0}
+            disabled={!isHydrated || isPending}
           >
             <option value="active">{copy.statuses.active}</option>
             <option value="inactive">{copy.statuses.inactive}</option>
@@ -93,6 +106,7 @@ export function WorldEntityForm({
           defaultValue={entity?.name ?? ""}
           maxLength={120}
           aria-invalid={state.errors.name.length > 0}
+          disabled={!isHydrated || isPending}
           required
         />
         <ErrorList errors={state.errors.name} />
@@ -107,6 +121,7 @@ export function WorldEntityForm({
           maxLength={300}
           rows={3}
           aria-invalid={state.errors.summary.length > 0}
+          disabled={!isHydrated || isPending}
           required
         />
         <ErrorList errors={state.errors.summary} />
@@ -123,6 +138,7 @@ export function WorldEntityForm({
           maxLength={4_000}
           rows={7}
           aria-invalid={state.errors.description.length > 0}
+          disabled={!isHydrated || isPending}
         />
         <ErrorList errors={state.errors.description} />
       </div>
@@ -138,12 +154,17 @@ export function WorldEntityForm({
           defaultValue={entity?.tags.join(", ") ?? ""}
           maxLength={320}
           aria-invalid={state.errors.tags.length > 0}
+          disabled={!isHydrated || isPending}
         />
         <p className="field-hint">{copy.tagsHint}</p>
         <ErrorList errors={state.errors.tags} />
       </div>
 
-      <button className="button button-primary" type="submit" disabled={isPending}>
+      <button
+        className="button button-primary"
+        type="submit"
+        disabled={!isHydrated || isPending}
+      >
         {isPending
           ? isEdit
             ? copy.savingAction
