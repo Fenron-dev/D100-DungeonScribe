@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useSyncExternalStore } from "react";
+import { useActionState, useEffect, useState } from "react";
 import type { WorldEntityDraft } from "@/domain/world-entity";
 import type { WorldEntityFormAction } from "@/features/world-entities/form-state";
 import { initialWorldEntityFormState } from "@/features/world-entities/form-state";
@@ -8,14 +8,15 @@ import type { getMessages } from "@/i18n/messages";
 
 type Messages = ReturnType<typeof getMessages>;
 
-const subscribeToHydration = () => () => undefined;
-
 function useHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribeToHydration,
-    () => true,
-    () => false,
-  );
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setIsHydrated(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  return isHydrated;
 }
 
 interface WorldEntityFormProps {
