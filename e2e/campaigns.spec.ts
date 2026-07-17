@@ -135,7 +135,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("link", { name: "Szenen öffnen" }).click();
   await page.getByRole("link", { name: "Neue Szene beginnen" }).click();
   await page.getByLabel("Szenentitel").fill("Die Straße im Nebel");
-  await page.getByLabel("Ort").selectOption({ label: "Die Nebelwacht" });
+  await page
+    .getByLabel("Ort", { exact: true })
+    .selectOption({ label: "Die Nebelwacht" });
   await page
     .getByLabel("Erwartete Ausgangssituation")
     .fill("Elara erreicht die Nebelwacht und sucht nach dem verborgenen Weg.");
