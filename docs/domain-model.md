@@ -26,7 +26,9 @@ Ist die zentrale Spieleinheit. Sie besitzt Status, Ausgangslage, Ort, Beteiligte
 
 Gemeinsame Basis für NPC, Ort, Region, Fraktion, Gegenstand, Quest und weitere definierte Typen. Kernfelder bleiben strukturiert; typspezifische Zusatzdaten werden separat validiert.
 
-Der erste vertikale Weltobjektbaustein unterstützt die Typen `npc`, `location`, `faction` und `item`. Gemeinsame strukturierte Felder sind Name, Kurzfassung, optionale Beschreibung, bis zu acht Tags und der Status `active`, `inactive`, `destroyed` oder `unknown`. Das Weltregister kann nach Name, Kurzfassung und Tags durchsucht sowie nach Typ gefiltert werden. Erstellen und Bearbeiten erzeugen atomar ein Kampagnenereignis.
+Die vertikalen Weltobjektbausteine unterstützen die Typen `npc`, `location`, `faction` und `item`. Gemeinsame strukturierte Felder sind Name, Kurzfassung, optionale Beschreibung, bis zu acht Tags und der Status `active`, `inactive`, `destroyed` oder `unknown`. Typspezifisch werden Rolle und Motivation, Region und Atmosphäre, Ziel und Einfluss beziehungsweise Zweck und Seltenheit validiert gespeichert. Das Weltregister kann nach Name, Kurzfassung und Tags durchsucht sowie nach Typ gefiltert werden. Erstellen und Bearbeiten erzeugen atomar ein Kampagnenereignis.
+
+Weltobjektbeziehungen sind gerichtete Datensätze mit Quelle, Ziel, stabilem Typ, optionaler Beschreibung und Status. Beide Enden müssen zur gleichen Kampagne gehören; Selbstbeziehungen und doppelte Kombinationen aus Quelle, Ziel und Typ sind unzulässig. Erstellen und Entfernen werden atomar als eigene Kampagnenereignisse protokolliert.
 
 ### KnowledgeEntry
 

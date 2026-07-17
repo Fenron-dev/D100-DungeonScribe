@@ -122,6 +122,11 @@ describe("PrismaCampaignRepository", () => {
       description: null,
       tags: ["Küste", "Zuflucht"],
       status: "active" as const,
+      details: {
+        type: "location" as const,
+        region: "Nordküste",
+        atmosphere: "Neblig",
+      },
     };
 
     const entity = await worldEntityRepository.create(campaign.id, entityDraft);
@@ -133,9 +138,44 @@ describe("PrismaCampaignRepository", () => {
       name: "Die Nebelwacht",
     });
 
+    const faction = await worldEntityRepository.create(campaign.id, {
+      ...entityDraft,
+      type: "faction",
+      name: "Bund der Lotsen",
+      details: {
+        type: "faction",
+        goal: "Sichere Seewege",
+        influence: "Nordküste",
+      },
+    });
+    if (!faction) {
+      throw new Error("Expected faction creation to succeed.");
+    }
+    const relation = await worldEntityRepository.createRelation(
+      campaign.id,
+      faction.id,
+      {
+        targetEntityId: entity.id,
+        type: "located_at",
+        description: "Hauptquartier",
+        status: "active",
+      },
+    );
+    if (!relation) {
+      throw new Error("Expected relation creation to succeed.");
+    }
+    await expect(
+      worldEntityRepository.listRelations(campaign.id, entity.id),
+    ).resolves.toMatchObject([{ type: "located_at", description: "Hauptquartier" }]);
+    await worldEntityRepository.removeRelation(campaign.id, entity.id, relation.id);
+
     await expect(
       worldEntityRepository.listByCampaign(campaign.id),
-    ).resolves.toMatchObject([{ name: "Die Nebelwacht", type: "location" }]);
+    ).resolves.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "Die Nebelwacht", type: "location" }),
+      ]),
+    );
     const eventTypes = await client.campaignEvent.findMany({
       where: { campaignId: campaign.id },
       orderBy: { timestampReal: "asc" },
@@ -145,6 +185,9 @@ describe("PrismaCampaignRepository", () => {
       "CAMPAIGN_CREATED",
       "ENTITY_CREATED",
       "ENTITY_UPDATED",
+      "ENTITY_CREATED",
+      "ENTITY_RELATION_CREATED",
+      "ENTITY_RELATION_REMOVED",
     ]);
   });
 });

@@ -15,8 +15,21 @@ function readText(formData: FormData, key: string): string {
 }
 
 function parseForm(formData: FormData) {
+  const type = readText(formData, "type");
+  const primary = readText(formData, "detailPrimary");
+  const secondary = readText(formData, "detailSecondary");
+  const details: Record<string, unknown> = { type };
+  if (type === "npc") {
+    Object.assign(details, { role: primary, motivation: secondary });
+  } else if (type === "location") {
+    Object.assign(details, { region: primary, atmosphere: secondary });
+  } else if (type === "faction") {
+    Object.assign(details, { goal: primary, influence: secondary });
+  } else if (type === "item") {
+    Object.assign(details, { purpose: primary, rarity: secondary });
+  }
   return worldEntityDraftSchema.safeParse({
-    type: readText(formData, "type"),
+    type,
     name: readText(formData, "name"),
     summary: readText(formData, "summary"),
     description: readText(formData, "description"),
@@ -25,6 +38,7 @@ function parseForm(formData: FormData) {
       .map((tag) => tag.trim())
       .filter(Boolean),
     status: readText(formData, "status"),
+    details,
   });
 }
 
@@ -38,6 +52,7 @@ function normalizeErrors(
     description: errors.description ?? [],
     tags: errors.tags ?? [],
     status: errors.status ?? [],
+    details: errors.details ?? [],
   };
 }
 

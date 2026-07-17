@@ -28,6 +28,7 @@ model Campaign {
   events CampaignEvent[]
   characters Character[]
   worldEntities WorldEntity[]
+  worldEntityRelations WorldEntityRelation[]
 
   @@index([status, updatedAt])
 }
@@ -58,13 +59,36 @@ model WorldEntity {
   description String?
   tags        Json
   status      String   @default("active")
+  details     Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  outgoingRelations WorldEntityRelation[] @relation("WorldEntityRelationSource")
+  incomingRelations WorldEntityRelation[] @relation("WorldEntityRelationTarget")
 
   @@index([campaignId, type, status])
   @@index([campaignId, updatedAt])
+}
+
+model WorldEntityRelation {
+  id             String   @id @default(cuid())
+  campaignId     String
+  sourceEntityId String
+  targetEntityId String
+  type           String
+  description    String?
+  status         String   @default("active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  sourceEntity WorldEntity @relation("WorldEntityRelationSource", fields: [sourceEntityId], references: [id], onDelete: Cascade)
+  targetEntity WorldEntity @relation("WorldEntityRelationTarget", fields: [targetEntityId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceEntityId, targetEntityId, type])
+  @@index([campaignId, sourceEntityId])
+  @@index([campaignId, targetEntityId])
 }
 
 model CampaignEvent {

@@ -1,9 +1,15 @@
-import type { WorldEntity, WorldEntityDraft } from "@/domain/world-entity";
+import type {
+  WorldEntity,
+  WorldEntityDraft,
+  WorldEntityRelation,
+  WorldEntityRelationDraft,
+} from "@/domain/world-entity";
+import { z } from "zod";
 import type { PrismaClient } from "@/generated/prisma/client";
 import type { WorldEntityRepository } from "@/repositories/world-entity-repository";
 import {
   worldEntityDraftSchema,
-  worldEntityTagsSchema,
+  worldEntityRelationDraftSchema,
 } from "@/schemas/world-entity";
 
 type WorldEntityRow = Awaited<
@@ -11,18 +17,46 @@ type WorldEntityRow = Awaited<
 >;
 
 function mapWorldEntity(row: NonNullable<WorldEntityRow>): WorldEntity {
+  const persistedDetails = z
+    .record(z.string(), z.unknown())
+    .catch({})
+    .parse(row.details);
   const draft = worldEntityDraftSchema.parse({
     type: row.type,
     name: row.name,
     summary: row.summary,
     description: row.description,
-    tags: worldEntityTagsSchema.parse(row.tags),
+    tags: row.tags,
     status: row.status,
+    details: { type: row.type, ...persistedDetails },
   });
 
   return {
     id: row.id,
     campaignId: row.campaignId,
+    ...draft,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+type WorldEntityRelationRow = Awaited<
+  ReturnType<PrismaClient["worldEntityRelation"]["findUnique"]>
+>;
+
+function mapRelation(
+  row: NonNullable<WorldEntityRelationRow>,
+): WorldEntityRelation {
+  const draft = worldEntityRelationDraftSchema.parse({
+    targetEntityId: row.targetEntityId,
+    type: row.type,
+    description: row.description,
+    status: row.status,
+  });
+  return {
+    id: row.id,
+    campaignId: row.campaignId,
+    sourceEntityId: row.sourceEntityId,
     ...draft,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -114,5 +148,93 @@ export class PrismaWorldEntityRepository implements WorldEntityRepository {
       });
       return mapWorldEntity(entity);
     });
+  }
+
+  public async createRelation(
+    campaignId: string,
+    sourceEntityId: string,
+    draft: WorldEntityRelationDraft,
+  ): Promise<WorldEntityRelation | null> {
+    const entities = await this.client.worldEntity.findMany({
+      where: { campaignId, id: { in: [sourceEntityId, draft.targetEntityId] } },
+      select: { id: true, name: true },
+    });
+    if (entities.length !== 2) {
+      return null;
+    }
+    const names = new Map(entities.map((entity) => [entity.id, entity.name]));
+    return this.client.$transaction(async (transaction) => {
+      const relation = await transaction.worldEntityRelation.create({
+        data: { campaignId, sourceEntityId, ...draft },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "ENTITY_RELATION_CREATED",
+          summary: "Weltobjekte verknüpft",
+          payload: {
+            relationId: relation.id,
+            sourceEntityId,
+            sourceName: names.get(sourceEntityId),
+            targetEntityId: draft.targetEntityId,
+            targetName: names.get(draft.targetEntityId),
+            type: draft.type,
+          },
+          source: "player",
+          reversible: true,
+        },
+      });
+      return mapRelation(relation);
+    });
+  }
+
+  public async listRelations(
+    campaignId: string,
+    entityId: string,
+  ): Promise<WorldEntityRelation[]> {
+    const relations = await this.client.worldEntityRelation.findMany({
+      where: {
+        campaignId,
+        OR: [{ sourceEntityId: entityId }, { targetEntityId: entityId }],
+      },
+      orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+    });
+    return relations.map(mapRelation);
+  }
+
+  public async removeRelation(
+    campaignId: string,
+    entityId: string,
+    relationId: string,
+  ): Promise<boolean> {
+    const relation = await this.client.worldEntityRelation.findFirst({
+      where: {
+        id: relationId,
+        campaignId,
+        OR: [{ sourceEntityId: entityId }, { targetEntityId: entityId }],
+      },
+    });
+    if (!relation) {
+      return false;
+    }
+    await this.client.$transaction(async (transaction) => {
+      await transaction.worldEntityRelation.delete({ where: { id: relation.id } });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "ENTITY_RELATION_REMOVED",
+          summary: "Verknüpfung entfernt",
+          payload: {
+            relationId: relation.id,
+            sourceEntityId: relation.sourceEntityId,
+            targetEntityId: relation.targetEntityId,
+            type: relation.type,
+          },
+          source: "player",
+          reversible: true,
+        },
+      });
+    });
+    return true;
   }
 }

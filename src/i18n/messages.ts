@@ -119,6 +119,32 @@ export interface MessageCatalog {
       destroyed: string;
       unknown: string;
     };
+    detailsTitle: string;
+    detailsHint: string;
+    detailFields: Record<"npc" | "location" | "faction" | "item", {
+      primary: string;
+      secondary: string;
+    }>;
+    relationsTitle: string;
+    relationsDescription: string;
+    relationTargetLabel: string;
+    relationTargetPlaceholder: string;
+    relationTypeLabel: string;
+    relationTypes: Record<
+      "located_at" | "member_of" | "owns" | "allied_with" | "hostile_to" | "connected_to",
+      string
+    >;
+    relationDescriptionLabel: string;
+    relationStatusLabel: string;
+    relationStatuses: { active: string; inactive: string };
+    relationCreateAction: string;
+    relationCreatingAction: string;
+    relationRemoveAction: string;
+    relationIncoming: string;
+    relationOutgoing: string;
+    relationEmpty: string;
+    relationValidationMessage: string;
+    relationSaveError: string;
     optionalHint: string;
     searchLabel: string;
     searchPlaceholder: string;
@@ -260,7 +286,7 @@ const germanMessages = {
     newEntity: "Weltobjekt erstellen",
     createTitle: "Ein Weltobjekt anlegen",
     createDescription:
-      "Halte die gemeinsame Basis fest. Typspezifische Details und Verknüpfungen folgen im nächsten Ausbau.",
+      "Halte die gemeinsame Basis und die passenden typspezifischen Details fest.",
     editTitle: "Weltobjekt bearbeiten",
     editDescription: "Aktualisiere den bekannten Zustand dieses Weltobjekts.",
     typeLabel: "Typ",
@@ -283,6 +309,38 @@ const germanMessages = {
       destroyed: "Zerstört",
       unknown: "Unbekannt",
     },
+    detailsTitle: "Typspezifische Angaben",
+    detailsHint: "Diese Angaben bleiben strukturiert und können später gezielt verwendet werden.",
+    detailFields: {
+      npc: { primary: "Rolle", secondary: "Motivation" },
+      location: { primary: "Region", secondary: "Atmosphäre" },
+      faction: { primary: "Ziel", secondary: "Einfluss" },
+      item: { primary: "Zweck", secondary: "Seltenheit" },
+    },
+    relationsTitle: "Beziehungen",
+    relationsDescription: "Verknüpfe dieses Weltobjekt gerichtet mit einem anderen Objekt der Kampagne.",
+    relationTargetLabel: "Zielobjekt",
+    relationTargetPlaceholder: "Ziel auswählen",
+    relationTypeLabel: "Beziehungstyp",
+    relationTypes: {
+      located_at: "befindet sich bei",
+      member_of: "gehört zu",
+      owns: "besitzt",
+      allied_with: "ist verbündet mit",
+      hostile_to: "ist verfeindet mit",
+      connected_to: "ist verbunden mit",
+    },
+    relationDescriptionLabel: "Beziehungsnotiz",
+    relationStatusLabel: "Status",
+    relationStatuses: { active: "Aktiv", inactive: "Inaktiv" },
+    relationCreateAction: "Beziehung anlegen",
+    relationCreatingAction: "Beziehung wird angelegt …",
+    relationRemoveAction: "Beziehung entfernen",
+    relationIncoming: "Eingehend",
+    relationOutgoing: "Ausgehend",
+    relationEmpty: "Noch keine Beziehungen vorhanden.",
+    relationValidationMessage: "Bitte prüfe die Beziehungsangaben.",
+    relationSaveError: "Die Beziehung konnte nicht gespeichert werden.",
     optionalHint: "optional",
     searchLabel: "Weltregister durchsuchen",
     searchPlaceholder: "Name, Kurzfassung oder Tag",
@@ -423,7 +481,7 @@ const englishMessages = {
     newEntity: "Create world entity",
     createTitle: "Create a world entity",
     createDescription:
-      "Record the shared foundation. Type-specific details and links follow in the next increment.",
+      "Record the shared foundation and the matching type-specific details.",
     editTitle: "Edit world entity",
     editDescription: "Update the known state of this world entity.",
     typeLabel: "Type",
@@ -446,6 +504,38 @@ const englishMessages = {
       destroyed: "Destroyed",
       unknown: "Unknown",
     },
+    detailsTitle: "Type-specific details",
+    detailsHint: "These structured details can be used selectively in future features.",
+    detailFields: {
+      npc: { primary: "Role", secondary: "Motivation" },
+      location: { primary: "Region", secondary: "Atmosphere" },
+      faction: { primary: "Goal", secondary: "Influence" },
+      item: { primary: "Purpose", secondary: "Rarity" },
+    },
+    relationsTitle: "Relations",
+    relationsDescription: "Create a directed link from this entity to another campaign entity.",
+    relationTargetLabel: "Target entity",
+    relationTargetPlaceholder: "Choose a target",
+    relationTypeLabel: "Relation type",
+    relationTypes: {
+      located_at: "is located at",
+      member_of: "is a member of",
+      owns: "owns",
+      allied_with: "is allied with",
+      hostile_to: "is hostile to",
+      connected_to: "is connected to",
+    },
+    relationDescriptionLabel: "Relation note",
+    relationStatusLabel: "Status",
+    relationStatuses: { active: "Active", inactive: "Inactive" },
+    relationCreateAction: "Create relation",
+    relationCreatingAction: "Creating relation …",
+    relationRemoveAction: "Remove relation",
+    relationIncoming: "Incoming",
+    relationOutgoing: "Outgoing",
+    relationEmpty: "No relations yet.",
+    relationValidationMessage: "Please check the relation fields.",
+    relationSaveError: "The relation could not be saved.",
     optionalHint: "optional",
     searchLabel: "Search world registry",
     searchPlaceholder: "Name, summary, or tag",

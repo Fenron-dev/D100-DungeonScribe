@@ -21,6 +21,7 @@ function firstValue(value: SearchValue): string | undefined {
 
 function WorldEntityCard({ entity }: { entity: WorldEntity }) {
   const copy = getMessages().worldEntities;
+  const details = getDetails(entity);
 
   return (
     <article className="world-entity-card">
@@ -34,6 +35,18 @@ function WorldEntityCard({ entity }: { entity: WorldEntity }) {
         </span>
       </div>
       <p>{entity.summary}</p>
+      {details.some((detail) => detail.value) ? (
+        <dl className="entity-details-list">
+          {details.map((detail) =>
+            detail.value ? (
+              <div key={detail.label}>
+                <dt>{detail.label}</dt>
+                <dd>{detail.value}</dd>
+              </div>
+            ) : null,
+          )}
+        </dl>
+      ) : null}
       {entity.tags.length > 0 ? (
         <ul className="entity-tags" aria-label={copy.tagsLabel}>
           {entity.tags.map((tag) => (
@@ -49,6 +62,28 @@ function WorldEntityCard({ entity }: { entity: WorldEntity }) {
       </Link>
     </article>
   );
+}
+
+function getDetails(entity: WorldEntity): Array<{ label: string; value: string | null }> {
+  const labels = getMessages().worldEntities.detailFields[entity.type];
+  switch (entity.details.type) {
+    case "npc": return [
+      { label: labels.primary, value: entity.details.role },
+      { label: labels.secondary, value: entity.details.motivation },
+    ];
+    case "location": return [
+      { label: labels.primary, value: entity.details.region },
+      { label: labels.secondary, value: entity.details.atmosphere },
+    ];
+    case "faction": return [
+      { label: labels.primary, value: entity.details.goal },
+      { label: labels.secondary, value: entity.details.influence },
+    ];
+    case "item": return [
+      { label: labels.primary, value: entity.details.purpose },
+      { label: labels.secondary, value: entity.details.rarity },
+    ];
+  }
 }
 
 export default async function WorldRegistryPage({

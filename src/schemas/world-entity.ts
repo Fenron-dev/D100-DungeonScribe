@@ -1,5 +1,7 @@
 import { z } from "zod";
 import {
+  worldEntityRelationStatuses,
+  worldEntityRelationTypes,
   worldEntityStatuses,
   worldEntityTypes,
 } from "@/domain/world-entity";
@@ -24,6 +26,25 @@ export const worldEntityTagsSchema = z
     message: "Tags dürfen nicht doppelt vorkommen.",
   });
 
+const optionalDetail = z
+  .string()
+  .trim()
+  .max(200, "Eine Detailangabe darf höchstens 200 Zeichen enthalten.")
+  .transform((value) => (value.length > 0 ? value : null))
+  .nullable()
+  .default(null);
+
+export const worldEntityDetailsSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("npc"), role: optionalDetail, motivation: optionalDetail }),
+  z.object({
+    type: z.literal("location"),
+    region: optionalDetail,
+    atmosphere: optionalDetail,
+  }),
+  z.object({ type: z.literal("faction"), goal: optionalDetail, influence: optionalDetail }),
+  z.object({ type: z.literal("item"), purpose: optionalDetail, rarity: optionalDetail }),
+]);
+
 export const worldEntityDraftSchema = z.object({
   type: z.enum(worldEntityTypes),
   name: z
@@ -39,6 +60,15 @@ export const worldEntityDraftSchema = z.object({
   description: optionalDescription,
   tags: worldEntityTagsSchema,
   status: z.enum(worldEntityStatuses),
+  details: worldEntityDetailsSchema,
+}).superRefine((entity, context) => {
+  if (entity.type !== entity.details.type) {
+    context.addIssue({
+      code: "custom",
+      path: ["details"],
+      message: "Die typspezifischen Angaben passen nicht zum Weltobjekttyp.",
+    });
+  }
 });
 
 export const worldEntityIdSchema = z
@@ -51,3 +81,21 @@ export const worldEntityFilterSchema = z.object({
   query: z.string().trim().max(120).optional(),
   type: z.enum(worldEntityTypes).optional(),
 });
+
+export const worldEntityRelationDraftSchema = z.object({
+  targetEntityId: worldEntityIdSchema,
+  type: z.enum(worldEntityRelationTypes),
+  description: z
+    .string()
+    .trim()
+    .max(500, "Die Beziehungsbeschreibung darf höchstens 500 Zeichen enthalten.")
+    .transform((value) => (value.length > 0 ? value : null))
+    .nullable(),
+  status: z.enum(worldEntityRelationStatuses),
+});
+
+export const worldEntityRelationIdSchema = z
+  .string()
+  .trim()
+  .min(1, "Beziehungs-ID fehlt.")
+  .max(64, "Beziehungs-ID ist ungültig.");

@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import type { WorldEntityDraft } from "@/domain/world-entity";
+import { useActionState, useState } from "react";
+import type { WorldEntityDraft, WorldEntityType } from "@/domain/world-entity";
 import type { WorldEntityFormAction } from "@/features/world-entities/form-state";
 import { initialWorldEntityFormState } from "@/features/world-entities/form-state";
 import type { getMessages } from "@/i18n/messages";
@@ -31,6 +31,9 @@ export function WorldEntityForm({
   messages,
   mode,
 }: WorldEntityFormProps) {
+  const [selectedType, setSelectedType] = useState<WorldEntityType | "">(
+    entity?.type ?? "",
+  );
   const [state, formAction, isPending] = useActionState(
     action,
     initialWorldEntityFormState,
@@ -56,6 +59,9 @@ export function WorldEntityForm({
             name="type"
             defaultValue={entity?.type ?? ""}
             aria-invalid={state.errors.type.length > 0}
+            onChange={(event) =>
+              setSelectedType(event.target.value as WorldEntityType | "")
+            }
             required
           >
             <option value="" disabled>{copy.typePlaceholder}</option>
@@ -83,6 +89,40 @@ export function WorldEntityForm({
           <ErrorList errors={state.errors.status} />
         </div>
       </div>
+
+      {selectedType ? (
+        <fieldset className="entity-details-fields" key={selectedType}>
+          <legend>{copy.detailsTitle}</legend>
+          <p className="field-hint">{copy.detailsHint}</p>
+          <div className="form-columns">
+            <div className="form-field">
+              <label htmlFor="world-entity-detail-primary">
+                {copy.detailFields[selectedType].primary} <span>({copy.optionalHint})</span>
+              </label>
+              <input
+                id="world-entity-detail-primary"
+                name="detailPrimary"
+                type="text"
+                defaultValue={getDetailValues(entity, selectedType).primary}
+                maxLength={200}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="world-entity-detail-secondary">
+                {copy.detailFields[selectedType].secondary} <span>({copy.optionalHint})</span>
+              </label>
+              <input
+                id="world-entity-detail-secondary"
+                name="detailSecondary"
+                type="text"
+                defaultValue={getDetailValues(entity, selectedType).secondary}
+                maxLength={200}
+              />
+            </div>
+          </div>
+          <ErrorList errors={state.errors.details} />
+        </fieldset>
+      ) : null}
 
       <div className="form-field">
         <label htmlFor="world-entity-name">{copy.nameLabel}</label>
@@ -154,4 +194,21 @@ export function WorldEntityForm({
       </button>
     </form>
   );
+}
+
+function getDetailValues(entity: WorldEntityDraft | undefined, type: WorldEntityType): {
+  primary: string;
+  secondary: string;
+} {
+  if (!entity || entity.details.type !== type) return { primary: "", secondary: "" };
+  switch (entity.details.type) {
+    case "npc":
+      return { primary: entity.details.role ?? "", secondary: entity.details.motivation ?? "" };
+    case "location":
+      return { primary: entity.details.region ?? "", secondary: entity.details.atmosphere ?? "" };
+    case "faction":
+      return { primary: entity.details.goal ?? "", secondary: entity.details.influence ?? "" };
+    case "item":
+      return { primary: entity.details.purpose ?? "", secondary: entity.details.rarity ?? "" };
+  }
 }

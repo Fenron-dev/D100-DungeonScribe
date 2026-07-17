@@ -38,6 +38,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.waitForTimeout(1_000);
   await page.getByLabel("Typ").selectOption("location");
   await page.getByLabel("Name").fill("Leuchtturm der Nebelwacht");
+  await page.getByLabel("Region").fill("Nordküste");
+  await page.getByLabel("Atmosphäre").fill("Neblig und windgepeitscht");
   await page
     .getByLabel("Kurzfassung")
     .fill("Der letzte sichere Ort an der Nordküste.");
@@ -54,6 +56,26 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByLabel("Name").fill("Die Nebelwacht");
   await page.getByRole("button", { name: "Änderungen speichern" }).click();
   await expect(page.getByRole("heading", { name: "Die Nebelwacht" })).toBeVisible();
+
+  await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
+  await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(1_000);
+  await page.getByLabel("Typ").selectOption("faction");
+  await page.getByLabel("Name").fill("Bund der Lotsen");
+  await page.getByLabel("Ziel").fill("Die sicheren Seewege bewahren");
+  await page.getByLabel("Einfluss").fill("Nordküste");
+  await page.getByLabel("Kurzfassung").fill("Ein alter Bund aus Küstenlotsen.");
+  await page.getByRole("button", { name: "Weltobjekt speichern" }).click();
+  await expect(page.getByRole("heading", { name: "Bund der Lotsen" })).toBeVisible();
+
+  const factionCard = page.getByRole("article").filter({ hasText: "Bund der Lotsen" });
+  await factionCard.getByRole("link", { name: "Bearbeiten" }).click();
+  await page.getByLabel("Zielobjekt").selectOption({ label: "Die Nebelwacht (Ort)" });
+  await page.getByLabel("Beziehungstyp").selectOption("located_at");
+  await page.getByLabel("Beziehungsnotiz").fill("Hauptquartier des Bundes");
+  await page.getByRole("button", { name: "Beziehung anlegen" }).click();
+  await expect(page.getByText("Bund der Lotsen befindet sich bei Die Nebelwacht")).toBeVisible();
+  await page.getByRole("link", { name: "Zum Weltregister" }).click();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
 
   await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();

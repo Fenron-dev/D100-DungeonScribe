@@ -140,11 +140,13 @@ jobs:
             CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
             CHARACTER_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Character;')"
             ENTITY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntity;')"
+            RELATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntityRelation;')"
             EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
             test "$CAMPAIGN_COUNT" = "1"
             test "$CHARACTER_COUNT" = "1"
-            test "$ENTITY_COUNT" = "1"
-            test "$EVENT_COUNT" = "7"
+            test "$ENTITY_COUNT" = "2"
+            test "$RELATION_COUNT" = "1"
+            test "$EVENT_COUNT" = "9"
           fi
 
       - name: Create archive and checksum

@@ -867,6 +867,98 @@ h2 {
   font-size: 0.78rem;
 }
 
+.entity-details-fields,
+.relation-section {
+  margin: 1.5rem 0 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.entity-details-fields legend {
+  padding: 0 0.4rem;
+  font-weight: 800;
+}
+
+.entity-details-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+}
+
+.entity-details-list div {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.35fr) 1fr;
+  gap: 0.75rem;
+}
+
+.entity-details-list dt {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.entity-details-list dd {
+  margin: 0;
+}
+
+.relation-section {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  background: rgb(255 255 255 / 2%);
+}
+
+.relation-section h2,
+.relation-section p {
+  margin-top: 0;
+}
+
+.relation-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.relation-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.relation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.relation-card p:last-child {
+  margin: 0.35rem 0 0;
+  color: var(--color-muted);
+}
+
+.relation-card .entity-status {
+  display: inline-block;
+  margin: 0.5rem 0 0;
+}
+
+.text-button {
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.danger-text {
+  color: #ffc1b4;
+}
+
 @media (max-width: 48rem) {
   .site-header {
     align-items: flex-start;
@@ -912,6 +1004,11 @@ h2 {
   .world-filter {
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .relation-card {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

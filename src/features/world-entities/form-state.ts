@@ -5,6 +5,7 @@ export interface WorldEntityFormErrors {
   description: string[];
   tags: string[];
   status: string[];
+  details: string[];
 }
 
 export interface WorldEntityFormState {
@@ -21,6 +22,7 @@ export const initialWorldEntityFormState: WorldEntityFormState = {
     description: [],
     tags: [],
     status: [],
+    details: [],
   },
 };
 

@@ -1,6 +1,7 @@
 import type {
   WorldEntity,
   WorldEntityFilter,
+  WorldEntityRelation,
 } from "@/domain/world-entity";
 import type { WorldEntityRepository } from "@/repositories/world-entity-repository";
 import { campaignIdSchema } from "@/schemas/campaign";
@@ -8,12 +9,21 @@ import {
   worldEntityDraftSchema,
   worldEntityFilterSchema,
   worldEntityIdSchema,
+  worldEntityRelationDraftSchema,
+  worldEntityRelationIdSchema,
 } from "@/schemas/world-entity";
 
 export class WorldEntityNotFoundError extends Error {
   public constructor() {
     super("World entity or campaign not found.");
     this.name = "WorldEntityNotFoundError";
+  }
+}
+
+export class InvalidWorldEntityRelationError extends Error {
+  public constructor(message = "A world entity cannot relate to itself.") {
+    super(message);
+    this.name = "InvalidWorldEntityRelationError";
   }
 }
 
@@ -79,5 +89,52 @@ export class WorldEntityService {
       throw new WorldEntityNotFoundError();
     }
     return entity;
+  }
+
+  public async createRelation(
+    campaignId: string,
+    sourceEntityId: string,
+    input: unknown,
+  ): Promise<WorldEntityRelation> {
+    const validCampaignId = campaignIdSchema.parse(campaignId);
+    const validSourceId = worldEntityIdSchema.parse(sourceEntityId);
+    const draft = worldEntityRelationDraftSchema.parse(input);
+    if (validSourceId === draft.targetEntityId) {
+      throw new InvalidWorldEntityRelationError();
+    }
+    const relation = await this.repository.createRelation(
+      validCampaignId,
+      validSourceId,
+      draft,
+    );
+    if (!relation) {
+      throw new WorldEntityNotFoundError();
+    }
+    return relation;
+  }
+
+  public async listRelations(
+    campaignId: string,
+    entityId: string,
+  ): Promise<WorldEntityRelation[]> {
+    return this.repository.listRelations(
+      campaignIdSchema.parse(campaignId),
+      worldEntityIdSchema.parse(entityId),
+    );
+  }
+
+  public async removeRelation(
+    campaignId: string,
+    entityId: string,
+    relationId: string,
+  ): Promise<void> {
+    const removed = await this.repository.removeRelation(
+      campaignIdSchema.parse(campaignId),
+      worldEntityIdSchema.parse(entityId),
+      worldEntityRelationIdSchema.parse(relationId),
+    );
+    if (!removed) {
+      throw new WorldEntityNotFoundError();
+    }
   }
 }
