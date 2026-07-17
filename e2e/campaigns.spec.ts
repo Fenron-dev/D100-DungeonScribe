@@ -84,6 +84,29 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
   ).toBeVisible();
 
+  await page.getByRole("link", { name: "Wissen öffnen" }).click();
+  await page.getByRole("link", { name: "Wissenseintrag erstellen" }).click();
+  await page.getByLabel("Wissensart").selectOption("secret");
+  await page.getByLabel("Wahrheitsstatus").selectOption("true");
+  await page.getByLabel("Titel").fill("Das Licht der Nebelwacht");
+  await page
+    .getByLabel("Inhalt")
+    .fill("Das Leuchtfeuer zieht die Kreaturen aus dem Nebel an.");
+  await page.getByLabel("Elara aus dem Nebel").check();
+  await page.getByLabel("Die Nebelwacht · Ort").check();
+  await page.getByLabel("Eintrag fixieren").check();
+  await page.getByRole("button", { name: "Wissenseintrag speichern" }).click();
+  await expect(page.getByRole("heading", { name: "Das Licht der Nebelwacht" })).toBeVisible();
+  await expect(page.getByText("Fixiert", { exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();
+  await page.getByLabel("Titel").fill("Die Wahrheit der Nebelwacht");
+  await page.getByRole("button", { name: "Änderungen speichern" }).click();
+  await expect(page.getByRole("heading", { name: "Die Wahrheit der Nebelwacht" })).toBeVisible();
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
+  ).toBeVisible();
+
   await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();
   await page.getByLabel("Name").fill("Die wiedergekehrte Straße");
   await page.getByRole("button", { name: "Änderungen speichern" }).click();

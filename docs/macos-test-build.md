@@ -1,9 +1,8 @@
 # macOS-Testbuild
 
-Der Workflow **macOS Test Build** erzeugt eigenständig startbare Testpakete für beide unterstützten Mac-Architekturen:
+Der Workflow **macOS Test Build** erzeugt ein eigenständig startbares Testpaket für Apple-Silicon-Macs:
 
 - Apple Silicon (`macos-15`, arm64)
-- Intel (`macos-15-intel`, x64)
 
 Die Runnerbezeichnungen entsprechen der [offiziellen GitHub-Runnerreferenz](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 
@@ -12,16 +11,11 @@ Die Runnerbezeichnungen entsprechen der [offiziellen GitHub-Runnerreferenz](http
 1. Im GitHub-Repository **Actions** öffnen.
 2. **macOS Test Build** auswählen.
 3. **Run workflow** für `main` starten.
-4. Nach erfolgreichem Abschluss das passende Artefakt herunterladen.
+4. Nach erfolgreichem Abschluss das Artefakt **D100-DungeonScribe-macOS-Apple-Silicon** herunterladen.
 
 Der Workflow läuft außerdem für Tags mit dem Präfix `test-build-`.
 
-## Passendes Paket wählen
-
-- Macs mit M1, M2, M3, M4 oder neuer verwenden **Apple Silicon**.
-- Ältere Macs mit Intel-Prozessor verwenden **Intel**.
-
-Die Architektur steht unter **Apple-Menü → Über diesen Mac**.
+Das Paket unterstützt Macs mit M1, M2, M3, M4 oder neuer. Ein Intel-Paket wird nicht mehr erzeugt.
 
 ## Anwendung starten
 
@@ -57,4 +51,4 @@ Jedes Artefakt enthält:
 - Startskript und Nutzungshinweise
 - Node.js-Lizenz
 
-Vor dem Upload führt der Workflow den Secret-Scan, den Produktions-Build, die Signaturprüfung nativer Module, alle Datenbankmigrationen und einen Start-/HTTP-Smoke-Test des fertig zusammengestellten Pakets aus. Für diesen Test wird das SQLite-Modul absichtlich mit einer Quarantänemarkierung versehen; der Start ist nur erfolgreich, wenn `Start.command` sie wieder entfernt. Neben dem Archiv wird eine SHA-256-Prüfsumme erzeugt.
+Vor dem Upload führt der Workflow den Secret-Scan, den Produktions-Build, die Signaturprüfung nativer Module, alle Datenbankmigrationen und den vollständigen Browser-Speichertest des fertig zusammengestellten Pakets aus. Für diesen Test wird das SQLite-Modul absichtlich mit einer Quarantänemarkierung versehen; der Start ist nur erfolgreich, wenn `Start.command` sie wieder entfernt. Neben dem Archiv wird eine SHA-256-Prüfsumme erzeugt.

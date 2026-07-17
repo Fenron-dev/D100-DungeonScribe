@@ -34,6 +34,8 @@ Weltobjektbeziehungen sind gerichtete Datensätze mit Quelle, Ziel, stabilem Typ
 
 Trennt Weltwahrheit von bekanntem oder vermutetem Wissen. Ein Eintrag besitzt Typ, Wahrheitsstatus, Wissende, Beziehungen, Quelle und Sperrstatus.
 
+Der erste vertikale Wissensbaustein speichert alle sechs Wissensarten, einen der vier Wahrheitswerte, eine explizite Liste wissender Charaktere, Verknüpfungen zu Weltobjekten und den Fixierungsstatus. Leere Wissendenlisten bedeuten ausdrücklich, dass kein Charakter den Eintrag kennt. Referenzierte Charaktere und Weltobjekte müssen zur gleichen Kampagne gehören. Erstellen und manuelles Bearbeiten erzeugen atomar `KNOWLEDGE_DISCOVERED` beziehungsweise `KNOWLEDGE_UPDATED`; der Erstellungsdatensatz verweist auf sein Quellereignis.
+
 ### StoryThread
 
 Beschreibt einen offenen, ruhenden, gelösten oder gescheiterten Handlungsstrang mit Dringlichkeit, Fortschritt und möglichen Entwicklungen.

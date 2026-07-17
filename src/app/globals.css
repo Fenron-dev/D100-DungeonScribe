@@ -970,6 +970,136 @@ h2 {
   color: #ffc1b4;
 }
 
+.knowledge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 1rem;
+}
+
+.knowledge-card {
+  display: flex;
+  min-height: 22rem;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: linear-gradient(145deg, rgb(27 36 32 / 92%), rgb(15 21 18 / 98%));
+}
+
+.knowledge-card h2 {
+  margin: 0;
+  font-size: 1.65rem;
+}
+
+.knowledge-card > p {
+  color: var(--color-muted);
+  white-space: pre-wrap;
+}
+
+.knowledge-secret {
+  border-color: rgb(201 112 94 / 48%);
+}
+
+.knowledge-rumor,
+.knowledge-assumption {
+  border-color: rgb(240 199 113 / 42%);
+}
+
+.knowledge-lock {
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgb(240 199 113 / 55%);
+  border-radius: 99rem;
+  color: var(--color-accent-strong);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.knowledge-metadata {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0 0 1.25rem;
+}
+
+.knowledge-metadata div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.4fr) 1fr;
+  gap: 0.75rem;
+}
+
+.knowledge-metadata dt {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.knowledge-metadata dd {
+  margin: 0;
+}
+
+.knowledge-card > .text-link {
+  margin-top: auto;
+}
+
+.selection-fieldset {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.selection-fieldset legend {
+  padding: 0 0.4rem;
+  font-weight: 800;
+}
+
+.selection-fieldset > p {
+  margin-top: 0;
+  color: var(--color-muted);
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.65rem;
+}
+
+.checkbox-card,
+.lock-control {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: rgb(255 255 255 / 2%);
+  cursor: pointer;
+}
+
+.checkbox-card input,
+.lock-control input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.1rem;
+  accent-color: var(--color-accent);
+}
+
+.lock-control strong,
+.lock-control small {
+  display: block;
+}
+
+.lock-control small {
+  margin-top: 0.25rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.empty-inline {
+  margin-bottom: 0;
+  font-style: italic;
+}
+
 @media (max-width: 48rem) {
   .site-header {
     align-items: flex-start;

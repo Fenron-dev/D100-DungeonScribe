@@ -161,6 +161,49 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
   };
+  knowledge: {
+    sectionTitle: string;
+    sectionDescription: string;
+    openRegistry: string;
+    title: string;
+    description: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    newEntry: string;
+    createTitle: string;
+    createDescription: string;
+    editTitle: string;
+    editDescription: string;
+    titleLabel: string;
+    contentLabel: string;
+    typeLabel: string;
+    typePlaceholder: string;
+    types: Record<
+      "fact" | "character_knowledge" | "rumor" | "secret" | "assumption" | "memory",
+      string
+    >;
+    truthStatusLabel: string;
+    truthStatuses: Record<"true" | "false" | "partially_true" | "unknown", string>;
+    knownByLabel: string;
+    knownByHint: string;
+    knownByNobody: string;
+    relatedEntitiesLabel: string;
+    relatedEntitiesHint: string;
+    noCharacters: string;
+    noEntities: string;
+    lockedLabel: string;
+    lockedHint: string;
+    lockedBadge: string;
+    createAction: string;
+    creatingAction: string;
+    editAction: string;
+    savingAction: string;
+    editLink: string;
+    backToCampaign: string;
+    backToRegistry: string;
+    validationMessage: string;
+    saveError: string;
+  };
   placeholders: {
     playTitle: string;
     campaignsTitle: string;
@@ -357,6 +400,64 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Das Weltobjekt konnte nicht gespeichert werden.",
   },
+  knowledge: {
+    sectionTitle: "Kampagnenwissen",
+    sectionDescription:
+      "Fakten, Charakterwissen, Gerüchte, Geheimnisse, Vermutungen und Erinnerungen bleiben sauber getrennt.",
+    openRegistry: "Wissen öffnen",
+    title: "Wissen dieser Kampagne",
+    description:
+      "Halte fest, was wahr ist, wer davon weiß und welche Informationen verborgen bleiben müssen.",
+    emptyTitle: "Noch kein Kampagnenwissen",
+    emptyDescription:
+      "Lege den ersten Fakt, ein Gerücht, ein Geheimnis oder eine Erinnerung an.",
+    newEntry: "Wissenseintrag erstellen",
+    createTitle: "Wissen festhalten",
+    createDescription:
+      "Die Wissensart und der Wahrheitsstatus bestimmen, wie dieser Eintrag später verwendet werden darf.",
+    editTitle: "Wissenseintrag bearbeiten",
+    editDescription: "Aktualisiere Inhalt, Zuordnung und Schutzstatus des Eintrags.",
+    titleLabel: "Titel",
+    contentLabel: "Inhalt",
+    typeLabel: "Wissensart",
+    typePlaceholder: "Wissensart auswählen",
+    types: {
+      fact: "Objektiver Fakt",
+      character_knowledge: "Charakterwissen",
+      rumor: "Gerücht",
+      secret: "Geheimnis",
+      assumption: "Vermutung",
+      memory: "Erinnerung",
+    },
+    truthStatusLabel: "Wahrheitsstatus",
+    truthStatuses: {
+      true: "Wahr",
+      false: "Falsch",
+      partially_true: "Teilweise wahr",
+      unknown: "Unbekannt",
+    },
+    knownByLabel: "Bekannt bei Charakteren",
+    knownByHint:
+      "Nicht ausgewählte Charaktere erhalten diesen Eintrag später nicht als bekanntes Wissen.",
+    knownByNobody: "Keinem Charakter bekannt",
+    relatedEntitiesLabel: "Verknüpfte Weltobjekte",
+    relatedEntitiesHint: "Optionaler Bezug zu Personen, Orten, Fraktionen oder Gegenständen.",
+    noCharacters: "In dieser Kampagne gibt es noch keine Charaktere.",
+    noEntities: "Im Weltregister gibt es noch keine Objekte.",
+    lockedLabel: "Eintrag fixieren",
+    lockedHint:
+      "Fixierte Einträge dürfen später nicht durch automatische Vorschläge überschrieben werden.",
+    lockedBadge: "Fixiert",
+    createAction: "Wissenseintrag speichern",
+    creatingAction: "Wissenseintrag wird gespeichert …",
+    editAction: "Änderungen speichern",
+    savingAction: "Änderungen werden gespeichert …",
+    editLink: "Bearbeiten",
+    backToCampaign: "Zur Kampagne",
+    backToRegistry: "Zum Kampagnenwissen",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Der Wissenseintrag konnte nicht gespeichert werden.",
+  },
   placeholders: {
     playTitle: "Spielen",
     campaignsTitle: "Kampagnen",
@@ -551,6 +652,62 @@ const englishMessages = {
     backToRegistry: "Back to world registry",
     validationMessage: "Please check the highlighted fields.",
     saveError: "The world entity could not be saved.",
+  },
+  knowledge: {
+    sectionTitle: "Campaign knowledge",
+    sectionDescription:
+      "Facts, character knowledge, rumors, secrets, assumptions, and memories remain clearly separated.",
+    openRegistry: "Open knowledge",
+    title: "This campaign's knowledge",
+    description:
+      "Record what is true, who knows it, and which information must remain hidden.",
+    emptyTitle: "No campaign knowledge yet",
+    emptyDescription: "Create the first fact, rumor, secret, or memory.",
+    newEntry: "Create knowledge entry",
+    createTitle: "Record knowledge",
+    createDescription:
+      "Knowledge type and truth status determine how this entry may be used later.",
+    editTitle: "Edit knowledge entry",
+    editDescription: "Update the entry's content, associations, and protection status.",
+    titleLabel: "Title",
+    contentLabel: "Content",
+    typeLabel: "Knowledge type",
+    typePlaceholder: "Choose a knowledge type",
+    types: {
+      fact: "Objective fact",
+      character_knowledge: "Character knowledge",
+      rumor: "Rumor",
+      secret: "Secret",
+      assumption: "Assumption",
+      memory: "Memory",
+    },
+    truthStatusLabel: "Truth status",
+    truthStatuses: {
+      true: "True",
+      false: "False",
+      partially_true: "Partially true",
+      unknown: "Unknown",
+    },
+    knownByLabel: "Known by characters",
+    knownByHint:
+      "Characters who are not selected will not receive this entry as known context later.",
+    knownByNobody: "Known by no character",
+    relatedEntitiesLabel: "Related world entities",
+    relatedEntitiesHint: "Optional links to people, locations, factions, or items.",
+    noCharacters: "This campaign has no characters yet.",
+    noEntities: "The world registry has no entities yet.",
+    lockedLabel: "Lock entry",
+    lockedHint: "Locked entries cannot be overwritten by automatic suggestions later.",
+    lockedBadge: "Locked",
+    createAction: "Save knowledge entry",
+    creatingAction: "Saving knowledge entry …",
+    editAction: "Save changes",
+    savingAction: "Saving changes …",
+    editLink: "Edit",
+    backToCampaign: "Back to campaign",
+    backToRegistry: "Back to campaign knowledge",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The knowledge entry could not be saved.",
   },
   placeholders: {
     playTitle: "Play",

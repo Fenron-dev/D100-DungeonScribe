@@ -14,19 +14,11 @@ env:
 
 jobs:
   build:
-    name: Build ${{ matrix.label }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - runner: macos-15
-            label: Apple Silicon
-            archive: D100-DungeonScribe-macOS-Apple-Silicon
-          - runner: macos-15-intel
-            label: Intel
-            archive: D100-DungeonScribe-macOS-Intel
-    runs-on: ${{ matrix.runner }}
+    name: Build Apple Silicon
+    runs-on: macos-15
     timeout-minutes: 30
+    env:
+      ARCHIVE_NAME: D100-DungeonScribe-macOS-Apple-Silicon
 
     steps:
       - name: Check out repository
@@ -55,8 +47,6 @@ jobs:
         run: npm run build
 
       - name: Assemble self-contained test package
-        env:
-          ARCHIVE_NAME: ${{ matrix.archive }}
         run: |
           BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
           mkdir -p "$BUNDLE_ROOT/.next" "$BUNDLE_ROOT/runtime"
@@ -79,16 +69,13 @@ jobs:
           done < <(find "$BUNDLE_ROOT" -type f -name "*.node" -print0)
 
       - name: Install browser for packaged persistence test
-        if: matrix.label == 'Apple Silicon'
         env:
           PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
         run: npx playwright install chromium
 
       - name: Smoke-test packaged application
         env:
-          ARCHIVE_NAME: ${{ matrix.archive }}
           PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
-          RUN_BROWSER_TEST: ${{ matrix.label == 'Apple Silicon' }}
         run: |
           BUNDLE_ROOT="$RUNNER_TEMP/$ARCHIVE_NAME"
           TEST_HOME="$RUNNER_TEMP/package-smoke-home"
@@ -129,29 +116,27 @@ jobs:
             exit 1
           fi
 
-          if [[ "$RUN_BROWSER_TEST" == "true" ]]; then
-            if ! PLAYWRIGHT_BASE_URL="http://127.0.0.1:3210" \
-              npx playwright test e2e/campaigns.spec.ts --project=chromium --retries=0; then
-              cat "$RUNNER_TEMP/package-server.log"
-              exit 1
-            fi
-
-            TEST_DATABASE="$TEST_HOME/Library/Application Support/D100 DungeonScribe/dungeonscribe.db"
-            CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
-            CHARACTER_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Character;')"
-            ENTITY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntity;')"
-            RELATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntityRelation;')"
-            EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
-            test "$CAMPAIGN_COUNT" = "1"
-            test "$CHARACTER_COUNT" = "1"
-            test "$ENTITY_COUNT" = "2"
-            test "$RELATION_COUNT" = "1"
-            test "$EVENT_COUNT" = "9"
+          if ! PLAYWRIGHT_BASE_URL="http://127.0.0.1:3210" \
+            npx playwright test e2e/campaigns.spec.ts --project=chromium --retries=0; then
+            cat "$RUNNER_TEMP/package-server.log"
+            exit 1
           fi
 
+          TEST_DATABASE="$TEST_HOME/Library/Application Support/D100 DungeonScribe/dungeonscribe.db"
+          CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
+          CHARACTER_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Character;')"
+          ENTITY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntity;')"
+          RELATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntityRelation;')"
+          KNOWLEDGE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM KnowledgeEntry;')"
+          EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
+          test "$CAMPAIGN_COUNT" = "1"
+          test "$CHARACTER_COUNT" = "1"
+          test "$ENTITY_COUNT" = "2"
+          test "$RELATION_COUNT" = "1"
+          test "$KNOWLEDGE_COUNT" = "1"
+          test "$EVENT_COUNT" = "11"
+
       - name: Create archive and checksum
-        env:
-          ARCHIVE_NAME: ${{ matrix.archive }}
         run: |
           mkdir -p dist
           COPYFILE_DISABLE=1 tar -C "$RUNNER_TEMP" -czf "dist/$ARCHIVE_NAME.tar.gz" "$ARCHIVE_NAME"
@@ -161,9 +146,9 @@ jobs:
       - name: Upload macOS test package
         uses: actions/upload-artifact@v5
         with:
-          name: ${{ matrix.archive }}
+          name: D100-DungeonScribe-macOS-Apple-Silicon
           path: |
-            dist/${{ matrix.archive }}.tar.gz
-            dist/${{ matrix.archive }}.tar.gz.sha256
+            dist/D100-DungeonScribe-macOS-Apple-Silicon.tar.gz
+            dist/D100-DungeonScribe-macOS-Apple-Silicon.tar.gz.sha256
           if-no-files-found: error
           retention-days: 14

@@ -29,8 +29,28 @@ model Campaign {
   characters Character[]
   worldEntities WorldEntity[]
   worldEntityRelations WorldEntityRelation[]
+  knowledgeEntries KnowledgeEntry[]
 
   @@index([status, updatedAt])
+}
+
+model KnowledgeEntry {
+  id                    String   @id @default(cuid())
+  campaignId            String
+  title                 String
+  content               String
+  type                  String
+  truthStatus           String
+  knownByCharacterIds   Json
+  relatedEntityIds      Json
+  sourceEventId         String?
+  locked                Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, type, updatedAt])
 }
 
 model Character {
