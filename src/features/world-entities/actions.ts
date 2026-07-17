@@ -16,17 +16,27 @@ function readText(formData: FormData, key: string): string {
 
 function parseForm(formData: FormData) {
   const type = readText(formData, "type");
-  const primary = readText(formData, "detailPrimary");
-  const secondary = readText(formData, "detailSecondary");
   const details: Record<string, unknown> = { type };
   if (type === "npc") {
-    Object.assign(details, { role: primary, motivation: secondary });
+    Object.assign(details, {
+      role: readText(formData, "npcRole"),
+      motivation: readText(formData, "npcMotivation"),
+    });
   } else if (type === "location") {
-    Object.assign(details, { region: primary, atmosphere: secondary });
+    Object.assign(details, {
+      region: readText(formData, "locationRegion"),
+      atmosphere: readText(formData, "locationAtmosphere"),
+    });
   } else if (type === "faction") {
-    Object.assign(details, { goal: primary, influence: secondary });
+    Object.assign(details, {
+      goal: readText(formData, "factionGoal"),
+      influence: readText(formData, "factionInfluence"),
+    });
   } else if (type === "item") {
-    Object.assign(details, { purpose: primary, rarity: secondary });
+    Object.assign(details, {
+      purpose: readText(formData, "itemPurpose"),
+      rarity: readText(formData, "itemRarity"),
+    });
   }
   return worldEntityDraftSchema.safeParse({
     type,
