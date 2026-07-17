@@ -1100,6 +1100,106 @@ h2 {
   font-style: italic;
 }
 
+.chronicle-filter {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: rgb(255 255 255 / 2%);
+}
+
+.chronicle-filter .form-field {
+  flex: 1;
+}
+
+.chronicle-filter .text-link {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.chronicle-result {
+  margin: 0 0 1.5rem;
+  color: var(--color-muted);
+}
+
+.chronicle-list {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 0 0 2rem;
+  list-style: none;
+}
+
+.chronicle-list::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.45rem;
+  width: 1px;
+  background: var(--color-border);
+  content: "";
+}
+
+.chronicle-event {
+  position: relative;
+}
+
+.chronicle-marker {
+  position: absolute;
+  top: 1.5rem;
+  left: -1.9rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--color-background);
+  border-radius: 50%;
+  background: var(--color-accent-strong);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.chronicle-event-knowledge .chronicle-marker {
+  background: #c99085;
+}
+
+.chronicle-event-world .chronicle-marker {
+  background: #86b69a;
+}
+
+.chronicle-event article {
+  padding: 1.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: linear-gradient(145deg, rgb(27 36 32 / 90%), rgb(15 21 18 / 96%));
+}
+
+.chronicle-event-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chronicle-event h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.chronicle-event article > p:not(.chronicle-meta) {
+  color: var(--color-muted);
+}
+
+.chronicle-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
 @media (max-width: 48rem) {
   .site-header {
     align-items: flex-start;
@@ -1149,6 +1249,11 @@ h2 {
 
   .relation-card {
     align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .chronicle-filter {
+    align-items: stretch;
     flex-direction: column;
   }
 }

@@ -204,6 +204,40 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
   };
+  chronicle: {
+    sectionTitle: string;
+    sectionDescription: string;
+    openChronicle: string;
+    title: string;
+    description: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    filterLabel: string;
+    filterAction: string;
+    resetFilter: string;
+    resultLabel: string;
+    backToCampaign: string;
+    categories: Record<
+      "all" | "campaign" | "characters" | "world" | "knowledge",
+      string
+    >;
+    eventTypes: Record<
+      | "CAMPAIGN_CREATED"
+      | "CAMPAIGN_UPDATED"
+      | "CAMPAIGN_ARCHIVED"
+      | "CHARACTER_CREATED"
+      | "CHARACTER_UPDATED"
+      | "ENTITY_CREATED"
+      | "ENTITY_UPDATED"
+      | "ENTITY_RELATION_CREATED"
+      | "ENTITY_RELATION_REMOVED"
+      | "KNOWLEDGE_DISCOVERED"
+      | "KNOWLEDGE_UPDATED",
+      string
+    >;
+    sources: Record<"player" | "rule_engine" | "oracle" | "ai" | "manual", string>;
+    reversibleBadge: string;
+  };
   placeholders: {
     playTitle: string;
     campaignsTitle: string;
@@ -458,6 +492,50 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Der Wissenseintrag konnte nicht gespeichert werden.",
   },
+  chronicle: {
+    sectionTitle: "Chronik",
+    sectionDescription:
+      "Alle verbindlichen Änderungen dieser Kampagne bleiben zeitlich geordnet und nachvollziehbar.",
+    openChronicle: "Chronik öffnen",
+    title: "Chronik der Kampagne",
+    description:
+      "Die Chronik zeigt gespeicherte Zustandsänderungen, ohne technische Rohdaten offenzulegen.",
+    emptyTitle: "Keine Ereignisse in dieser Auswahl",
+    emptyDescription: "Wähle eine andere Kategorie oder setze den Filter zurück.",
+    filterLabel: "Chronik filtern",
+    filterAction: "Filtern",
+    resetFilter: "Filter zurücksetzen",
+    resultLabel: "Ereignisse",
+    backToCampaign: "Zur Kampagne",
+    categories: {
+      all: "Alle Bereiche",
+      campaign: "Kampagne",
+      characters: "Charaktere",
+      world: "Weltregister",
+      knowledge: "Wissen",
+    },
+    eventTypes: {
+      CAMPAIGN_CREATED: "Kampagne begonnen",
+      CAMPAIGN_UPDATED: "Kampagne geändert",
+      CAMPAIGN_ARCHIVED: "Kampagne archiviert",
+      CHARACTER_CREATED: "Charakter erschaffen",
+      CHARACTER_UPDATED: "Charakter geändert",
+      ENTITY_CREATED: "Weltobjekt angelegt",
+      ENTITY_UPDATED: "Weltobjekt geändert",
+      ENTITY_RELATION_CREATED: "Beziehung angelegt",
+      ENTITY_RELATION_REMOVED: "Beziehung entfernt",
+      KNOWLEDGE_DISCOVERED: "Wissen festgehalten",
+      KNOWLEDGE_UPDATED: "Wissen geändert",
+    },
+    sources: {
+      player: "Spieler",
+      rule_engine: "Regel-Engine",
+      oracle: "Orakel",
+      ai: "Bestätigter KI-Vorschlag",
+      manual: "Manuell",
+    },
+    reversibleBadge: "Änderbar",
+  },
   placeholders: {
     playTitle: "Spielen",
     campaignsTitle: "Kampagnen",
@@ -708,6 +786,50 @@ const englishMessages = {
     backToRegistry: "Back to campaign knowledge",
     validationMessage: "Please check the highlighted fields.",
     saveError: "The knowledge entry could not be saved.",
+  },
+  chronicle: {
+    sectionTitle: "Chronicle",
+    sectionDescription:
+      "Every binding campaign change remains ordered by time and traceable.",
+    openChronicle: "Open chronicle",
+    title: "Campaign chronicle",
+    description:
+      "The chronicle shows stored state changes without exposing technical raw data.",
+    emptyTitle: "No events in this selection",
+    emptyDescription: "Choose another category or reset the filter.",
+    filterLabel: "Filter chronicle",
+    filterAction: "Filter",
+    resetFilter: "Reset filter",
+    resultLabel: "Events",
+    backToCampaign: "Back to campaign",
+    categories: {
+      all: "All areas",
+      campaign: "Campaign",
+      characters: "Characters",
+      world: "World registry",
+      knowledge: "Knowledge",
+    },
+    eventTypes: {
+      CAMPAIGN_CREATED: "Campaign started",
+      CAMPAIGN_UPDATED: "Campaign changed",
+      CAMPAIGN_ARCHIVED: "Campaign archived",
+      CHARACTER_CREATED: "Character created",
+      CHARACTER_UPDATED: "Character changed",
+      ENTITY_CREATED: "World entity created",
+      ENTITY_UPDATED: "World entity changed",
+      ENTITY_RELATION_CREATED: "Relation created",
+      ENTITY_RELATION_REMOVED: "Relation removed",
+      KNOWLEDGE_DISCOVERED: "Knowledge recorded",
+      KNOWLEDGE_UPDATED: "Knowledge changed",
+    },
+    sources: {
+      player: "Player",
+      rule_engine: "Rules engine",
+      oracle: "Oracle",
+      ai: "Approved AI proposal",
+      manual: "Manual",
+    },
+    reversibleBadge: "Changeable",
   },
   placeholders: {
     playTitle: "Play",

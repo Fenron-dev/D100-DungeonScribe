@@ -44,6 +44,8 @@ Beschreibt einen offenen, ruhenden, gelösten oder gescheiterten Handlungsstrang
 
 Unveränderlicher Nachweis einer verbindlichen Änderung. Korrekturen erzeugen neue Ereignisse, statt historische Ereignisse still zu überschreiben.
 
+Die Chronik liest Ereignisse ausschließlich und ordnet bekannte Ereignistypen stabil den Bereichen Kampagne, Charaktere, Weltregister und Wissen zu. Die Benutzeroberfläche zeigt keine Payloads oder internen Identitäten. Ein als reversibel markiertes Ereignis wird nicht verändert oder gelöscht; eine spätere Korrektur muss als neues Ereignis erfolgen.
+
 ## Identitäten und Zeit
 
 - IDs sind undurchsichtige Strings und tragen keine Fachlogik.

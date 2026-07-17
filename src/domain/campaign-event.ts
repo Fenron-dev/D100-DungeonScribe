@@ -1,0 +1,54 @@
+export const campaignEventTypes = [
+  "CAMPAIGN_CREATED",
+  "CAMPAIGN_UPDATED",
+  "CAMPAIGN_ARCHIVED",
+  "CHARACTER_CREATED",
+  "CHARACTER_UPDATED",
+  "ENTITY_CREATED",
+  "ENTITY_UPDATED",
+  "ENTITY_RELATION_CREATED",
+  "ENTITY_RELATION_REMOVED",
+  "KNOWLEDGE_DISCOVERED",
+  "KNOWLEDGE_UPDATED",
+] as const;
+
+export type CampaignEventType = (typeof campaignEventTypes)[number];
+
+export const campaignEventSources = [
+  "player",
+  "rule_engine",
+  "oracle",
+  "ai",
+  "manual",
+] as const;
+
+export type CampaignEventSource = (typeof campaignEventSources)[number];
+
+export const campaignEventCategories = [
+  "all",
+  "campaign",
+  "characters",
+  "world",
+  "knowledge",
+] as const;
+
+export type CampaignEventCategory = (typeof campaignEventCategories)[number];
+
+export interface CampaignEvent {
+  id: string;
+  campaignId: string;
+  eventType: CampaignEventType;
+  timestampReal: Date;
+  summary: string;
+  source: CampaignEventSource;
+  reversible: boolean;
+}
+
+export function getCampaignEventCategory(
+  eventType: CampaignEventType,
+): Exclude<CampaignEventCategory, "all"> {
+  if (eventType.startsWith("CAMPAIGN_")) return "campaign";
+  if (eventType.startsWith("CHARACTER_")) return "characters";
+  if (eventType.startsWith("ENTITY_")) return "world";
+  return "knowledge";
+}
