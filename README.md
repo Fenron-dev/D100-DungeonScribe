@@ -6,9 +6,9 @@ Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb e
 
 ## Projektstatus
 
-Phase 0 bis Phase 3 sind abgeschlossen. Das Projekt befindet sich in **Phase 4 – Charakterverwaltung** und wird ausschließlich über GitHub Actions gebaut und geprüft.
+Phase 0 bis Phase 4 sind abgeschlossen. Das Projekt befindet sich in **Phase 5 – Weltobjekte** und wird ausschließlich über GitHub Actions gebaut und geprüft.
 
-Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren sowie deren Charaktere anlegen und bearbeiten. Charakterprofile enthalten Konzept, Archetyp, eine bis drei Eigenschaften, eine optionale Schwäche und Notizen. Jede verbindliche Änderung wird atomar mit einem Kampagnenereignis gespeichert.
+Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren, deren Charaktere verwalten sowie ein durchsuchbares Weltregister für Personen, Orte, Fraktionen und Gegenstände. Jede verbindliche Änderung wird atomar mit einem Kampagnenereignis gespeichert.
 
 Die reine Regel-Engine wertet konfigurierbare W6-Pool-Proben mit Archetyp, Eigenschaften, Vor- und Nachteilen, Schwierigkeiten, Erfolgsgraden und der freiwilligen Wahl „Erfolg mit Kosten“ aus. Feste Zufallssequenzen machen jede Regelentscheidung reproduzierbar testbar.
 
@@ -49,6 +49,7 @@ Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien au
 - [Domainmodell](docs/domain-model.md)
 - [Regel-Engine](docs/rules-engine.md)
 - [Charakterverwaltung](docs/character-management.md)
+- [Weltobjekte](docs/world-entities.md)
 - [Entwicklungsprozess](docs/development-process.md)
 - [macOS-Testbuild](docs/macos-test-build.md)
 - [Verbindliche Regeln für Codex](AGENTS.md)

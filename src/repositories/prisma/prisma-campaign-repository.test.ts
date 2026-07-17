@@ -3,6 +3,7 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaCharacterRepository } from "./prisma-character-repository";
 import { PrismaCampaignRepository } from "./prisma-campaign-repository";
+import { PrismaWorldEntityRepository } from "./prisma-world-entity-repository";
 
 const testDatabaseUrl = process.env.DATABASE_URL;
 
@@ -15,6 +16,7 @@ const client = new PrismaClient({
 });
 const repository = new PrismaCampaignRepository(client);
 const characterRepository = new PrismaCharacterRepository(client);
+const worldEntityRepository = new PrismaWorldEntityRepository(client);
 
 const draft = {
   name: "Die Straßen im Nebel",
@@ -108,6 +110,41 @@ describe("PrismaCampaignRepository", () => {
       "CAMPAIGN_CREATED",
       "CHARACTER_CREATED",
       "CHARACTER_UPDATED",
+    ]);
+  });
+
+  it("persists world entities with traceable events", async () => {
+    const campaign = await repository.create(draft);
+    const entityDraft = {
+      type: "location" as const,
+      name: "Leuchtturm der Nebelwacht",
+      summary: "Der letzte sichere Ort an der Nordküste.",
+      description: null,
+      tags: ["Küste", "Zuflucht"],
+      status: "active" as const,
+    };
+
+    const entity = await worldEntityRepository.create(campaign.id, entityDraft);
+    if (!entity) {
+      throw new Error("Expected world entity creation to succeed.");
+    }
+    await worldEntityRepository.update(campaign.id, entity.id, {
+      ...entityDraft,
+      name: "Die Nebelwacht",
+    });
+
+    await expect(
+      worldEntityRepository.listByCampaign(campaign.id),
+    ).resolves.toMatchObject([{ name: "Die Nebelwacht", type: "location" }]);
+    const eventTypes = await client.campaignEvent.findMany({
+      where: { campaignId: campaign.id },
+      orderBy: { timestampReal: "asc" },
+      select: { eventType: true },
+    });
+    expect(eventTypes.map(({ eventType }) => eventType)).toEqual([
+      "CAMPAIGN_CREATED",
+      "ENTITY_CREATED",
+      "ENTITY_UPDATED",
     ]);
   });
 });

@@ -57,6 +57,7 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
   const messages = getMessages();
   const copy = messages.campaigns;
   const characterCopy = messages.characters;
+  const worldCopy = messages.worldEntities;
   const archiveAction = archiveCampaignAction.bind(null, campaign.id);
 
   return (
@@ -138,6 +139,19 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
             <p>{characterCopy.emptyDescription}</p>
           </div>
         )}
+      </section>
+
+      <section className="world-entry-section" aria-labelledby="world-title">
+        <div>
+          <h2 id="world-title">{worldCopy.sectionTitle}</h2>
+          <p>{worldCopy.sectionDescription}</p>
+        </div>
+        <Link
+          className="button button-secondary"
+          href={`/campaigns/${campaign.id}/world`}
+        >
+          {worldCopy.openRegistry}
+        </Link>
       </section>
     </article>
   );

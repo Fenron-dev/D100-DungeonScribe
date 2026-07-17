@@ -90,6 +90,51 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
   };
+  worldEntities: {
+    sectionTitle: string;
+    sectionDescription: string;
+    openRegistry: string;
+    title: string;
+    description: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    noResults: string;
+    newEntity: string;
+    createTitle: string;
+    createDescription: string;
+    editTitle: string;
+    editDescription: string;
+    typeLabel: string;
+    typePlaceholder: string;
+    types: { npc: string; location: string; faction: string; item: string };
+    nameLabel: string;
+    summaryLabel: string;
+    descriptionLabel: string;
+    tagsLabel: string;
+    tagsHint: string;
+    statusLabel: string;
+    statuses: {
+      active: string;
+      inactive: string;
+      destroyed: string;
+      unknown: string;
+    };
+    optionalHint: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    allTypes: string;
+    filterAction: string;
+    resetFilter: string;
+    createAction: string;
+    creatingAction: string;
+    editAction: string;
+    savingAction: string;
+    editLink: string;
+    backToCampaign: string;
+    backToRegistry: string;
+    validationMessage: string;
+    saveError: string;
+  };
   placeholders: {
     playTitle: string;
     campaignsTitle: string;
@@ -200,6 +245,60 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Der Charakter konnte nicht gespeichert werden.",
   },
+  worldEntities: {
+    sectionTitle: "Weltregister",
+    sectionDescription:
+      "Personen, Orte, Fraktionen und Gegenstände bilden den dauerhaften Zustand der Spielwelt.",
+    openRegistry: "Weltregister öffnen",
+    title: "Die Welt dieser Kampagne",
+    description:
+      "Durchsuche und pflege die bekannten Bausteine der Spielwelt an einem zentralen Ort.",
+    emptyTitle: "Das Weltregister ist noch leer",
+    emptyDescription:
+      "Lege eine wichtige Person, einen Ort, eine Fraktion oder einen Gegenstand an.",
+    noResults: "Keine Weltobjekte entsprechen diesem Filter.",
+    newEntity: "Weltobjekt erstellen",
+    createTitle: "Ein Weltobjekt anlegen",
+    createDescription:
+      "Halte die gemeinsame Basis fest. Typspezifische Details und Verknüpfungen folgen im nächsten Ausbau.",
+    editTitle: "Weltobjekt bearbeiten",
+    editDescription: "Aktualisiere den bekannten Zustand dieses Weltobjekts.",
+    typeLabel: "Typ",
+    typePlaceholder: "Typ auswählen",
+    types: {
+      npc: "Person",
+      location: "Ort",
+      faction: "Fraktion",
+      item: "Gegenstand",
+    },
+    nameLabel: "Name",
+    summaryLabel: "Kurzfassung",
+    descriptionLabel: "Beschreibung",
+    tagsLabel: "Tags",
+    tagsHint: "Bis zu acht Begriffe, durch Kommas getrennt.",
+    statusLabel: "Status",
+    statuses: {
+      active: "Aktiv",
+      inactive: "Inaktiv",
+      destroyed: "Zerstört",
+      unknown: "Unbekannt",
+    },
+    optionalHint: "optional",
+    searchLabel: "Weltregister durchsuchen",
+    searchPlaceholder: "Name, Kurzfassung oder Tag",
+    allTypes: "Alle Typen",
+    filterAction: "Filtern",
+    resetFilter: "Filter zurücksetzen",
+    createAction: "Weltobjekt speichern",
+    creatingAction: "Weltobjekt wird gespeichert …",
+    editAction: "Änderungen speichern",
+    savingAction: "Änderungen werden gespeichert …",
+    editLink: "Bearbeiten",
+    backToCampaign: "Zur Kampagne",
+    backToRegistry: "Zum Weltregister",
+    validationMessage: "Bitte prüfe die markierten Felder.",
+    saveError: "Das Weltobjekt konnte nicht gespeichert werden.",
+  },
   placeholders: {
     playTitle: "Spielen",
     campaignsTitle: "Kampagnen",
@@ -308,6 +407,60 @@ const englishMessages = {
     backToCampaign: "Back to campaign",
     validationMessage: "Please check the highlighted fields.",
     saveError: "The character could not be saved.",
+  },
+  worldEntities: {
+    sectionTitle: "World registry",
+    sectionDescription:
+      "People, locations, factions, and items form the persistent state of the game world.",
+    openRegistry: "Open world registry",
+    title: "This campaign's world",
+    description:
+      "Search and maintain the known building blocks of the game world in one place.",
+    emptyTitle: "The world registry is empty",
+    emptyDescription:
+      "Add an important person, location, faction, or item.",
+    noResults: "No world entities match this filter.",
+    newEntity: "Create world entity",
+    createTitle: "Create a world entity",
+    createDescription:
+      "Record the shared foundation. Type-specific details and links follow in the next increment.",
+    editTitle: "Edit world entity",
+    editDescription: "Update the known state of this world entity.",
+    typeLabel: "Type",
+    typePlaceholder: "Choose a type",
+    types: {
+      npc: "Person",
+      location: "Location",
+      faction: "Faction",
+      item: "Item",
+    },
+    nameLabel: "Name",
+    summaryLabel: "Summary",
+    descriptionLabel: "Description",
+    tagsLabel: "Tags",
+    tagsHint: "Up to eight comma-separated terms.",
+    statusLabel: "Status",
+    statuses: {
+      active: "Active",
+      inactive: "Inactive",
+      destroyed: "Destroyed",
+      unknown: "Unknown",
+    },
+    optionalHint: "optional",
+    searchLabel: "Search world registry",
+    searchPlaceholder: "Name, summary, or tag",
+    allTypes: "All types",
+    filterAction: "Filter",
+    resetFilter: "Reset filters",
+    createAction: "Save world entity",
+    creatingAction: "Saving world entity …",
+    editAction: "Save changes",
+    savingAction: "Saving changes …",
+    editLink: "Edit",
+    backToCampaign: "Back to campaign",
+    backToRegistry: "Back to world registry",
+    validationMessage: "Please check the highlighted fields.",
+    saveError: "The world entity could not be saved.",
   },
   placeholders: {
     playTitle: "Play",

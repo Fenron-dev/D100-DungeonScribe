@@ -32,6 +32,28 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     page.getByRole("heading", { name: "Elara aus dem Nebel" }),
   ).toBeVisible();
 
+  await page.getByRole("link", { name: "Weltregister öffnen" }).click();
+  await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
+  await page.getByLabel("Typ").selectOption("location");
+  await page.getByLabel("Name").fill("Leuchtturm der Nebelwacht");
+  await page
+    .getByLabel("Kurzfassung")
+    .fill("Der letzte sichere Ort an der Nordküste.");
+  await page.getByLabel("Tags").fill("Küste, Zuflucht");
+  await page.getByRole("button", { name: "Weltobjekt speichern" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "Leuchtturm der Nebelwacht" }),
+  ).toBeVisible();
+  await page.getByLabel("Weltregister durchsuchen").fill("Küste");
+  await page.getByRole("button", { name: "Filtern" }).click();
+  await expect(page.getByText("Der letzte sichere Ort an der Nordküste.")).toBeVisible();
+  await page.getByRole("link", { name: "Bearbeiten" }).click();
+  await page.getByLabel("Name").fill("Die Nebelwacht");
+  await page.getByRole("button", { name: "Änderungen speichern" }).click();
+  await expect(page.getByRole("heading", { name: "Die Nebelwacht" })).toBeVisible();
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+
   await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();
   await page.getByLabel("Name").fill("Die wiedergekehrte Straße");
   await page.getByRole("button", { name: "Änderungen speichern" }).click();

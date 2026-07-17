@@ -27,6 +27,7 @@ model Campaign {
 
   events CampaignEvent[]
   characters Character[]
+  worldEntities WorldEntity[]
 
   @@index([status, updatedAt])
 }
@@ -45,6 +46,24 @@ model Character {
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
+  @@index([campaignId, updatedAt])
+}
+
+model WorldEntity {
+  id          String   @id @default(cuid())
+  campaignId  String
+  type        String
+  name        String
+  summary     String
+  description String?
+  tags        Json
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, type, status])
   @@index([campaignId, updatedAt])
 }
 
