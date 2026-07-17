@@ -76,7 +76,13 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Beziehung anlegen" }).click();
   await expect(page.getByText("Bund der Lotsen befindet sich bei Die Nebelwacht")).toBeVisible();
   await page.getByRole("link", { name: "Zum Weltregister" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Die Welt dieser Kampagne" }),
+  ).toBeVisible();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
+  ).toBeVisible();
 
   await page.getByRole("link", { name: "Bearbeiten", exact: true }).click();
   await page.getByLabel("Name").fill("Die wiedergekehrte Straße");
