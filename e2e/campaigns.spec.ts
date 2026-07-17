@@ -35,6 +35,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("link", { name: "Weltregister öffnen" }).click();
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
   await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(1_000);
   await page.getByLabel("Typ").selectOption("location");
   await page.getByLabel("Name").fill("Leuchtturm der Nebelwacht");
   await page
