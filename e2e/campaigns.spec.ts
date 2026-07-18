@@ -214,15 +214,19 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page
     .getByLabel("Was soll als Nächstes erzählt werden?")
     .fill("Lass ein leises Klopfen hinter dem Kartenregal hörbar werden.");
-  await page.getByRole("button", { name: "Erzählung erzeugen" }).click();
+  const generateNarrationButton = page.getByRole("button", { name: "Erzählung erzeugen" });
+  await generateNarrationButton.click();
   const aiMessage = page.locator(".scene-tab-panel:not([hidden]) .scene-message-entry.source-ai").filter({
     hasText: "Die Szene nimmt die Richtung",
   }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
+  await expect(generateNarrationButton).toBeEnabled();
   const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");
-  await aiMessageEdit.locator("summary").click();
-  await expect(aiMessageEdit).toHaveAttribute("open", "");
+  await expect(async () => {
+    await aiMessageEdit.locator("summary").click();
+    await expect(aiMessageEdit).toHaveAttribute("open", "");
+  }).toPass({ timeout: 15_000 });
   await aiMessageEdit.getByLabel("Überarbeiteter Text").fill(
     "Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen.",
   );
