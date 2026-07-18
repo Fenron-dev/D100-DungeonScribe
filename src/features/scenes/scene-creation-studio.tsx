@@ -26,9 +26,10 @@ export function SceneCreationStudio({
   providerMode: "openai" | "demo";
   threads: StoryThread[];
 }) {
+  const generator = generateSceneDraftAction.bind(null, campaignId);
   return (
     <CreativeDraftPanel
-      action={generateSceneDraftAction.bind(null, campaignId)}
+      action={generator}
       messages={messages}
       mode={providerMode}
       renderForm={(draft, revision) => (
