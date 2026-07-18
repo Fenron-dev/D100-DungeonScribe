@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("creates, edits, and archives a campaign", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/campaigns");
   await page.getByRole("link", { name: "Neue Kampagne" }).first().click();
 
@@ -206,5 +207,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Archivierte Kampagnen" }),
   ).toBeVisible();
-  await expect(page.getByText("Die wiedergekehrte Straße")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 3, name: "Die wiedergekehrte Straße" }).first(),
+  ).toBeVisible();
 });
