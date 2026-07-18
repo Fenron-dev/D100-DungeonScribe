@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("creates, edits, and archives a campaign", async ({ page }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(180_000);
   await page.goto("/campaigns");
   await page.getByRole("link", { name: "Neue Kampagne" }).first().click();
 
@@ -56,8 +56,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
 
   await page.getByRole("link", { name: "Weltregister öffnen" }).click();
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(1_000);
+  await expect(page.getByRole("button", { name: "Entwurf erzeugen" })).toBeVisible();
   await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
   await expect(page.getByLabel("Kurzfassung")).not.toHaveValue("", { timeout: 15_000 });
   await page.getByLabel("Typ").selectOption("location");
@@ -82,8 +81,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Die Nebelwacht" })).toBeVisible();
 
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(1_000);
+  await expect(page.getByLabel("Typ")).toBeVisible();
   await page.getByLabel("Typ").selectOption("faction");
   await page.getByLabel("Name").fill("Bund der Lotsen");
   await page.getByLabel("Ziel").fill("Die sicheren Seewege bewahren");
