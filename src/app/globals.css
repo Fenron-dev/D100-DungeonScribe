@@ -1426,6 +1426,25 @@ h2 {
   white-space: pre-wrap;
 }
 
+.scene-message-entry {
+  max-width: min(90%, 48rem);
+  border-left-color: rgb(121 168 183 / 80%);
+  border-radius: 0.8rem 0.8rem 0.8rem 0.2rem;
+  background: rgb(64 112 128 / 10%);
+}
+
+.message-player {
+  margin-left: auto;
+  border-right: 3px solid var(--color-accent);
+  border-left: 0;
+  border-radius: 0.8rem 0.8rem 0.2rem;
+  background: rgb(240 199 113 / 8%);
+}
+
+.scene-message-form {
+  grid-column: 1 / -1;
+}
+
 .journal-entry-kind {
   color: var(--color-muted);
   font-size: 0.78rem;

@@ -299,6 +299,13 @@ export interface MessageCatalog {
     journalTitle: string;
     journalDescription: string;
     journalEmpty: string;
+    messageTitle: string;
+    messageDescription: string;
+    messageRoleLabel: string;
+    messageRoles: Record<"player" | "narrator", string>;
+    messageContentLabel: string;
+    sendMessageAction: string;
+    sendingMessageAction: string;
     noteTitle: string;
     noteKindLabel: string;
     noteKinds: Record<"action" | "observation", string>;
@@ -370,6 +377,7 @@ export interface MessageCatalog {
       | "THREAD_UPDATED"
       | "SCENE_STARTED"
       | "SCENE_NOTE_ADDED"
+      | "SCENE_MESSAGE_ADDED"
       | "DICE_ROLLED"
       | "SCENE_COMPLETED",
       string
@@ -740,6 +748,14 @@ const germanMessages = {
     journalDescription:
       "Handlungen, Beobachtungen und Proben bleiben in ihrer zeitlichen Reihenfolge erhalten.",
     journalEmpty: "Für diese Szene gibt es noch keinen Protokolleintrag.",
+    messageTitle: "Szenendialog",
+    messageDescription:
+      "Halte Spielerhandlungen und manuelle Erzählantworten als fortlaufenden Dialog fest.",
+    messageRoleLabel: "Beitrag von",
+    messageRoles: { player: "Spieler", narrator: "Erzähler" },
+    messageContentLabel: "Nachricht",
+    sendMessageAction: "Nachricht speichern",
+    sendingMessageAction: "Nachricht wird gespeichert …",
     noteTitle: "Eintrag festhalten",
     noteKindLabel: "Eintragsart",
     noteKinds: { action: "Handlung", observation: "Beobachtung" },
@@ -816,6 +832,7 @@ const germanMessages = {
       THREAD_UPDATED: "Handlungsstrang geändert",
       SCENE_STARTED: "Szene begonnen",
       SCENE_NOTE_ADDED: "Szeneneintrag festgehalten",
+      SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
       DICE_ROLLED: "Probe ausgewertet",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
@@ -1187,6 +1204,14 @@ const englishMessages = {
     journalDescription:
       "Actions, observations, and checks remain in their chronological order.",
     journalEmpty: "This scene has no log entries yet.",
+    messageTitle: "Scene dialogue",
+    messageDescription:
+      "Record player actions and manual narration as an ongoing dialogue.",
+    messageRoleLabel: "Contribution by",
+    messageRoles: { player: "Player", narrator: "Narrator" },
+    messageContentLabel: "Message",
+    sendMessageAction: "Save message",
+    sendingMessageAction: "Saving message …",
     noteTitle: "Record an entry",
     noteKindLabel: "Entry type",
     noteKinds: { action: "Action", observation: "Observation" },
@@ -1263,6 +1288,7 @@ const englishMessages = {
       THREAD_UPDATED: "Story thread changed",
       SCENE_STARTED: "Scene started",
       SCENE_NOTE_ADDED: "Scene entry recorded",
+      SCENE_MESSAGE_ADDED: "Scene message recorded",
       DICE_ROLLED: "Check resolved",
       SCENE_COMPLETED: "Scene completed",
     },

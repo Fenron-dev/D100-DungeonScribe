@@ -1,6 +1,8 @@
 import type {
   DiceRoll,
   SceneJournalEntry,
+  SceneMessage,
+  SceneMessageDraft,
   SceneNote,
   SceneNoteDraft,
 } from "@/domain/scene-journal";
@@ -25,6 +27,11 @@ export interface SceneJournalRepository {
     sceneId: string,
     draft: SceneNoteDraft,
   ): Promise<SceneNote | null>;
+  addMessage(
+    campaignId: string,
+    sceneId: string,
+    draft: SceneMessageDraft,
+  ): Promise<SceneMessage | null>;
   addRoll(
     campaignId: string,
     sceneId: string,

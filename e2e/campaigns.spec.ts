@@ -152,6 +152,17 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Szene beginnen" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Die Straße im Nebel" })).toBeVisible();
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
+  await page.getByLabel("Nachricht").fill("Ich untersuche die Spuren am Kartenarchiv.");
+  await page.getByRole("button", { name: "Nachricht speichern" }).click();
+  await expect(page.getByText("Ich untersuche die Spuren am Kartenarchiv.")).toBeVisible();
+  await page.getByLabel("Beitrag von").selectOption("narrator");
+  await page
+    .getByLabel("Nachricht")
+    .fill("Hinter der Tür raschelt Pergament, obwohl kein Wind weht.");
+  await page.getByRole("button", { name: "Nachricht speichern" }).click();
+  await expect(
+    page.getByText("Hinter der Tür raschelt Pergament, obwohl kein Wind weht."),
+  ).toBeVisible();
   await page
     .getByLabel("Eintrag", { exact: true })
     .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
@@ -177,13 +188,14 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText("15 Ereignisse")).toBeVisible();
+  await expect(page.getByText("17 Ereignisse")).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
-  await expect(page.getByText("4 Ereignisse")).toBeVisible();
+  await expect(page.getByText("6 Ereignisse")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene begonnen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene abgeschlossen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
   await expect(

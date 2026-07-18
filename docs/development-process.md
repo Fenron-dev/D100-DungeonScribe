@@ -43,7 +43,7 @@ Bis GitHub Actions verfügbar ist:
 
 Nach Einrichtung des Repositorys sollte CI nach jedem abgeschlossenen Arbeitspaket beziehungsweise Push laufen, nicht erst am Ende des MVP. Dadurch bleibt der lokale Rechner frei von Build-Daten, während Fehler zeitnah sichtbar werden.
 
-Der getrennte Workflow `macOS Test Build` erzeugt bei manueller Anforderung selbststartende Testpakete für Apple Silicon und Intel. macOS-Runner werden wegen ihrer höheren Kosten nicht bei jedem Push ausgeführt. Diese Pakete sind Entwicklungsbuilds, keine signierten oder notarisierten Veröffentlichungen.
+Der getrennte Workflow `macOS Test Build` erzeugt bei manueller Anforderung ein selbststartendes Testpaket für Apple Silicon. Ein Intel-Paket wird nicht gebaut, da das vorgesehene Testgerät ein Apple-Silicon-Mac ist. macOS-Runner werden wegen ihrer höheren Kosten nicht bei jedem Push ausgeführt. Diese Pakete sind Entwicklungsbuilds, keine signierten oder notarisierten Veröffentlichungen.
 
 ## Git- und Repository-Strategie
 

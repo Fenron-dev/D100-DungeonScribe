@@ -63,6 +63,44 @@ export function SceneNoteForm({
   );
 }
 
+export function SceneMessageForm({
+  action,
+  messages,
+}: {
+  action: SceneJournalFormAction;
+  messages: ReturnType<typeof getMessages>;
+}) {
+  const [state, formAction, isPending] = useActionState(action, initialSceneJournalFormState);
+  const copy = messages.scenes;
+  return (
+    <form className="scene-journal-form scene-message-form" action={formAction} noValidate>
+      <h3>{copy.messageTitle}</h3>
+      <p>{copy.messageDescription}</p>
+      <FormMessage message={state.message} errors={state.errors} copy={copy} />
+      <div className="form-field">
+        <label htmlFor="scene-message-role">{copy.messageRoleLabel}</label>
+        <select id="scene-message-role" name="role" defaultValue="player">
+          <option value="player">{copy.messageRoles.player}</option>
+          <option value="narrator">{copy.messageRoles.narrator}</option>
+        </select>
+      </div>
+      <div className="form-field">
+        <label htmlFor="scene-message-content">{copy.messageContentLabel}</label>
+        <textarea
+          id="scene-message-content"
+          name="content"
+          rows={5}
+          maxLength={8_000}
+          required
+        />
+      </div>
+      <button className="button" type="submit" disabled={isPending}>
+        {isPending ? copy.sendingMessageAction : copy.sendMessageAction}
+      </button>
+    </form>
+  );
+}
+
 export function SceneRollForm({
   action,
   characters,

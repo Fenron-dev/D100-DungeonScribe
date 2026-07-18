@@ -1,10 +1,14 @@
-import type { DiceRoll, SceneNote } from "@/domain/scene-journal";
+import type { DiceRoll, SceneMessage, SceneNote } from "@/domain/scene-journal";
 import type { SceneJournalRepository } from "@/repositories/scene-journal-repository";
 import type { D6PoolRuleEngine } from "@/rules/rule-engine";
 import type { Ruleset } from "@/rules/ruleset";
 import type { CheckInput } from "@/rules/types";
 import { campaignIdSchema } from "@/schemas/campaign";
-import { diceRollDraftSchema, sceneNoteDraftSchema } from "@/schemas/scene-journal";
+import {
+  diceRollDraftSchema,
+  sceneMessageDraftSchema,
+  sceneNoteDraftSchema,
+} from "@/schemas/scene-journal";
 import { sceneIdSchema } from "@/schemas/scene";
 
 export class SceneJournalNotFoundError extends Error {
@@ -40,6 +44,20 @@ export class SceneJournalService {
     );
     if (!note) throw new SceneJournalNotFoundError();
     return note;
+  }
+
+  public async addMessage(
+    campaignId: string,
+    sceneId: string,
+    input: unknown,
+  ): Promise<SceneMessage> {
+    const message = await this.repository.addMessage(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      sceneMessageDraftSchema.parse(input),
+    );
+    if (!message) throw new SceneJournalNotFoundError();
+    return message;
   }
 
   public async roll(

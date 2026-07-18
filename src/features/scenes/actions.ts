@@ -9,7 +9,11 @@ import type {
   SceneJournalFormState,
 } from "@/features/scenes/form-state";
 import { sceneDraftSchema, sceneSummarySchema } from "@/schemas/scene";
-import { diceRollDraftSchema, sceneNoteDraftSchema } from "@/schemas/scene-journal";
+import {
+  diceRollDraftSchema,
+  sceneMessageDraftSchema,
+  sceneNoteDraftSchema,
+} from "@/schemas/scene-journal";
 import { SceneTraitMismatchError } from "@/services/scene-journal-service";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { ActiveSceneExistsError } from "@/services/scene-service";
@@ -35,6 +39,32 @@ export async function addSceneNoteAction(
   }
   try {
     await sceneJournalService.addNote(campaignId, sceneId, result.data);
+  } catch (error) {
+    reportPersistenceError("create", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function addSceneMessageAction(
+  campaignId: string,
+  sceneId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const result = sceneMessageDraftSchema.safeParse({
+    role: readText(formData, "role"),
+    content: readText(formData, "content"),
+  });
+  if (!result.success) {
+    return {
+      message: "validation",
+      errors: result.error.issues.map(({ message }) => message),
+    };
+  }
+  try {
+    await sceneJournalService.addMessage(campaignId, sceneId, result.data);
   } catch (error) {
     reportPersistenceError("create", error);
     return { message: "save_error", errors: [] };

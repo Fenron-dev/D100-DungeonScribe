@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sceneNoteKinds } from "@/domain/scene-journal";
+import { sceneMessageRoles, sceneNoteKinds } from "@/domain/scene-journal";
 import { difficulties } from "@/rules/types";
 import { characterIdSchema } from "@/schemas/character";
 
@@ -19,6 +19,17 @@ export const sceneNoteDraftSchema = z.object({
     .min(1, "Bitte gib einen Eintrag ein.")
     .max(4_000, "Der Eintrag darf höchstens 4.000 Zeichen enthalten."),
 });
+
+export const sceneMessageDraftSchema = z.object({
+  role: z.enum(sceneMessageRoles),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Bitte gib eine Nachricht ein.")
+    .max(8_000, "Die Nachricht darf höchstens 8.000 Zeichen enthalten."),
+});
+
+export const sceneMessageSourceSchema = z.enum(["manual", "ai"]);
 
 export const diceRollDraftSchema = z.object({
   characterId: characterIdSchema,

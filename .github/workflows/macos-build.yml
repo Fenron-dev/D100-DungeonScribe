@@ -131,6 +131,7 @@ jobs:
           THREAD_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM StoryThread;')"
           SCENE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Scene;')"
           NOTE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM SceneNote;')"
+          MESSAGE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM SceneMessage;')"
           ROLL_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM DiceRoll;')"
           EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
           test "$CAMPAIGN_COUNT" = "1"
@@ -141,8 +142,9 @@ jobs:
           test "$THREAD_COUNT" = "1"
           test "$SCENE_COUNT" = "1"
           test "$NOTE_COUNT" = "1"
+          test "$MESSAGE_COUNT" = "2"
           test "$ROLL_COUNT" = "1"
-          test "$EVENT_COUNT" = "17"
+          test "$EVENT_COUNT" = "19"
 
       - name: Create archive and checksum
         run: |

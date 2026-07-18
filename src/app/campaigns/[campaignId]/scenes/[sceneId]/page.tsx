@@ -2,11 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   addSceneNoteAction,
+  addSceneMessageAction,
   completeSceneAction,
   rollSceneCheckAction,
 } from "@/features/scenes/actions";
 import { SceneCompletionForm } from "@/features/scenes/scene-completion-form";
-import { SceneNoteForm, SceneRollForm } from "@/features/scenes/scene-journal-forms";
+import {
+  SceneMessageForm,
+  SceneNoteForm,
+  SceneRollForm,
+} from "@/features/scenes/scene-journal-forms";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
@@ -49,6 +54,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const locationName = scene.locationId ? entityNames.get(scene.locationId) : null;
   const completionAction = completeSceneAction.bind(null, campaign.id, scene.id);
   const noteAction = addSceneNoteAction.bind(null, campaign.id, scene.id);
+  const messageAction = addSceneMessageAction.bind(null, campaign.id, scene.id);
   const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
@@ -103,6 +109,19 @@ export default async function ScenePage({ params }: ScenePageProps) {
         {journal.length === 0 ? <p className="empty-copy">{copy.journalEmpty}</p> : (
           <ol className="scene-journal-list">
             {journal.map((entry) => {
+              if (entry.type === "message") {
+                return (
+                  <li
+                    className={`scene-journal-entry scene-message-entry message-${entry.value.role}`}
+                    key={entry.value.id}
+                  >
+                    <span className="journal-entry-kind">
+                      {copy.messageRoles[entry.value.role]}
+                    </span>
+                    <p>{entry.value.content}</p>
+                  </li>
+                );
+              }
               if (entry.type === "note") {
                 return (
                   <li className="scene-journal-entry" key={entry.value.id}>
@@ -137,6 +156,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
       {scene.status === "active" ? (
         <>
           <div className="scene-journal-forms">
+            <SceneMessageForm action={messageAction} messages={messages} />
             <SceneNoteForm action={noteAction} messages={messages} />
             <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />
           </div>

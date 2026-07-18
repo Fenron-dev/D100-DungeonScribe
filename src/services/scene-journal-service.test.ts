@@ -3,6 +3,8 @@ import type { Character } from "@/domain/character";
 import type {
   DiceRoll,
   SceneJournalEntry,
+  SceneMessage,
+  SceneMessageDraft,
   SceneNote,
   SceneNoteDraft,
 } from "@/domain/scene-journal";
@@ -52,6 +54,22 @@ class InMemoryJournalRepository implements SceneJournalRepository {
     this.entries.push({ type: "note", value: note });
     return note;
   }
+  public async addMessage(
+    campaignId: string,
+    sceneId: string,
+    draft: SceneMessageDraft,
+  ): Promise<SceneMessage> {
+    const message: SceneMessage = {
+      id: "message-1",
+      campaignId,
+      sceneId,
+      ...draft,
+      source: "manual",
+      createdAt: new Date(),
+    };
+    this.entries.push({ type: "message", value: message });
+    return message;
+  }
   public async addRoll(
     campaignId: string,
     sceneId: string,
@@ -74,6 +92,22 @@ class InMemoryJournalRepository implements SceneJournalRepository {
 }
 
 describe("SceneJournalService", () => {
+  it("stores a manual scene message", async () => {
+    const repository = new InMemoryJournalRepository();
+    const service = new SceneJournalService(
+      repository,
+      new D6PoolRuleEngine(new FixedRandomSource([5])),
+      coreAdventureRuleset,
+    );
+    const message = await service.addMessage("campaign-1", "scene-1", {
+      role: "narrator",
+      content: "Die Tür öffnet sich knarrend.",
+    });
+    expect(message.role).toBe("narrator");
+    expect(message.source).toBe("manual");
+    expect(repository.entries[0]?.type).toBe("message");
+  });
+
   it("stores a scene note", async () => {
     const repository = new InMemoryJournalRepository();
     const service = new SceneJournalService(

@@ -15,6 +15,22 @@ export interface SceneNote extends SceneNoteDraft {
   createdAt: Date;
 }
 
+export const sceneMessageRoles = ["player", "narrator"] as const;
+export type SceneMessageRole = (typeof sceneMessageRoles)[number];
+
+export interface SceneMessageDraft {
+  role: SceneMessageRole;
+  content: string;
+}
+
+export interface SceneMessage extends SceneMessageDraft {
+  id: string;
+  campaignId: string;
+  sceneId: string;
+  source: "manual" | "ai";
+  createdAt: Date;
+}
+
 export interface DiceRollDraft {
   characterId: string;
   action: string;
@@ -41,4 +57,5 @@ export interface DiceRoll {
 
 export type SceneJournalEntry =
   | { type: "note"; value: SceneNote }
+  | { type: "message"; value: SceneMessage }
   | { type: "roll"; value: DiceRoll };
