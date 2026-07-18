@@ -195,14 +195,20 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page
     .getByLabel("Nachricht")
     .fill("Hinter der Tür raschelt Pergament, obwohl kein Wind weht.");
-  await page.getByRole("button", { name: "Nachricht speichern" }).click();
+  const saveMessageButton = page.getByRole("button", { name: "Nachricht speichern" });
+  await saveMessageButton.click();
   await expect(
     page.locator("#scene-dialogue-panel").getByRole("paragraph").filter({
       hasText: /^Hinter der Tür raschelt Pergament, obwohl kein Wind weht\.$/,
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "Spielleiter" }).click();
-  await expect(page.getByText("Demo-Modus", { exact: true })).toBeVisible();
+  await expect(saveMessageButton).toBeEnabled();
+  const gameMasterTab = page.getByRole("tab", { name: "Spielleiter" });
+  await gameMasterTab.click();
+  await expect(gameMasterTab).toHaveAttribute("aria-selected", "true");
+  await expect(
+    page.locator("#game-master-panel").getByText("Demo-Modus", { exact: true }),
+  ).toBeVisible();
   await page
     .getByLabel("Was soll als Nächstes erzählt werden?")
     .fill("Lass ein leises Klopfen hinter dem Kartenregal hörbar werden.");
