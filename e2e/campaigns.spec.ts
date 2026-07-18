@@ -183,6 +183,17 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     /^(Nein|Nein, aber …|Nein, und zusätzlich …|Ungewiss oder situationsabhängig|Ja|Ja, aber …|Ja, und zusätzlich …)$/,
   );
   await page
+    .getByLabel("Detailfrage (optional)")
+    .fill("Was macht das Kartenarchiv gefährlich?");
+  await page.getByLabel("Erster Begriff").selectOption("discovery");
+  await page.getByLabel("Zweiter Begriff").selectOption("danger");
+  await page.getByRole("button", { name: "Inspiration ziehen" }).click();
+  const inspiration = page.locator(".inspiration-entry");
+  await expect(inspiration.getByText("Was macht das Kartenarchiv gefährlich?")).toBeVisible();
+  await expect(inspiration.locator(".inspiration-terms strong")).toHaveCount(2);
+  await expect(inspiration.getByText("Entdeckung", { exact: true })).toBeVisible();
+  await expect(inspiration.getByText("Gefahr", { exact: true })).toBeVisible();
+  await page
     .getByLabel("Szenenzusammenfassung")
     .fill("Elara findet eine verborgene Karte, die einen Weg durch den Nebel zeigt.");
   await page.getByRole("button", { name: "Szene abschließen" }).click();
@@ -195,16 +206,17 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText("18 Ereignisse")).toBeVisible();
+  await expect(page.getByText("19 Ereignisse")).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
-  await expect(page.getByText("7 Ereignisse")).toBeVisible();
+  await expect(page.getByText("8 Ereignisse")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene begonnen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene abgeschlossen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelfrage beantwortet" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Orakelinspiration gezogen" })).toBeVisible();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),

@@ -1,4 +1,7 @@
 import type {
+  InspirationInput,
+  InspirationResult,
+  OracleInspiration,
   OracleRecord,
   YesNoOracleInput,
   YesNoOracleResult,
@@ -11,4 +14,10 @@ export interface OracleRepository {
     input: YesNoOracleInput,
     result: YesNoOracleResult,
   ): Promise<OracleRecord | null>;
+  createInspiration(
+    campaignId: string,
+    sceneId: string,
+    input: InspirationInput,
+    result: InspirationResult,
+  ): Promise<OracleInspiration | null>;
 }

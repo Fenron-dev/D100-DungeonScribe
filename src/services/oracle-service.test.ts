@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type {
+  InspirationInput,
+  InspirationResult,
+  OracleInspiration,
   OracleRecord,
   YesNoOracleInput,
   YesNoOracleResult,
 } from "@/oracle/types";
 import { YesNoOracle } from "@/oracle/yes-no-oracle";
+import { InspirationOracle } from "@/oracle/inspiration-oracle";
 import type { OracleRepository } from "@/repositories/oracle-repository";
 import { FixedRandomSource } from "@/rules/testing/fixed-random-source";
 import { OracleContextNotFoundError, OracleService } from "@/services/oracle-service";
@@ -29,6 +33,22 @@ class InMemoryOracleRepository implements OracleRepository {
     };
     return this.saved;
   }
+  public async createInspiration(
+    campaignId: string,
+    sceneId: string,
+    input: InspirationInput,
+    result: InspirationResult,
+  ): Promise<OracleInspiration | null> {
+    if (!this.available) return null;
+    return {
+      id: "inspiration-1",
+      campaignId,
+      sceneId,
+      ...input,
+      ...result,
+      createdAt: new Date("2026-07-18T17:00:00Z"),
+    };
+  }
 }
 
 describe("OracleService", () => {
@@ -37,6 +57,7 @@ describe("OracleService", () => {
     const service = new OracleService(
       repository,
       new YesNoOracle(new FixedRandomSource([4, 5])),
+      new InspirationOracle(new FixedRandomSource([0, 1])),
     );
     const record = await service.askYesNo("campaign-1", "scene-1", {
       question: "Ist die Tür verschlossen?",
@@ -56,6 +77,7 @@ describe("OracleService", () => {
     const service = new OracleService(
       new InMemoryOracleRepository(false),
       new YesNoOracle(new FixedRandomSource([3, 4])),
+      new InspirationOracle(new FixedRandomSource([0, 1])),
     );
     await expect(
       service.askYesNo("campaign-1", "scene-1", {
@@ -63,5 +85,23 @@ describe("OracleService", () => {
         likelihood: "even",
       }),
     ).rejects.toBeInstanceOf(OracleContextNotFoundError);
+  });
+
+  it("stores a reproducible inspiration for an optional detail question", async () => {
+    const service = new OracleService(
+      new InMemoryOracleRepository(),
+      new YesNoOracle(new FixedRandomSource([3, 4])),
+      new InspirationOracle(new FixedRandomSource([1, 3])),
+    );
+    const inspiration = await service.drawInspiration("campaign-1", "scene-1", {
+      question: "Was verbirgt sich hinter der Tür?",
+      primaryCategory: "discovery",
+      secondaryCategory: "danger",
+    });
+    expect(inspiration).toMatchObject({
+      question: "Was verbirgt sich hinter der Tür?",
+      primaryTermId: "discovery.secret",
+      secondaryTermId: "danger.pursuit",
+    });
   });
 });

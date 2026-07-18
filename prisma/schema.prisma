@@ -35,6 +35,7 @@ model Campaign {
   sceneNotes SceneNote[]
   sceneMessages SceneMessage[]
   oracleRecords OracleRecord[]
+  oracleInspirations OracleInspiration[]
   diceRolls DiceRoll[]
 
   @@index([status, updatedAt])
@@ -62,6 +63,7 @@ model Scene {
   notes SceneNote[]
   messages SceneMessage[]
   oracleRecords OracleRecord[]
+  oracleInspirations OracleInspiration[]
   diceRolls DiceRoll[]
 
   @@index([campaignId, status, startedAtReal])
@@ -112,6 +114,24 @@ model OracleRecord {
   answer        String
   isDouble      Boolean
   createdAt     DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, createdAt])
+  @@index([campaignId, createdAt])
+}
+
+model OracleInspiration {
+  id                String   @id @default(cuid())
+  campaignId        String
+  sceneId           String
+  question          String?
+  primaryCategory   String
+  primaryTermId     String
+  secondaryCategory String
+  secondaryTermId   String
+  createdAt         DateTime @default(now())
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)

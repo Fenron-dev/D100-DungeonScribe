@@ -48,3 +48,55 @@ export function OracleForm({
     </form>
   );
 }
+
+export function InspirationForm({
+  action,
+  messages,
+}: {
+  action: OracleFormAction;
+  messages: ReturnType<typeof getMessages>;
+}) {
+  const [state, formAction, isPending] = useActionState(action, initialOracleFormState);
+  const copy = messages.oracle;
+  const categoryOptions = Object.entries(copy.categories);
+  return (
+    <form className="scene-journal-form oracle-form" action={formAction} noValidate>
+      <h3>{copy.inspirationTitle}</h3>
+      <p>{copy.inspirationDescription}</p>
+      {state.message ? (
+        <div className="form-message" role="alert">
+          <p>{state.message === "validation" ? copy.validationMessage : copy.saveError}</p>
+          {state.errors.length > 0 ? (
+            <ul>{state.errors.map((error) => <li key={error}>{error}</li>)}</ul>
+          ) : null}
+        </div>
+      ) : null}
+      <div className="form-field">
+        <label htmlFor="inspiration-question">{copy.detailQuestionLabel}</label>
+        <input id="inspiration-question" name="question" maxLength={500} />
+        <small>{copy.detailQuestionHint}</small>
+      </div>
+      <div className="form-columns">
+        <div className="form-field">
+          <label htmlFor="inspiration-primary">{copy.primaryCategoryLabel}</label>
+          <select id="inspiration-primary" name="primaryCategory" defaultValue="action">
+            {categoryOptions.map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="form-field">
+          <label htmlFor="inspiration-secondary">{copy.secondaryCategoryLabel}</label>
+          <select id="inspiration-secondary" name="secondaryCategory" defaultValue="theme">
+            {categoryOptions.map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <button className="button" type="submit" disabled={isPending}>
+        {isPending ? copy.drawingAction : copy.drawAction}
+      </button>
+    </form>
+  );
+}

@@ -134,6 +134,7 @@ jobs:
           MESSAGE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM SceneMessage;')"
           ROLL_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM DiceRoll;')"
           ORACLE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM OracleRecord;')"
+          INSPIRATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM OracleInspiration;')"
           EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
           test "$CAMPAIGN_COUNT" = "1"
           test "$CHARACTER_COUNT" = "1"
@@ -146,7 +147,8 @@ jobs:
           test "$MESSAGE_COUNT" = "2"
           test "$ROLL_COUNT" = "1"
           test "$ORACLE_COUNT" = "1"
-          test "$EVENT_COUNT" = "20"
+          test "$INSPIRATION_COUNT" = "1"
+          test "$EVENT_COUNT" = "21"
 
       - name: Create archive and checksum
         run: |

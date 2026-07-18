@@ -1479,6 +1479,39 @@ h2 {
   text-transform: uppercase;
 }
 
+.inspiration-entry {
+  border-left-color: rgb(190 132 195 / 82%);
+  background: linear-gradient(120deg, rgb(82 61 116 / 16%), rgb(15 21 18 / 88%));
+}
+
+.inspiration-terms {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.inspiration-terms > div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 8rem;
+}
+
+.inspiration-terms small {
+  color: var(--color-muted);
+}
+
+.inspiration-terms strong {
+  color: var(--color-accent-strong);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+
+.inspiration-terms > span {
+  color: rgb(208 187 245);
+  font-size: 1.5rem;
+}
+
 .journal-entry-kind {
   color: var(--color-muted);
   font-size: 0.78rem;

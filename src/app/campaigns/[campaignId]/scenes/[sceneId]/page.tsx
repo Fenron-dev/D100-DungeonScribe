@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { askOracleAction } from "@/features/oracle/actions";
-import { OracleForm } from "@/features/oracle/oracle-form";
+import { askOracleAction, drawInspirationAction } from "@/features/oracle/actions";
+import { InspirationForm, OracleForm } from "@/features/oracle/oracle-form";
 import {
   addSceneNoteAction,
   addSceneMessageAction,
@@ -59,6 +59,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const messageAction = addSceneMessageAction.bind(null, campaign.id, scene.id);
   const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
   const oracleAction = askOracleAction.bind(null, campaign.id, scene.id);
+  const inspirationAction = drawInspirationAction.bind(null, campaign.id, scene.id);
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
   );
@@ -112,6 +113,29 @@ export default async function ScenePage({ params }: ScenePageProps) {
         {journal.length === 0 ? <p className="empty-copy">{copy.journalEmpty}</p> : (
           <ol className="scene-journal-list">
             {journal.map((entry) => {
+              if (entry.type === "inspiration") {
+                return (
+                  <li className="scene-journal-entry inspiration-entry" key={entry.value.id}>
+                    <span className="journal-entry-kind">
+                      {messages.oracle.inspirationResultTitle}
+                    </span>
+                    {entry.value.question ? (
+                      <p className="oracle-question">{entry.value.question}</p>
+                    ) : null}
+                    <div className="inspiration-terms">
+                      <div>
+                        <small>{messages.oracle.categories[entry.value.primaryCategory]}</small>
+                        <strong>{messages.oracle.terms[entry.value.primaryTermId]}</strong>
+                      </div>
+                      <span aria-hidden="true">+</span>
+                      <div>
+                        <small>{messages.oracle.categories[entry.value.secondaryCategory]}</small>
+                        <strong>{messages.oracle.terms[entry.value.secondaryTermId]}</strong>
+                      </div>
+                    </div>
+                  </li>
+                );
+              }
               if (entry.type === "oracle") {
                 const modifier = entry.value.modifier >= 0
                   ? `+${entry.value.modifier}`
@@ -192,6 +216,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
             <SceneNoteForm action={noteAction} messages={messages} />
             <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />
             <OracleForm action={oracleAction} messages={messages} />
+            <InspirationForm action={inspirationAction} messages={messages} />
           </div>
           <SceneCompletionForm action={completionAction} messages={messages} />
         </>

@@ -18,9 +18,14 @@ Die Engine würfelt 2W6, addiert den Modifikator und begrenzt den Endwert auf 2 
 
 Gespeichert werden Frage, Wahrscheinlichkeit, beide Würfel, Rohsumme, Modifikator, Endwert, Antwort und Pasch-Markierung. Das Ergebnis erscheint chronologisch im Spielprotokoll und erzeugt atomar `ORACLE_ANSWERED` mit der Quelle `oracle`. Ein Pasch löst in diesem Arbeitspaket noch kein Zufallsereignis aus; die Markierung bereitet diesen späteren Baustein lediglich vor.
 
+## Offene Inspiration und Detailfragen
+
+Für eine offene Inspiration wählt der Spieler zwei Kategorien aus: Handlung, Thema, Stimmung, Person, Gegenstand, Ort, Gefahr, Entdeckung oder Komplikation. Eine optionale Detailfrage gibt dem Begriffspaar einen konkreten Bezug. Beide Begriffe werden unabhängig über die injizierte Zufallsquelle aus validierten Tabellen gezogen.
+
+Gespeichert werden die optionale Frage, beide Kategorien und stabile Begriffsschlüssel. Die sichtbare Übersetzung erfolgt erst in der Oberfläche, sodass dieselbe Ziehung auch nach einem Sprachwechsel erhalten bleibt. Das Ereignis `ORACLE_INSPIRATION_DRAWN` wird atomar mit dem Ergebnis gespeichert. Inspirationen sind Deutungshilfen und erzeugen keine Fakten oder Weltänderungen.
+
 ## Noch nicht enthalten
 
-- Inspirationsbegriffe und Detailfragen
 - Zufallsereignisse
 - Spannung oder Chaos
 - automatische Änderungen an Welt, Wissen oder Handlungssträngen

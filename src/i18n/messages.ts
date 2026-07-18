@@ -1,3 +1,5 @@
+import type { InspirationCategory, InspirationTermId } from "@/oracle/types";
+
 export const supportedLocales = ["de", "en"] as const;
 
 export type Locale = (typeof supportedLocales)[number];
@@ -359,6 +361,17 @@ export interface MessageCatalog {
     diceLabel: string;
     calculationLabel: string;
     doubleBadge: string;
+    inspirationTitle: string;
+    inspirationDescription: string;
+    detailQuestionLabel: string;
+    detailQuestionHint: string;
+    primaryCategoryLabel: string;
+    secondaryCategoryLabel: string;
+    categories: Record<InspirationCategory, string>;
+    drawAction: string;
+    drawingAction: string;
+    inspirationResultTitle: string;
+    terms: Record<InspirationTermId, string>;
   };
   chronicle: {
     sectionTitle: string;
@@ -402,6 +415,7 @@ export interface MessageCatalog {
       | "SCENE_MESSAGE_ADDED"
       | "DICE_ROLLED"
       | "ORACLE_ANSWERED"
+      | "ORACLE_INSPIRATION_DRAWN"
       | "SCENE_COMPLETED",
       string
     >;
@@ -845,6 +859,51 @@ const germanMessages = {
     diceLabel: "2W6",
     calculationLabel: "Auswertung",
     doubleBadge: "Pasch",
+    inspirationTitle: "Offene Inspiration",
+    inspirationDescription:
+      "Ziehe zwei Begriffe für eine offene Idee oder als Antwort auf eine optionale Detailfrage.",
+    detailQuestionLabel: "Detailfrage (optional)",
+    detailQuestionHint: "Zum Beispiel: Was ist an diesem Ort ungewöhnlich?",
+    primaryCategoryLabel: "Erster Begriff",
+    secondaryCategoryLabel: "Zweiter Begriff",
+    categories: {
+      action: "Handlung",
+      theme: "Thema",
+      mood: "Stimmung",
+      person: "Person",
+      item: "Gegenstand",
+      location: "Ort",
+      danger: "Gefahr",
+      discovery: "Entdeckung",
+      complication: "Komplikation",
+    },
+    drawAction: "Inspiration ziehen",
+    drawingAction: "Inspiration wird gezogen …",
+    inspirationResultTitle: "Inspiration",
+    terms: {
+      "action.reveal": "Enthüllen", "action.protect": "Beschützen",
+      "action.transform": "Verwandeln", "action.pursue": "Verfolgen",
+      "action.betray": "Verraten", "theme.debt": "Schuld",
+      "theme.freedom": "Freiheit", "theme.loss": "Verlust",
+      "theme.legacy": "Vermächtnis", "theme.trust": "Vertrauen",
+      "mood.uneasy": "Unbehaglich", "mood.hopeful": "Hoffnungsvoll",
+      "mood.solemn": "Feierlich", "mood.urgent": "Dringlich",
+      "mood.mysterious": "Rätselhaft", "person.stranger": "Fremder",
+      "person.rival": "Rivale", "person.witness": "Zeuge",
+      "person.guide": "Wegweiser", "person.outcast": "Ausgestoßener",
+      "item.key": "Schlüssel", "item.letter": "Brief",
+      "item.relic": "Relikt", "item.map": "Karte", "item.tool": "Werkzeug",
+      "location.threshold": "Schwelle", "location.ruin": "Ruine",
+      "location.refuge": "Zuflucht", "location.crossroads": "Kreuzung",
+      "location.depths": "Tiefe", "danger.ambush": "Hinterhalt",
+      "danger.collapse": "Einsturz", "danger.deception": "Täuschung",
+      "danger.pursuit": "Verfolgung", "danger.exposure": "Entlarvung",
+      "discovery.trace": "Spur", "discovery.secret": "Geheimnis",
+      "discovery.connection": "Verbindung", "discovery.opportunity": "Gelegenheit",
+      "discovery.warning": "Warnung", "complication.delay": "Verzögerung",
+      "complication.price": "Preis", "complication.mistake": "Irrtum",
+      "complication.attention": "Aufmerksamkeit", "complication.shortage": "Mangel",
+    },
   },
   chronicle: {
     sectionTitle: "Chronik",
@@ -889,6 +948,7 @@ const germanMessages = {
       SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
       DICE_ROLLED: "Probe ausgewertet",
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
+      ORACLE_INSPIRATION_DRAWN: "Orakelinspiration gezogen",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
@@ -1333,6 +1393,51 @@ const englishMessages = {
     diceLabel: "2d6",
     calculationLabel: "Evaluation",
     doubleBadge: "Double",
+    inspirationTitle: "Open inspiration",
+    inspirationDescription:
+      "Draw two terms for an open idea or as an answer to an optional detail question.",
+    detailQuestionLabel: "Detail question (optional)",
+    detailQuestionHint: "For example: What is unusual about this place?",
+    primaryCategoryLabel: "First term",
+    secondaryCategoryLabel: "Second term",
+    categories: {
+      action: "Action",
+      theme: "Theme",
+      mood: "Mood",
+      person: "Person",
+      item: "Item",
+      location: "Location",
+      danger: "Danger",
+      discovery: "Discovery",
+      complication: "Complication",
+    },
+    drawAction: "Draw inspiration",
+    drawingAction: "Drawing inspiration …",
+    inspirationResultTitle: "Inspiration",
+    terms: {
+      "action.reveal": "Reveal", "action.protect": "Protect",
+      "action.transform": "Transform", "action.pursue": "Pursue",
+      "action.betray": "Betray", "theme.debt": "Debt",
+      "theme.freedom": "Freedom", "theme.loss": "Loss",
+      "theme.legacy": "Legacy", "theme.trust": "Trust",
+      "mood.uneasy": "Uneasy", "mood.hopeful": "Hopeful",
+      "mood.solemn": "Solemn", "mood.urgent": "Urgent",
+      "mood.mysterious": "Mysterious", "person.stranger": "Stranger",
+      "person.rival": "Rival", "person.witness": "Witness",
+      "person.guide": "Guide", "person.outcast": "Outcast",
+      "item.key": "Key", "item.letter": "Letter", "item.relic": "Relic",
+      "item.map": "Map", "item.tool": "Tool",
+      "location.threshold": "Threshold", "location.ruin": "Ruin",
+      "location.refuge": "Refuge", "location.crossroads": "Crossroads",
+      "location.depths": "Depths", "danger.ambush": "Ambush",
+      "danger.collapse": "Collapse", "danger.deception": "Deception",
+      "danger.pursuit": "Pursuit", "danger.exposure": "Exposure",
+      "discovery.trace": "Trace", "discovery.secret": "Secret",
+      "discovery.connection": "Connection", "discovery.opportunity": "Opportunity",
+      "discovery.warning": "Warning", "complication.delay": "Delay",
+      "complication.price": "Price", "complication.mistake": "Mistake",
+      "complication.attention": "Attention", "complication.shortage": "Shortage",
+    },
   },
   chronicle: {
     sectionTitle: "Chronicle",
@@ -1377,6 +1482,7 @@ const englishMessages = {
       SCENE_MESSAGE_ADDED: "Scene message recorded",
       DICE_ROLLED: "Check resolved",
       ORACLE_ANSWERED: "Oracle question answered",
+      ORACLE_INSPIRATION_DRAWN: "Oracle inspiration drawn",
       SCENE_COMPLETED: "Scene completed",
     },
     sources: {

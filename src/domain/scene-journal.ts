@@ -1,5 +1,5 @@
 import type { CheckInput, CheckResult, Difficulty } from "@/rules/types";
-import type { OracleRecord } from "@/oracle/types";
+import type { OracleInspiration, OracleRecord } from "@/oracle/types";
 
 export const sceneNoteKinds = ["action", "observation"] as const;
 export type SceneNoteKind = (typeof sceneNoteKinds)[number];
@@ -60,4 +60,5 @@ export type SceneJournalEntry =
   | { type: "note"; value: SceneNote }
   | { type: "message"; value: SceneMessage }
   | { type: "oracle"; value: OracleRecord }
+  | { type: "inspiration"; value: OracleInspiration }
   | { type: "roll"; value: DiceRoll };
