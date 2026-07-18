@@ -2,11 +2,13 @@
 
 import { useActionState } from "react";
 import {
-  initialLockFormState,
   setupAppPasswordAction,
   unlockAppAction,
   resetAppPasswordAction,
 } from "@/features/settings/security-actions";
+
+interface LockFormState { error: boolean }
+const initialLockFormState: LockFormState = { error: false };
 
 export function AppLock({ configured }: { configured: boolean }) {
   const action = configured ? unlockAppAction : setupAppPasswordAction;

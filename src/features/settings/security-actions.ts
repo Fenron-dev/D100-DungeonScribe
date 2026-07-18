@@ -9,8 +9,7 @@ import {
   unlockAiProfileVault,
 } from "@/services/ai-profile-vault-service";
 
-export interface LockFormState { error: boolean }
-export const initialLockFormState: LockFormState = { error: false };
+interface LockFormState { error: boolean }
 
 function password(formData: FormData): string {
   const value = formData.get("password");
