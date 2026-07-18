@@ -6,7 +6,7 @@ import type {
   SceneNote,
   SceneNoteDraft,
 } from "@/domain/scene-journal";
-import type { PrismaClient } from "@/generated/prisma/client";
+import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import type {
   PersistedRollDraft,
   SceneJournalRepository,
@@ -19,6 +19,10 @@ type NoteRow = Awaited<ReturnType<PrismaClient["sceneNote"]["findUnique"]>>;
 type RollRow = Awaited<ReturnType<PrismaClient["diceRoll"]["findUnique"]>>;
 
 const participantIdsSchema = z.array(z.string());
+
+function toPrismaJson(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
 
 function mapNote(row: NonNullable<NoteRow>): SceneNote {
   return {
@@ -117,8 +121,8 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
           characterId: draft.input.characterId,
           action: draft.input.action,
           difficulty: draft.input.difficulty,
-          input: draft.input,
-          result: draft.result,
+          input: toPrismaJson(draft.input),
+          result: toPrismaJson(draft.result),
           rulesetId: draft.rulesetId,
           rulesetVersion: draft.rulesetVersion,
         },
