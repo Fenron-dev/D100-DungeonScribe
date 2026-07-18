@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { campaignStyleSchema } from "@/schemas/campaign";
 
 export const narrationRequestSchema = z.object({
   locale: z.enum(["de", "en"]),
@@ -10,6 +11,8 @@ export const narrationRequestSchema = z.object({
       genre: z.string().nullable(),
       mood: z.string().nullable(),
       tension: z.number().int().min(1).max(6),
+      futureIdeas: z.string().nullable(),
+      style: campaignStyleSchema,
     }),
     scene: z.object({
       title: z.string(),

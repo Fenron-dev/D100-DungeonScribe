@@ -51,6 +51,8 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
           genre: scene.campaign.genre,
           mood: scene.campaign.mood,
           tension: scene.campaign.tension,
+          futureIdeas: scene.campaign.futureIdeas,
+          style: scene.campaign.style,
         },
         scene: {
           title: scene.title,

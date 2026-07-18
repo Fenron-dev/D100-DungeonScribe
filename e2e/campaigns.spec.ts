@@ -18,8 +18,21 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Kampagne erstellen" }).click();
 
   await expect(
+    page.getByRole("heading", { level: 1, name: "Eine Szene beginnen" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Entwurf erzeugen" })).toBeVisible();
+  await page.getByRole("link", { name: "Zu den Szenen" }).click();
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+  await expect(
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
   ).toBeVisible();
+
+  await page.getByRole("link", { name: "Spielen" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Was möchtest du spielen?" }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Erste Szene beginnen" })).toBeVisible();
+  await page.getByRole("link", { name: "Kampagne öffnen" }).click();
 
   await page.getByRole("link", { name: "Charakter erstellen" }).click();
   await page.getByRole("button", { name: "Entwurf erzeugen" }).click();

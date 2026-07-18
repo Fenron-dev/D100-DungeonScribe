@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createSceneAction } from "@/features/scenes/actions";
-import { SceneForm } from "@/features/scenes/scene-form";
+import { SceneCreationStudio } from "@/features/scenes/scene-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
+import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -39,11 +40,13 @@ export default async function NewScenePage({ params }: NewScenePageProps) {
         <h1>{copy.createTitle}</h1>
         <p>{copy.createDescription}</p>
       </header>
-      <SceneForm
+      <SceneCreationStudio
         action={action}
+        campaignId={campaign.id}
         characters={characters}
         entities={entities}
         messages={messages}
+        providerMode={creativeDraftProviderMode}
         threads={threads}
       />
     </div>

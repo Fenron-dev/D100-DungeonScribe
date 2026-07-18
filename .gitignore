@@ -32,6 +32,9 @@ credentials/
 *.sqlite
 *.sqlite3
 data/
+vault/
+imports/
+modules/
 exports/
 backups/
 private/

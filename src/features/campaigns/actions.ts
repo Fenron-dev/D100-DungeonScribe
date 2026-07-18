@@ -28,11 +28,27 @@ function readText(formData: FormData, key: string): string {
 }
 
 function parseForm(formData: FormData) {
+  const readStyleValue = (key: string): number =>
+    Number.parseInt(readText(formData, key), 10);
+
   return campaignDraftSchema.safeParse({
     name: readText(formData, "name"),
     premise: readText(formData, "premise"),
     genre: readText(formData, "genre"),
     mood: readText(formData, "mood"),
+    templateId: readText(formData, "templateId"),
+    futureIdeas: readText(formData, "futureIdeas"),
+    style: {
+      seriousness: readStyleValue("seriousness"),
+      groundedness: readStyleValue("groundedness"),
+      action: readStyleValue("action"),
+      combat: readStyleValue("combat"),
+      sliceOfLife: readStyleValue("sliceOfLife"),
+      rulesDensity: readStyleValue("rulesDensity"),
+      danger: readStyleValue("danger"),
+      lootAmount: readStyleValue("lootAmount"),
+      lootSignificance: readStyleValue("lootSignificance"),
+    },
   });
 }
 
@@ -44,6 +60,9 @@ function normalizeErrors(
     premise: errors.premise ?? [],
     genre: errors.genre ?? [],
     mood: errors.mood ?? [],
+    templateId: errors.templateId ?? [],
+    futureIdeas: errors.futureIdeas ?? [],
+    style: errors.style ?? [],
   };
 }
 
@@ -73,7 +92,7 @@ export async function createCampaignAction(
 
   revalidatePath("/");
   revalidatePath("/campaigns");
-  redirect(`/campaigns/${campaignId}`);
+  redirect(`/campaigns/${campaignId}/scenes/new`);
 }
 
 export async function updateCampaignAction(

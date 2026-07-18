@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { CreativeDraftRequest } from "@/ai/creative-draft-provider";
 import type { HttpClient } from "@/ai/http-client";
 import { OpenAiCreativeDraftProvider } from "@/ai/openai-creative-draft-provider";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 const request: CreativeDraftRequest = {
   locale: "de",
@@ -12,6 +13,9 @@ const request: CreativeDraftRequest = {
     premise: "Verlorene Wege kehren zurück.",
     genre: "Fantasy",
     mood: "Unheimlich",
+    templateId: "balanced",
+    futureIdeas: null,
+    style: defaultCampaignStyle,
   },
 };
 

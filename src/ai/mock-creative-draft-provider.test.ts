@@ -4,6 +4,7 @@ import type { CreativeDraftRequest } from "@/ai/creative-draft-provider";
 import { campaignDraftSchema } from "@/schemas/campaign";
 import { characterDraftSchema } from "@/schemas/character";
 import { worldEntityDraftSchema } from "@/schemas/world-entity";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 const request: CreativeDraftRequest = {
   locale: "de",
@@ -14,6 +15,9 @@ const request: CreativeDraftRequest = {
     premise: "Verlorene Wege kehren zurück.",
     genre: "Fantasy",
     mood: "Unheimlich",
+    templateId: "balanced",
+    futureIdeas: null,
+    style: defaultCampaignStyle,
   },
 };
 

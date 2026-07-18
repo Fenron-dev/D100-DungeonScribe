@@ -1,3 +1,8 @@
+import type {
+  CampaignStyle,
+  CampaignTemplateId,
+} from "@/domain/campaign-style";
+
 export const campaignStatuses = ["active", "archived"] as const;
 
 export type CampaignStatus = (typeof campaignStatuses)[number];
@@ -8,6 +13,9 @@ export interface Campaign {
   premise: string;
   genre: string | null;
   mood: string | null;
+  templateId: CampaignTemplateId;
+  futureIdeas: string | null;
+  style: CampaignStyle;
   tension: number;
   status: CampaignStatus;
   createdAt: Date;
@@ -20,4 +28,7 @@ export interface CampaignDraft {
   premise: string;
   genre: string | null;
   mood: string | null;
+  templateId: CampaignTemplateId;
+  futureIdeas: string | null;
+  style: CampaignStyle;
 }

@@ -20,6 +20,9 @@ model Campaign {
   premise    String
   genre      String?
   mood       String?
+  templateId String   @default("balanced")
+  futureIdeas String?
+  style      Json
   tension    Int      @default(3)
   status     String   @default("active")
   archivedAt DateTime?

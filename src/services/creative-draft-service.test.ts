@@ -4,8 +4,10 @@ import type {
   CreativeDraftRequest,
 } from "@/ai/creative-draft-provider";
 import type { CampaignDraft } from "@/domain/campaign";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 import type { CharacterDraft } from "@/domain/character";
 import type { WorldEntityDraft } from "@/domain/world-entity";
+import type { SceneDraft } from "@/domain/scene";
 import { FixedRandomSource } from "@/rules/testing/fixed-random-source";
 import { CreativeDraftService } from "@/services/creative-draft-service";
 
@@ -13,7 +15,15 @@ class CapturingProvider implements CreativeDraftProvider {
   public request: CreativeDraftRequest | null = null;
   public async generateCampaign(request: CreativeDraftRequest): Promise<CampaignDraft> {
     this.request = request;
-    return { name: "Test", premise: "Eine Idee", genre: null, mood: null };
+    return {
+      name: "Test",
+      premise: "Eine Idee",
+      genre: null,
+      mood: null,
+      templateId: "balanced",
+      futureIdeas: null,
+      style: defaultCampaignStyle,
+    };
   }
   public async generateCharacter(request: CreativeDraftRequest): Promise<CharacterDraft> {
     this.request = request;
@@ -38,6 +48,19 @@ class CapturingProvider implements CreativeDraftProvider {
       details: { type: "item", purpose: "Wegweiser", rarity: "Selten" },
     };
   }
+  public async generateScene(request: CreativeDraftRequest): Promise<SceneDraft> {
+    this.request = request;
+    return {
+      title: "Beginn",
+      locationId: null,
+      expectedSetup: "Eine erwartete Lage.",
+      actualSetup: "Ein überraschender Beginn.",
+      objective: null,
+      participantCharacterIds: [],
+      participantEntityIds: [],
+      relevantThreadIds: [],
+    };
+  }
 }
 
 describe("CreativeDraftService", () => {
@@ -49,6 +72,9 @@ describe("CreativeDraftService", () => {
       premise: "Verlorene Wege kehren zurück.",
       genre: null,
       mood: null,
+      templateId: "balanced" as const,
+      futureIdeas: null,
+      style: defaultCampaignStyle,
     };
     await service.generateCharacter("Überraschend", campaign);
     expect(provider.request).toEqual({

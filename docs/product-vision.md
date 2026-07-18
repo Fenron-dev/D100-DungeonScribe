@@ -1,0 +1,121 @@
+# Produktvision: Spielen statt verwalten
+
+## Leitgedanke
+
+D100 DungeonScribe ist eine private Solo-Rollenspielplattform. Der Spielchat ist
+der Mittelpunkt. Eine Idee oder ein einziger Satz muss genügen, um ein neues
+Abenteuer zu beginnen oder eine bestehende Kampagne weiterzuführen. Formulare
+bleiben als freiwillige Detailansicht erhalten, dürfen den Spielfluss aber nicht
+voraussetzen.
+
+Es wird nur festgelegt, was für die nächste Spielsituation benötigt wird. Welt,
+Charaktere, Regeln und Handlungsstränge dürfen während des Spiels gemeinsam mit
+der KI entdeckt und entwickelt werden.
+
+## Zielablauf
+
+1. Auf der Startseite stehen **Spiel fortsetzen**, **Neues Abenteuer** und
+   **Überrasch mich** im Vordergrund.
+2. Für ein neues Abenteuer genügt eine Prämisse. Alternativ erzeugt die KI einen
+   vollständigen Vorschlag.
+3. Vor dem Speichern zeigt die App eine bearbeitbare Vorschau mit
+   **Übernehmen**, **Anpassen** und **Neu erzeugen**.
+4. Danach beginnt unmittelbar die erste Szene im Spielchat.
+5. Erzählung, freie Spielereingaben, optionale Handlungsvorschläge, Würfe und
+   Orakel bleiben auf derselben Spieloberfläche.
+6. Die KI erkennt mögliche neue Personen, Orte, Gegenstände, Regeln,
+   Erkenntnisse und Handlungsstränge. Sie legt sie nicht verbindlich an, sondern
+   zeigt zunächst kleine Vorschlagskarten im Spiel.
+7. Harmlose Vorschlagsarten können später auf Wunsch automatisch übernommen
+   werden. Wichtige mechanische Änderungen bleiben bestätigungspflichtig.
+
+## Kampagnenstart
+
+Der schnelle Einstieg bietet drei Wege:
+
+- **Überrasch mich:** Die KI schlägt alles Nötige vor.
+- **Aus meiner Idee:** Ein Satz wird zu Kampagnenentwurf und Startszene.
+- **Detailliert erstellen:** Alle Angaben können bewusst selbst gesetzt werden.
+
+Über eine Vorlage oder einen KI-Vorschlag werden zentrale Spielparameter
+vorbelegt. Eigene Vorlagen können später gespeichert werden. Die wichtigsten
+Einstellungen sind direkt sichtbar, weitere Details bleiben aufklappbar.
+
+Vorgesehene unabhängige Achsen sind unter anderem:
+
+- hoffnungsvoll bis trostlos
+- ernst bis humorvoll
+- bodenständig bis überdreht
+- persönlich bis episch
+- entspannt bis actionreich
+- friedlich bis kampfbetont
+- Slice of Life bis großes Abenteuer
+- geringe bis hohe Gegnerdichte
+- erzählerisch bis taktisch
+- wenig bis viel Farming und Crafting
+- seltene Beute bis Beuteüberfluss
+- gewöhnliche bis besonders bedeutsame Funde
+- geringe bis hohe Gefahr
+
+Grün-Gelb-Rot wird nur dort eingesetzt, wo die Farbe eine verständliche
+Intensität oder Gefahr ausdrückt. Jeder Regler besitzt zusätzlich benannte
+Endpunkte und einen lesbaren Wert; Bedeutung wird nie allein durch Farbe
+vermittelt.
+
+Kampagneneinstellungen bleiben während des Spiels anpassbar. Änderungen wirken
+auf kommende Szenen und schreiben vergangene Ereignisse nicht rückwirkend um.
+
+## Zukunftsideen
+
+Eine Kampagne kann unverbindliche Wünsche für ihren späteren Verlauf speichern,
+zum Beispiel einen besonderen Fund, eine erlernbare Fähigkeit oder eine spätere
+Entwicklung. Solche Einträge sind Möglichkeiten, keine bereits wahren Fakten.
+
+Später sollen sie optional Angaben zu Zeitpunkt, Genauigkeit und Überraschung
+erhalten. Die KI darf sie vorbereiten und passend einbauen, aber nicht erzwingen.
+
+## Vorlagen, Favoriten und persönliche Bibliothek
+
+Kampagneneinstellungen, Regeln, Gegenstände, Personen- und Kreaturentypen,
+Orte, Fraktionen sowie Orakeltabellen können als Favoriten markiert und in
+anderen Kampagnen wiederverwendet werden. Die KI darf passende Favoriten
+vorschlagen, übernimmt sie aber nicht ungefragt.
+
+## Abenteuermodule
+
+Ein späterer Import liest ein vom Nutzer selbst ausgewähltes PDF, Dokument oder
+Textmodul ein. Die KI extrahiert Orte, Personen, Begegnungen, Gerüchte, Tabellen,
+Regeln und Handlungsabschnitte in eine prüfbare Vorschau. Unklare oder
+widersprüchliche Angaben werden markiert. Erst eine Bestätigung macht daraus
+Kampagnenzustand.
+
+Der Import bietet die Modi **originalgetreu spielen** und **als Inspiration
+verwenden**. Jeder Nutzer stellt seine Module selbst bereit; sie gehören nicht
+zum ausgelieferten Programm.
+
+## Datenschutz und öffentliche Builds
+
+Das öffentliche GitHub-Repository enthält ausschließlich Programmcode,
+Dokumentation und Build-Workflows. Persönliche Inhalte gehören in den Vault des
+Nutzers und niemals in das Repository.
+
+- Vault, Datenbanken, Speicherstände und importierte Module liegen außerhalb des
+  Projektordners.
+- Keine Telemetrie und keine automatische Cloud-Synchronisierung.
+- OpenAI-Schlüssel und GitHub-Zugangsdaten werden niemals gespeichert,
+  protokolliert oder exportiert; eine spätere App-Eingabe nutzt den geschützten
+  Schlüsselbund des Betriebssystems.
+- Eine Übertragung von Modul- oder Kampagneninhalten an einen KI-Anbieter wird
+  vorher sichtbar gemacht und benötigt die Zustimmung des Nutzers.
+- Private Sicherungen sind optional und vom öffentlichen Quellcode getrennt.
+- Eine spätere GitHub-Sicherung verwendet exportierte Kampagnenpakete statt der
+  laufenden Datenbank. Geheimnisse werden ausdrücklich ausgeschlossen.
+
+## Umsetzungsreihenfolge
+
+1. Klarer Spielstart und zentraler Spielbereich
+2. Kampagnenvorlagen, zentrale Regler, KI-Vorschläge und Zukunftsideen
+3. KI-Entwurf einer prüfbaren Startszene
+4. Vorschlagskarten aus Chat, Würfen und Nutzerinterpretationen
+5. Favoriten- und Bausteinbibliothek
+6. Optionaler, prüfbarer Modulimport

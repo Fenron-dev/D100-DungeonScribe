@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Campaign, CampaignDraft } from "@/domain/campaign";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 import type {
   CampaignListOptions,
   CampaignRepository,
@@ -74,6 +75,9 @@ const referenceDraft = {
     "  Eine Kartografin sucht nach Straßen, die jede Nacht ihren Verlauf ändern.  ",
   genre: " Fantasy ",
   mood: " Geheimnisvoll ",
+  templateId: "balanced" as const,
+  futureIdeas: null,
+  style: defaultCampaignStyle,
 };
 
 describe("CampaignService", () => {

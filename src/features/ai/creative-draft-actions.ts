@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { CampaignDraft } from "@/domain/campaign";
 import type { CharacterDraft } from "@/domain/character";
 import type { WorldEntityDraft } from "@/domain/world-entity";
+import type { SceneDraft } from "@/domain/scene";
 import { campaignService } from "@/services/campaign-service-instance";
 import { creativeDraftService } from "@/services/creative-draft-service-instance";
 
@@ -24,7 +25,7 @@ function nextRevision(current: number): number {
   return Number.isSafeInteger(current) && current >= 0 ? current + 1 : 1;
 }
 
-function reportDraftError(kind: "campaign" | "character" | "world", error: unknown): void {
+function reportDraftError(kind: "campaign" | "character" | "world" | "scene", error: unknown): void {
   const technicalError = error as { name?: unknown };
   const name = typeof technicalError.name === "string" ? technicalError.name : "UnknownError";
   console.error(`[ai] ${kind} draft failed (${name})`);
@@ -38,6 +39,9 @@ async function campaignContext(campaignId: string): Promise<CampaignDraft | null
     premise: campaign.premise,
     genre: campaign.genre,
     mood: campaign.mood,
+    templateId: campaign.templateId,
+    futureIdeas: campaign.futureIdeas,
+    style: campaign.style,
   };
 }
 
@@ -97,6 +101,27 @@ export async function generateWorldEntityDraftAction(
     };
   } catch (error) {
     reportDraftError("world", error);
+    return { ...state, error: true };
+  }
+}
+
+export async function generateSceneDraftAction(
+  campaignId: string,
+  state: CreativeDraftActionResult<SceneDraft>,
+  formData: FormData,
+): Promise<CreativeDraftActionResult<SceneDraft>> {
+  const parsed = preferenceSchema.safeParse(preferenceFrom(formData));
+  if (!parsed.success) return { ...state, error: true };
+  try {
+    const campaign = await campaignContext(campaignId);
+    if (!campaign) return { ...state, error: true };
+    return {
+      draft: await creativeDraftService.generateScene(parsed.data, campaign),
+      error: false,
+      revision: nextRevision(state.revision),
+    };
+  } catch (error) {
+    reportDraftError("scene", error);
     return { ...state, error: true };
   }
 }

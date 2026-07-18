@@ -4,6 +4,7 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaCharacterRepository } from "./prisma-character-repository";
 import { PrismaCampaignRepository } from "./prisma-campaign-repository";
 import { PrismaWorldEntityRepository } from "./prisma-world-entity-repository";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 const testDatabaseUrl = process.env.DATABASE_URL;
 
@@ -23,6 +24,9 @@ const draft = {
   premise: "Eine verschwundene Straße ist nach zwanzig Jahren zurückgekehrt.",
   genre: "Fantasy",
   mood: "Geheimnisvoll",
+  templateId: "balanced" as const,
+  futureIdeas: null,
+  style: defaultCampaignStyle,
 };
 
 describe("PrismaCampaignRepository", () => {

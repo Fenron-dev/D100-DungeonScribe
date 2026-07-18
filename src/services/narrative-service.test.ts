@@ -7,6 +7,7 @@ import type {
 import type { SceneMessage } from "@/domain/scene-journal";
 import type { NarrativeRepository } from "@/repositories/narrative-repository";
 import { NarrativeService } from "@/services/narrative-service";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 class MemoryNarrativeRepository implements NarrativeRepository {
   public saved: NarrationResult | null = null;
@@ -21,7 +22,15 @@ class MemoryNarrativeRepository implements NarrativeRepository {
       locale,
       direction,
       context: {
-        campaign: { name: "Test", premise: "Nebel", genre: null, mood: null, tension: 3 },
+        campaign: {
+          name: "Test",
+          premise: "Nebel",
+          genre: null,
+          mood: null,
+          tension: 3,
+          futureIdeas: null,
+          style: defaultCampaignStyle,
+        },
         scene: {
           title: "Turm",
           actualSetup: "Still",

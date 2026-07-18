@@ -5,6 +5,8 @@ import type {
 import type { CampaignDraft } from "@/domain/campaign";
 import type { CharacterDraft } from "@/domain/character";
 import type { WorldEntityDraft } from "@/domain/world-entity";
+import type { SceneDraft } from "@/domain/scene";
+import { campaignStyleTemplates } from "@/domain/campaign-style";
 
 const campaignDrafts: CampaignDraft[] = [
   {
@@ -12,18 +14,27 @@ const campaignDrafts: CampaignDraft[] = [
     premise: "Versunkene Glocken rufen jede Nacht Menschen in ein Moor, das sich an ihre verlorenen Erinnerungen erinnert.",
     genre: "Düstere Fantasy",
     mood: "Melancholisch und unheimlich",
+    templateId: "survival",
+    futureIdeas: null,
+    style: campaignStyleTemplates.survival,
   },
   {
     name: "Archiv der letzten Sterne",
     premise: "Eine wandernde Bibliothek bewahrt Sternkarten zu Orten, die am nächsten Morgen aus der Welt verschwinden.",
     genre: "Mystery-Fantasy",
     mood: "Staunend und angespannt",
+    templateId: "mythic",
+    futureIdeas: null,
+    style: campaignStyleTemplates.mythic,
   },
   {
     name: "Der Zug ohne Fahrplan",
     premise: "Ein verlassener Nachtzug hält nur für Menschen, die eine unmögliche Entscheidung rückgängig machen wollen.",
     genre: "Urban Fantasy",
     mood: "Traumartig und geheimnisvoll",
+    templateId: "balanced",
+    futureIdeas: null,
+    style: campaignStyleTemplates.balanced,
   },
 ];
 
@@ -84,6 +95,39 @@ const worldDrafts: WorldEntityDraft[] = [
   },
 ];
 
+const sceneDrafts: SceneDraft[] = [
+  {
+    title: "Das Läuten im Nebel",
+    locationId: null,
+    expectedSetup: "Der Charakter folgt einem fernen Glockenton bis an den Rand eines Ortes, den niemand betreten will.",
+    actualSetup: "Als der Nebel für einen Atemzug aufreißt, liegt im feuchten Boden eine frische Spur, die direkt auf den Charakter zuläuft.",
+    objective: "Herausfinden, wer oder was die Spur hinterlassen hat.",
+    participantCharacterIds: [],
+    participantEntityIds: [],
+    relevantThreadIds: [],
+  },
+  {
+    title: "Eine Karte mit leerer Stelle",
+    locationId: null,
+    expectedSetup: "Ein scheinbar gewöhnlicher Auftrag soll den Charakter zu einem sicheren Treffpunkt führen.",
+    actualSetup: "Am Treffpunkt wartet niemand. Auf dem Tisch liegt nur eine Karte, auf der sich langsam ein bislang unbekannter Weg einzeichnet.",
+    objective: "Entscheiden, ob der unbekannte Weg verfolgt werden soll.",
+    participantCharacterIds: [],
+    participantEntityIds: [],
+    relevantThreadIds: [],
+  },
+  {
+    title: "Der Gast vor Sonnenaufgang",
+    locationId: null,
+    expectedSetup: "Ein ruhiger Morgen bietet Gelegenheit, sich mit der Umgebung vertraut zu machen.",
+    actualSetup: "Noch vor Sonnenaufgang klopft ein erschöpfter Fremder an die Tür und behauptet, den Charakter aus einem Traum zu kennen.",
+    objective: "Die Absicht des unerwarteten Gastes einschätzen.",
+    participantCharacterIds: [],
+    participantEntityIds: [],
+    relevantThreadIds: [],
+  },
+];
+
 function choose<T>(values: readonly T[], variation: number): T {
   const value = values[variation % values.length];
   if (!value) throw new Error("Mock draft collection is empty");
@@ -101,5 +145,9 @@ export class MockCreativeDraftProvider implements CreativeDraftProvider {
 
   public async generateWorldEntity(request: CreativeDraftRequest): Promise<WorldEntityDraft> {
     return choose(worldDrafts, request.variation);
+  }
+
+  public async generateScene(request: CreativeDraftRequest): Promise<SceneDraft> {
+    return choose(sceneDrafts, request.variation);
   }
 }

@@ -4,7 +4,12 @@ import type {
   CampaignListOptions,
   CampaignRepository,
 } from "@/repositories/campaign-repository";
-import { campaignStatusSchema, campaignTensionSchema } from "@/schemas/campaign";
+import {
+  campaignStatusSchema,
+  campaignStyleSchema,
+  campaignTemplateIdSchema,
+  campaignTensionSchema,
+} from "@/schemas/campaign";
 
 type CampaignRow = Awaited<
   ReturnType<PrismaClient["campaign"]["findUnique"]>
@@ -17,6 +22,9 @@ function mapCampaign(row: NonNullable<CampaignRow>): Campaign {
     premise: row.premise,
     genre: row.genre,
     mood: row.mood,
+    templateId: campaignTemplateIdSchema.parse(row.templateId),
+    futureIdeas: row.futureIdeas,
+    style: campaignStyleSchema.parse(row.style),
     tension: campaignTensionSchema.parse(row.tension),
     status: campaignStatusSchema.parse(row.status),
     createdAt: row.createdAt,
@@ -30,7 +38,9 @@ export class PrismaCampaignRepository implements CampaignRepository {
 
   public async create(draft: CampaignDraft): Promise<Campaign> {
     return this.client.$transaction(async (transaction) => {
-      const campaign = await transaction.campaign.create({ data: draft });
+      const campaign = await transaction.campaign.create({
+        data: { ...draft, style: { ...draft.style } },
+      });
 
       await transaction.campaignEvent.create({
         data: {
@@ -73,7 +83,7 @@ export class PrismaCampaignRepository implements CampaignRepository {
     return this.client.$transaction(async (transaction) => {
       const campaign = await transaction.campaign.update({
         where: { id },
-        data: draft,
+        data: { ...draft, style: { ...draft.style } },
       });
 
       await transaction.campaignEvent.create({

@@ -48,6 +48,18 @@ export interface MessageCatalog {
     openAiMode: string;
     demoHint: string;
   };
+  play: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    continueAction: string;
+    startAction: string;
+    setupAction: string;
+    newCampaign: string;
+    noCampaignTitle: string;
+    noCampaignDescription: string;
+    otherCampaigns: string;
+  };
   campaigns: {
     eyebrow: string;
     title: string;
@@ -81,6 +93,33 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
     updatedLabel: string;
+    setupTitle: string;
+    setupDescription: string;
+    templateLabel: string;
+    templateHint: string;
+    templates: Record<
+      "balanced" | "mythic" | "dungeon" | "cozy" | "survival" | "loot",
+      string
+    >;
+    futureIdeasLabel: string;
+    futureIdeasPlaceholder: string;
+    futureIdeasHint: string;
+    styleTitle: string;
+    styleDescription: string;
+    moreSettings: string;
+    balancedValue: string;
+    styleAxes: Record<
+      | "seriousness"
+      | "groundedness"
+      | "action"
+      | "combat"
+      | "sliceOfLife"
+      | "rulesDensity"
+      | "danger"
+      | "lootAmount"
+      | "lootSignificance",
+      { label: string; left: string; right: string }
+    >;
   };
   characters: {
     sectionTitle: string;
@@ -533,6 +572,20 @@ const germanMessages = {
     openAiMode: "OpenAI",
     demoHint: "Ohne API-Schlüssel werden lokale Beispielentwürfe verwendet und keine Daten übertragen.",
   },
+  play: {
+    eyebrow: "Direkt ins Abenteuer",
+    title: "Was möchtest du spielen?",
+    description:
+      "Setze deine letzte Szene fort oder beginne aus einer Kampagnenidee unmittelbar eine neue.",
+    continueAction: "Spiel fortsetzen",
+    startAction: "Erste Szene beginnen",
+    setupAction: "Zum Spielstart",
+    newCampaign: "Neues Abenteuer",
+    noCampaignTitle: "Noch wartet dein erstes Abenteuer",
+    noCampaignDescription:
+      "Eine Idee oder ein einzelner Satz genügt. Die Details kannst du prüfen oder der KI überlassen.",
+    otherCampaigns: "Weitere aktive Kampagnen",
+  },
   campaigns: {
     eyebrow: "Kampagnenbibliothek",
     title: "Deine Kampagnen",
@@ -569,6 +622,40 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Die Kampagne konnte nicht gespeichert werden.",
     updatedLabel: "Aktualisiert",
+    setupTitle: "Wie soll sich das Abenteuer anfühlen?",
+    setupDescription:
+      "Wähle eine Vorlage und passe nur an, was dir wichtig ist. Alle Einstellungen lassen sich später ändern.",
+    templateLabel: "Vorlage",
+    templateHint: "Die Vorlage stellt die Regler ein. Danach kannst du jeden Wert einzeln verändern.",
+    templates: {
+      balanced: "Ausgewogenes Abenteuer",
+      mythic: "Mythische epische Fantasy",
+      dungeon: "Überdrehtes Dungeon-Spektakel",
+      cozy: "Gemütliches magisches Landleben",
+      survival: "Harter Überlebenskampf",
+      loot: "Lootreiches Actionabenteuer",
+    },
+    futureIdeasLabel: "Was soll später einmal vorkommen?",
+    futureIdeasPlaceholder:
+      "Zum Beispiel: Irgendwann soll mein Charakter eine intelligente Waffe finden oder Drachenmagie lernen.",
+    futureIdeasHint:
+      "Das sind unverbindliche Zukunftsideen. Die KI darf auf einen passenden Moment warten und sie überraschend vorbereiten.",
+    styleTitle: "Spielgefühl",
+    styleDescription:
+      "Die Regler steuern kommende Vorschläge und Erzählungen, ohne bisherige Ereignisse umzuschreiben.",
+    moreSettings: "Weitere Einstellungen",
+    balancedValue: "Ausgewogen",
+    styleAxes: {
+      seriousness: { label: "Ton", left: "Humorvoll", right: "Ernst" },
+      groundedness: { label: "Darstellung", left: "Überdreht", right: "Bodenständig" },
+      action: { label: "Tempo", left: "Entspannt", right: "Actionreich" },
+      combat: { label: "Konflikte", left: "Friedlich", right: "Kampfbetont" },
+      sliceOfLife: { label: "Alltag", left: "Großes Abenteuer", right: "Slice of Life" },
+      rulesDensity: { label: "Regeln", left: "Erzählerisch", right: "Taktisch" },
+      danger: { label: "Gefahr", left: "Nachsichtig", right: "Gnadenlos" },
+      lootAmount: { label: "Lootmenge", left: "Sehr selten", right: "Beuteüberfluss" },
+      lootSignificance: { label: "Bedeutung der Funde", left: "Gewöhnlich", right: "Jeder Fund ist besonders" },
+    },
   },
   characters: {
     sectionTitle: "Charaktere",
@@ -1153,6 +1240,20 @@ const englishMessages = {
     openAiMode: "OpenAI",
     demoHint: "Without an API key, local example drafts are used and no data is transmitted.",
   },
+  play: {
+    eyebrow: "Straight into the adventure",
+    title: "What would you like to play?",
+    description:
+      "Continue your latest scene or turn a campaign idea directly into a new one.",
+    continueAction: "Continue playing",
+    startAction: "Begin first scene",
+    setupAction: "Go to game start",
+    newCampaign: "New adventure",
+    noCampaignTitle: "Your first adventure is waiting",
+    noCampaignDescription:
+      "An idea or a single sentence is enough. Review the details or let the AI suggest them.",
+    otherCampaigns: "Other active campaigns",
+  },
   campaigns: {
     eyebrow: "Campaign library",
     title: "Your campaigns",
@@ -1188,6 +1289,40 @@ const englishMessages = {
     validationMessage: "Please check the highlighted fields.",
     saveError: "The campaign could not be saved.",
     updatedLabel: "Updated",
+    setupTitle: "How should the adventure feel?",
+    setupDescription:
+      "Choose a template and only adjust what matters to you. Every setting can be changed later.",
+    templateLabel: "Template",
+    templateHint: "The template sets the sliders. You can then change every value individually.",
+    templates: {
+      balanced: "Balanced adventure",
+      mythic: "Mythic epic fantasy",
+      dungeon: "Over-the-top dungeon spectacle",
+      cozy: "Cozy magical life",
+      survival: "Harsh survival struggle",
+      loot: "Loot-rich action adventure",
+    },
+    futureIdeasLabel: "What should appear later?",
+    futureIdeasPlaceholder:
+      "For example: One day my character should find an intelligent weapon or learn dragon magic.",
+    futureIdeasHint:
+      "These are optional future ideas. The AI may wait for a fitting moment and prepare them as a surprise.",
+    styleTitle: "Play style",
+    styleDescription:
+      "The sliders guide future suggestions and narration without rewriting past events.",
+    moreSettings: "More settings",
+    balancedValue: "Balanced",
+    styleAxes: {
+      seriousness: { label: "Tone", left: "Humorous", right: "Serious" },
+      groundedness: { label: "Presentation", left: "Over the top", right: "Grounded" },
+      action: { label: "Pace", left: "Relaxed", right: "Action-packed" },
+      combat: { label: "Conflict", left: "Peaceful", right: "Combat-heavy" },
+      sliceOfLife: { label: "Everyday life", left: "Grand adventure", right: "Slice of life" },
+      rulesDensity: { label: "Rules", left: "Narrative", right: "Tactical" },
+      danger: { label: "Danger", left: "Forgiving", right: "Ruthless" },
+      lootAmount: { label: "Loot amount", left: "Very rare", right: "Loot flood" },
+      lootSignificance: { label: "Find significance", left: "Ordinary", right: "Every find matters" },
+    },
   },
   characters: {
     sectionTitle: "Characters",

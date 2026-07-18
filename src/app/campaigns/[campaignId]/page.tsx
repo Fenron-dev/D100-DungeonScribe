@@ -5,6 +5,7 @@ import { archiveCampaignAction } from "@/features/campaigns/actions";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
+import { sceneService } from "@/services/scene-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,10 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
     notFound();
   }
 
-  const characters = await characterService.list(campaign.id);
+  const [characters, activeScene] = await Promise.all([
+    characterService.list(campaign.id),
+    sceneService.findActive(campaign.id),
+  ]);
   const messages = getMessages();
   const copy = messages.campaigns;
   const characterCopy = messages.characters;
@@ -78,6 +82,20 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
           <h1>{campaign.name}</h1>
         </div>
         <div className="detail-actions">
+          {campaign.status === "active" ? (
+            <Link
+              className="button button-primary"
+              href={
+                activeScene
+                  ? `/campaigns/${campaign.id}/scenes/${activeScene.id}`
+                  : `/campaigns/${campaign.id}/scenes/new`
+              }
+            >
+              {activeScene
+                ? messages.play.continueAction
+                : messages.play.startAction}
+            </Link>
+          ) : null}
           <Link
             className="button button-secondary"
             href={`/campaigns/${campaign.id}/edit`}
@@ -119,6 +137,14 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
           ) : null}
         </dl>
       </section>
+
+      {campaign.futureIdeas ? (
+        <section className="future-ideas" aria-labelledby="future-ideas-title">
+          <p className="card-kicker">{copy.optionalHint}</p>
+          <h2 id="future-ideas-title">{copy.futureIdeasLabel}</h2>
+          <p>{campaign.futureIdeas}</p>
+        </section>
+      ) : null}
 
       <section className="character-section" aria-labelledby="characters-title">
         <div className="section-heading">

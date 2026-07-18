@@ -5,12 +5,21 @@ import {
 } from "@/ai/openai-narrative-provider";
 import type { HttpClient } from "@/ai/http-client";
 import type { NarrationRequest } from "@/ai/narrative-provider";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 const request: NarrationRequest = {
   locale: "de",
   direction: "Beschreibe ein Geräusch",
   context: {
-    campaign: { name: "Test", premise: "Nebel", genre: null, mood: null, tension: 3 },
+    campaign: {
+      name: "Test",
+      premise: "Nebel",
+      genre: null,
+      mood: null,
+      tension: 3,
+      futureIdeas: null,
+      style: defaultCampaignStyle,
+    },
     scene: {
       title: "Turm",
       actualSetup: "Die Tür steht offen.",

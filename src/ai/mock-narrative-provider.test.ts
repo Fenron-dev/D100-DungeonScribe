@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MockNarrativeProvider } from "@/ai/mock-narrative-provider";
 import type { NarrationRequest } from "@/ai/narrative-provider";
+import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 const request: NarrationRequest = {
   locale: "de",
@@ -12,6 +13,8 @@ const request: NarrationRequest = {
       genre: "Fantasy",
       mood: "Unheimlich",
       tension: 3,
+      futureIdeas: null,
+      style: defaultCampaignStyle,
     },
     scene: {
       title: "Am Leuchtturm",

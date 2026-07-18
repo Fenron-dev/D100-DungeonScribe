@@ -6,6 +6,7 @@ import {
 import type { CampaignDraft } from "@/domain/campaign";
 import type { CharacterDraft } from "@/domain/character";
 import type { WorldEntityDraft } from "@/domain/world-entity";
+import type { SceneDraft } from "@/domain/scene";
 import type { RandomSource } from "@/rules/random-source";
 
 export class CreativeDraftService {
@@ -42,5 +43,12 @@ export class CreativeDraftService {
     campaign: CampaignDraft,
   ): Promise<WorldEntityDraft> {
     return this.provider.generateWorldEntity(this.request(preference, campaign));
+  }
+
+  public generateScene(
+    preference: string,
+    campaign: CampaignDraft,
+  ): Promise<SceneDraft> {
+    return this.provider.generateScene(this.request(preference, campaign));
   }
 }

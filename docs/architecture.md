@@ -1,5 +1,8 @@
 # Architektur
 
+Die verbindliche Produktrichtung und der angestrebte Spielfluss sind in
+[`product-vision.md`](./product-vision.md) festgehalten.
+
 ## Zielbild
 
 D100 DungeonScribe ist eine modulare Einzelbenutzer-Webanwendung. Sie läuft später lokal oder selbst gehostet und benötigt externe Dienste nur für optionale KI-Funktionen.
