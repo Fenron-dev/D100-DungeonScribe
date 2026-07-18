@@ -232,7 +232,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("tab", { name: "Eintrag" }).click();
   await page
-    .getByLabel("Eintrag", { exact: true })
+    .getByRole("textbox", { name: "Eintrag", exact: true })
     .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
   await page.getByRole("button", { name: "Eintrag speichern" }).click();
   await page.getByRole("tab", { name: "Probe" }).click();
