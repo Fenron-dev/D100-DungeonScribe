@@ -57,6 +57,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("link", { name: "Weltregister öffnen" }).click();
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
   await expect(page.getByRole("button", { name: "Entwurf erzeugen" })).toBeVisible();
+  await page.waitForTimeout(1_000);
   await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
   await expect(page.getByLabel("Kurzfassung")).not.toHaveValue("", { timeout: 15_000 });
   await page.getByLabel("Typ").selectOption("location");
@@ -82,6 +83,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
 
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
   await expect(page.getByLabel("Typ")).toBeVisible();
+  await page.waitForTimeout(1_000);
   await page.getByLabel("Typ").selectOption("faction");
   await page.getByLabel("Name").fill("Bund der Lotsen");
   await page.getByLabel("Ziel").fill("Die sicheren Seewege bewahren");
