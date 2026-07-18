@@ -220,11 +220,13 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
-  await aiMessage.getByText("Text bearbeiten").click();
-  await aiMessage.getByLabel("Überarbeiteter Text").fill(
+  const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");
+  await aiMessageEdit.locator("summary").click();
+  await expect(aiMessageEdit).toHaveAttribute("open", "");
+  await aiMessageEdit.getByLabel("Überarbeiteter Text").fill(
     "Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen.",
   );
-  await aiMessage.getByRole("button", { name: "Änderung speichern" }).click();
+  await aiMessageEdit.getByRole("button", { name: "Änderung speichern" }).click();
   await expect(
     page.locator("#game-master-panel").getByRole("paragraph").filter({
       hasText: /^Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen\.$/,
