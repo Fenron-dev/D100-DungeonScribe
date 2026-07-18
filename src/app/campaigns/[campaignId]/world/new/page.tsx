@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createWorldEntityAction } from "@/features/world-entities/actions";
-import { WorldEntityForm } from "@/features/world-entities/world-entity-form";
+import { WorldEntityCreationStudio } from "@/features/world-entities/world-entity-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
+import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,12 @@ export default async function NewWorldEntityPage({
         <h1>{copy.createTitle}</h1>
         <p>{copy.createDescription}</p>
       </header>
-      <WorldEntityForm action={action} messages={messages} mode="create" />
+      <WorldEntityCreationStudio
+        action={action}
+        campaignId={campaign.id}
+        messages={messages}
+        providerMode={creativeDraftProviderMode}
+      />
     </div>
   );
 }

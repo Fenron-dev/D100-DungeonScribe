@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { CampaignForm } from "@/features/campaigns/campaign-form";
 import { createCampaignAction } from "@/features/campaigns/actions";
+import { CampaignCreationStudio } from "@/features/campaigns/campaign-creation-studio";
 import { getMessages } from "@/i18n/messages";
+import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export default function NewCampaignPage() {
   const messages = getMessages();
@@ -17,10 +18,10 @@ export default function NewCampaignPage() {
         <h1>{copy.createTitle}</h1>
         <p>{copy.createDescription}</p>
       </header>
-      <CampaignForm
+      <CampaignCreationStudio
         action={createCampaignAction}
         messages={messages}
-        mode="create"
+        providerMode={creativeDraftProviderMode}
       />
     </div>
   );

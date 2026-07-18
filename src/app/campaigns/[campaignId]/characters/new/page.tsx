@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createCharacterAction } from "@/features/characters/actions";
-import { CharacterForm } from "@/features/characters/character-form";
+import { CharacterCreationStudio } from "@/features/characters/character-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
+import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,12 @@ export default async function NewCharacterPage({ params }: NewCharacterPageProps
         <h1>{copy.createTitle}</h1>
         <p>{copy.createDescription}</p>
       </header>
-      <CharacterForm action={action} messages={messages} mode="create" />
+      <CharacterCreationStudio
+        action={action}
+        campaignId={campaign.id}
+        messages={messages}
+        providerMode={creativeDraftProviderMode}
+      />
     </div>
   );
 }

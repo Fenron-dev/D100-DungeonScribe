@@ -6,14 +6,7 @@ import {
   type NarrationRequest,
   type NarrationResult,
 } from "@/ai/narrative-provider";
-
-interface HttpResponse {
-  ok: boolean;
-  status: number;
-  json(): Promise<unknown>;
-}
-
-export type HttpClient = (url: string, init: RequestInit) => Promise<HttpResponse>;
+import type { HttpClient } from "@/ai/http-client";
 
 const openAiResponseSchema = z.object({
   output: z.array(

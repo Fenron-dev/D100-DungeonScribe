@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   NarrativeProviderError,
   OpenAiNarrativeProvider,
-  type HttpClient,
 } from "@/ai/openai-narrative-provider";
+import type { HttpClient } from "@/ai/http-client";
 import type { NarrationRequest } from "@/ai/narrative-provider";
 
 const request: NarrationRequest = {

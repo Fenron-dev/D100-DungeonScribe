@@ -32,6 +32,22 @@ export interface MessageCatalog {
     foundationsTitle: string;
     foundations: readonly string[];
   };
+  creativeDrafts: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    preferenceLabel: string;
+    preferencePlaceholder: string;
+    preferenceHint: string;
+    generateAction: string;
+    regenerateAction: string;
+    generatingAction: string;
+    reviewHint: string;
+    error: string;
+    demoMode: string;
+    openAiMode: string;
+    demoHint: string;
+  };
   campaigns: {
     eyebrow: string;
     title: string;
@@ -499,6 +515,23 @@ const germanMessages = {
       "Deterministische Regeln und Orakel ohne KI-Abhängigkeit",
       "Prüfbare Änderungen und vollständig exportierbare Daten",
     ],
+  },
+  creativeDrafts: {
+    eyebrow: "Optionaler KI-Entwurf",
+    title: "Überrasch mich",
+    description:
+      "Erzeuge einen vollständigen Vorschlag für die Felder darunter. Gespeichert wird erst, wenn du den Entwurf geprüft und den normalen Speichern-Knopf gedrückt hast.",
+    preferenceLabel: "Wunsch oder Richtung (optional)",
+    preferencePlaceholder: "Zum Beispiel: märchenhaft, düster, ungewöhnlich – oder einfach leer lassen",
+    preferenceHint: "Bei leerem Feld entsteht eine freie Überraschung. Mit „Neu erzeugen“ erhältst du eine andere Variante.",
+    generateAction: "Entwurf erzeugen",
+    regenerateAction: "Neu erzeugen",
+    generatingAction: "Entwurf wird erzeugt …",
+    reviewHint: "Der Entwurf steht jetzt in den Formularfeldern. Du kannst jedes Detail ändern oder ihn bewusst speichern.",
+    error: "Der KI-Entwurf konnte nicht erzeugt werden. Deine bisherigen Formulardaten wurden nicht gespeichert oder verändert.",
+    demoMode: "Demo-Modus",
+    openAiMode: "OpenAI",
+    demoHint: "Ohne API-Schlüssel werden lokale Beispielentwürfe verwendet und keine Daten übertragen.",
   },
   campaigns: {
     eyebrow: "Kampagnenbibliothek",
@@ -1102,6 +1135,23 @@ const englishMessages = {
       "Deterministic rules and oracles without an AI dependency",
       "Reviewable changes and fully exportable data",
     ],
+  },
+  creativeDrafts: {
+    eyebrow: "Optional AI draft",
+    title: "Surprise me",
+    description:
+      "Generate a complete suggestion for the fields below. Nothing is saved until you review the draft and press the normal save button.",
+    preferenceLabel: "Preference or direction (optional)",
+    preferencePlaceholder: "For example: whimsical, dark, unusual — or leave it empty",
+    preferenceHint: "An empty field creates a free surprise. Use “Generate again” for another variant.",
+    generateAction: "Generate draft",
+    regenerateAction: "Generate again",
+    generatingAction: "Generating draft …",
+    reviewHint: "The draft is now in the form fields. You can change every detail or deliberately save it.",
+    error: "The AI draft could not be generated. Your existing form data was not saved or changed.",
+    demoMode: "Demo mode",
+    openAiMode: "OpenAI",
+    demoHint: "Without an API key, local example drafts are used and no data is transmitted.",
   },
   campaigns: {
     eyebrow: "Campaign library",

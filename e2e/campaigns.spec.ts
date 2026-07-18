@@ -5,6 +5,10 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.goto("/campaigns");
   await page.getByRole("link", { name: "Neue Kampagne" }).first().click();
 
+  await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
+  await expect(page.getByText("Der Entwurf steht jetzt in den Formularfeldern.", { exact: false })).toBeVisible();
+  await expect(page.getByLabel("Name")).not.toHaveValue("");
+
   await page.getByLabel("Name").fill("Die Straßen im Nebel");
   await page
     .getByLabel("Kampagnenidee")
@@ -16,6 +20,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Charakter erstellen" }).click();
+  await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
+  await expect(page.getByLabel("Konzept")).not.toHaveValue("");
   await page.getByLabel("Name").fill("Elara Venn");
   await page
     .getByLabel("Konzept")
@@ -37,6 +43,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
   await page.waitForLoadState("networkidle");
   await page.waitForTimeout(1_000);
+  await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
+  await expect(page.getByLabel("Kurzfassung")).not.toHaveValue("");
   await page.getByLabel("Typ").selectOption("location");
   await page.getByLabel("Name").fill("Leuchtturm der Nebelwacht");
   await page.getByLabel("Region").fill("Nordküste");

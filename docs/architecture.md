@@ -107,6 +107,8 @@ API-Schlüssel werden ausschließlich serverseitig aus Umgebungsvariablen oder e
 
 Die erste Erzählfunktion lädt ausschließlich Kampagnenname und -idee, Genre, Stimmung, Spannung, aktuellen Szenenbeginn und -ziel, Namen der Beteiligten sowie Titel offener relevanter Handlungsstränge. Wissenseinträge, Geheimnisse, Charakterdetails und frühere Nachrichten sind nicht Teil dieser Abfrage. Der Adapter fordert keine serverseitige Speicherung der Antwort an. Fehlerprotokolle enthalten nur den Fehlerklassennamen, nicht Schlüssel, Prompt, Kontext oder Antwort.
 
+Story-, Charakter- und Weltobjektgeneratoren verwenden einen zweiten anbieterneutralen Port. Sie liefern ausschließlich fachlich validierte Entwürfe an die vorhandenen Erstellformulare. Ein Entwurf besitzt keine Repository-Abhängigkeit, wird nicht automatisch gespeichert und löst kein `CampaignEvent` aus. „Neu erzeugen“ ersetzt nur den flüchtigen Formularentwurf. Erst die vorhandene manuelle Erstellaktion validiert und persistiert die vom Benutzer geprüften Felder. Charakter- und Weltentwürfe erhalten nur den Kampagnenrahmen; Wissen, Notizen, Ereignisse und Geheimnisse werden nicht geladen.
+
 ## Internationalisierung
 
 Deutsch ist die Standard-Locale. Die UI wird von Beginn an so strukturiert, dass weitere Locales ergänzt werden können:

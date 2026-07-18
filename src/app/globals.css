@@ -457,6 +457,42 @@ h2 {
   box-shadow: var(--shadow-raised);
 }
 
+.creative-draft-panel {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid rgb(154 127 204 / 52%);
+  border-radius: var(--radius-large);
+  background: linear-gradient(145deg, rgb(42 34 61 / 28%), rgb(15 21 18 / 97%));
+  box-shadow: var(--shadow-raised);
+}
+
+.creative-draft-panel h2,
+.creative-draft-panel .eyebrow,
+.creative-draft-panel > p {
+  margin: 0;
+}
+
+.creative-draft-panel > p:not(.form-message, .draft-review-hint) {
+  color: var(--color-muted);
+}
+
+.creative-draft-panel textarea {
+  min-height: 6rem;
+}
+
+.creative-draft-panel > .button {
+  justify-self: start;
+}
+
+.draft-review-hint {
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid rgb(104 174 128);
+  color: #c9eed8;
+  background: rgb(64 128 89 / 14%);
+}
+
 .form-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
