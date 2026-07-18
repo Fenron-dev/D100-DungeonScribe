@@ -151,7 +151,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Szene beginnen" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Die Straße im Nebel" })).toBeVisible();
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
-  await page.getByLabel("Eintrag").fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
+  await page
+    .getByLabel("Eintrag", { exact: true })
+    .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
   await page.getByRole("button", { name: "Eintrag speichern" }).click();
   await expect(page.getByText("Elara folgt den frischen Spuren in das Kartenarchiv.")).toBeVisible();
   await page.getByLabel("Handelnder Charakter").selectOption({ label: "Elara aus dem Nebel" });
