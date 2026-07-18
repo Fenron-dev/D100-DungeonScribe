@@ -73,4 +73,29 @@ describe("OpenAiNarrativeProvider", () => {
       NarrativeProviderError,
     );
   });
+
+  it("uses the compatible chat endpoint for non-OpenAI profiles", async () => {
+    const httpClient = vi.fn<HttpClient>().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        choices: [{ message: { content: '{"narration":"Der Nebel teilt sich."}' } }],
+      }),
+    });
+    const provider = new OpenAiNarrativeProvider(
+      null,
+      "local-model",
+      httpClient,
+      "http://127.0.0.1:1234/v1",
+      "chat-completions",
+    );
+    await expect(provider.generateNarration(request)).resolves.toEqual({
+      narration: "Der Nebel teilt sich.",
+    });
+    expect(httpClient.mock.calls[0]?.[0]).toBe("http://127.0.0.1:1234/v1/chat/completions");
+    const [, init] = httpClient.mock.calls[0] ?? [];
+    expect(init?.headers).not.toMatchObject({ Authorization: expect.any(String) });
+    const body = JSON.parse(String(init?.body)) as { response_format: { type: string } };
+    expect(body.response_format.type).toBe("json_schema");
+  });
 });

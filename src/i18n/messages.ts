@@ -569,7 +569,7 @@ const germanMessages = {
     reviewHint: "Der Entwurf steht jetzt in den Formularfeldern. Du kannst jedes Detail ändern oder ihn bewusst speichern.",
     error: "Der KI-Entwurf konnte nicht erzeugt werden. Deine bisherigen Formulardaten wurden nicht gespeichert oder verändert.",
     demoMode: "Demo-Modus",
-    openAiMode: "OpenAI",
+    openAiMode: "KI-Profil",
     demoHint: "Ohne API-Schlüssel werden lokale Beispielentwürfe verwendet und keine Daten übertragen.",
   },
   play: {
@@ -972,7 +972,7 @@ const germanMessages = {
     aiGeneratingAction: "Erzählung wird erzeugt …",
     aiNarrationError: "Die Erzählung konnte nicht erzeugt oder gespeichert werden.",
     aiDemoMode: "Demo-Modus",
-    aiOpenAiMode: "OpenAI",
+    aiOpenAiMode: "KI-Profil",
     aiDemoHint:
       "Es ist kein API-Schlüssel eingerichtet. Daher entsteht eine lokale, vorhersehbare Demo-Antwort ohne externe Übertragung.",
     noteTitle: "Eintrag festhalten",
@@ -1237,7 +1237,7 @@ const englishMessages = {
     reviewHint: "The draft is now in the form fields. You can change every detail or deliberately save it.",
     error: "The AI draft could not be generated. Your existing form data was not saved or changed.",
     demoMode: "Demo mode",
-    openAiMode: "OpenAI",
+    openAiMode: "AI profile",
     demoHint: "Without an API key, local example drafts are used and no data is transmitted.",
   },
   play: {
@@ -1636,7 +1636,7 @@ const englishMessages = {
     aiGeneratingAction: "Generating narration …",
     aiNarrationError: "The narration could not be generated or saved.",
     aiDemoMode: "Demo mode",
-    aiOpenAiMode: "OpenAI",
+    aiOpenAiMode: "AI profile",
     aiDemoHint:
       "No API key is configured, so a predictable local demo response is used without external transmission.",
     noteTitle: "Record an entry",

@@ -4,7 +4,7 @@ import { createCharacterAction } from "@/features/characters/actions";
 import { CharacterCreationStudio } from "@/features/characters/character-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
-import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
+import { getCreativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,7 @@ export default async function NewCharacterPage({ params }: NewCharacterPageProps
         action={action}
         campaignId={campaign.id}
         messages={messages}
-        providerMode={creativeDraftProviderMode}
+        providerMode={await getCreativeDraftProviderMode()}
       />
     </div>
   );

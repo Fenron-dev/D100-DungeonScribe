@@ -6,7 +6,7 @@ import type { CharacterDraft } from "@/domain/character";
 import type { WorldEntityDraft } from "@/domain/world-entity";
 import type { SceneDraft } from "@/domain/scene";
 import { campaignService } from "@/services/campaign-service-instance";
-import { creativeDraftService } from "@/services/creative-draft-service-instance";
+import { getCreativeDraftService } from "@/services/creative-draft-service-instance";
 
 const preferenceSchema = z.string().trim().max(500);
 
@@ -53,7 +53,7 @@ export async function generateCampaignDraftAction(
   if (!parsed.success) return { ...state, error: true };
   try {
     return {
-      draft: await creativeDraftService.generateCampaign(parsed.data),
+      draft: await (await getCreativeDraftService()).generateCampaign(parsed.data),
       error: false,
       revision: nextRevision(state.revision),
     };
@@ -74,7 +74,7 @@ export async function generateCharacterDraftAction(
     const campaign = await campaignContext(campaignId);
     if (!campaign) return { ...state, error: true };
     return {
-      draft: await creativeDraftService.generateCharacter(parsed.data, campaign),
+      draft: await (await getCreativeDraftService()).generateCharacter(parsed.data, campaign),
       error: false,
       revision: nextRevision(state.revision),
     };
@@ -95,7 +95,7 @@ export async function generateWorldEntityDraftAction(
     const campaign = await campaignContext(campaignId);
     if (!campaign) return { ...state, error: true };
     return {
-      draft: await creativeDraftService.generateWorldEntity(parsed.data, campaign),
+      draft: await (await getCreativeDraftService()).generateWorldEntity(parsed.data, campaign),
       error: false,
       revision: nextRevision(state.revision),
     };
@@ -116,7 +116,7 @@ export async function generateSceneDraftAction(
     const campaign = await campaignContext(campaignId);
     if (!campaign) return { ...state, error: true };
     return {
-      draft: await creativeDraftService.generateScene(parsed.data, campaign),
+      draft: await (await getCreativeDraftService()).generateScene(parsed.data, campaign),
       error: false,
       revision: nextRevision(state.revision),
     };

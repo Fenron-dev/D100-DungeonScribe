@@ -3,6 +3,14 @@ import { expect, test } from "@playwright/test";
 test("creates, edits, and archives a campaign", async ({ page }) => {
   test.setTimeout(180_000);
   await page.goto("/campaigns");
+  if (await page.getByRole("button", { name: "Kennwort speichern" }).isVisible()) {
+    await page.getByLabel("Kennwort", { exact: true }).fill("test-password-123");
+    await page.getByLabel("Kennwort wiederholen").fill("test-password-123");
+    await page.getByRole("button", { name: "Kennwort speichern" }).click();
+  } else {
+    await page.getByLabel("Kennwort", { exact: true }).fill("test-password-123");
+    await page.getByRole("button", { name: "Entsperren" }).click();
+  }
   await page.getByRole("link", { name: "Neue Kampagne" }).first().click();
 
   await page.getByRole("button", { name: "Entwurf erzeugen" }).click();

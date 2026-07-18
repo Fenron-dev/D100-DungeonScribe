@@ -56,4 +56,30 @@ describe("OpenAiCreativeDraftProvider", () => {
     expect(body.input).not.toContain("knowledge");
     expect(body.input).not.toContain("secret");
   });
+
+  it("accepts structured chat completions from compatible providers", async () => {
+    const httpClient = vi.fn<HttpClient>().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        choices: [{ message: { content: JSON.stringify({
+          name: "Sera Venn",
+          concept: "Eine Reisende, die vergessene Wege hören kann.",
+          archetype: "insightful",
+          traits: ["Aufmerksam"],
+          flaw: null,
+          notes: "",
+        }) } }],
+      }),
+    });
+    const provider = new OpenAiCreativeDraftProvider(
+      "router-key",
+      "test-model",
+      httpClient,
+      "https://openrouter.ai/api/v1",
+      "chat-completions",
+    );
+    await expect(provider.generateCharacter(request)).resolves.toMatchObject({ name: "Sera Venn" });
+    expect(httpClient.mock.calls[0]?.[0]).toBe("https://openrouter.ai/api/v1/chat/completions");
+  });
 });

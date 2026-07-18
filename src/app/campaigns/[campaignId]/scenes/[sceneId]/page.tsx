@@ -29,7 +29,7 @@ import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
-import { narrativeProviderMode } from "@/services/narrative-service-instance";
+import { getNarrativeProviderMode } from "@/services/narrative-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
 
@@ -270,7 +270,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
             <NarrativeForm
               action={narrationAction}
               messages={messages}
-              mode={narrativeProviderMode}
+              mode={await getNarrativeProviderMode()}
             />
             <SceneMessageForm action={messageAction} messages={messages} />
             <SceneNoteForm action={noteAction} messages={messages} />

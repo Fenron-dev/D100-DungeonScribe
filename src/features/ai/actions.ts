@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { NarrativeFormState } from "@/features/ai/form-state";
-import { narrativeService } from "@/services/narrative-service-instance";
+import { getNarrativeService } from "@/services/narrative-service-instance";
 
 const inputSchema = z.object({
   direction: z.string().trim().min(1).max(2_000),
@@ -23,7 +23,7 @@ export async function generateNarrationAction(
     return { message: "validation", errors: result.error.issues.map(({ message }) => message) };
   }
   try {
-    const narration = await narrativeService.narrate(
+    const narration = await (await getNarrativeService()).narrate(
       campaignId,
       sceneId,
       result.data.direction,

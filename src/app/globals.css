@@ -1850,6 +1850,89 @@ h2 {
   background: rgb(255 255 255 / 2%);
 }
 
+.lock-page {
+  display: grid;
+  min-height: 100vh;
+  padding: 2rem;
+  place-items: center;
+}
+
+.lock-card {
+  width: min(100%, 34rem);
+  padding: clamp(1.5rem, 6vw, 3rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: linear-gradient(145deg, rgb(27 36 32 / 98%), rgb(14 19 17 / 99%));
+  box-shadow: var(--shadow-raised);
+}
+
+.lock-card h1 {
+  max-width: 12ch;
+  font-size: clamp(2.3rem, 8vw, 4rem);
+}
+
+.lock-card > p:not(.eyebrow, .form-message) {
+  color: var(--color-muted);
+}
+
+.lock-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.button-link {
+  margin-top: 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.settings-page {
+  max-width: 68rem;
+}
+
+.settings-section {
+  margin-top: 3rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+}
+
+.profile-card {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: rgb(255 255 255 / 2%);
+}
+
+.profile-card.profile-active {
+  border-color: rgb(105 171 128 / 70%);
+}
+
+.profile-card h3,
+.profile-card p {
+  margin-top: 0;
+}
+
+.profile-card > p:last-of-type {
+  color: var(--color-muted);
+}
+
+.profile-card .button-row {
+  margin-top: 1rem;
+}
+
+.danger-zone {
+  padding: 1.5rem;
+  border: 1px solid rgb(201 112 94 / 40%);
+  border-radius: var(--radius-medium);
+}
+
 @media (max-width: 48rem) {
   .site-header {
     align-items: flex-start;

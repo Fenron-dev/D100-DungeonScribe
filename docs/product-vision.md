@@ -102,14 +102,31 @@ Nutzers und niemals in das Repository.
 - Vault, Datenbanken, Speicherstände und importierte Module liegen außerhalb des
   Projektordners.
 - Keine Telemetrie und keine automatische Cloud-Synchronisierung.
-- OpenAI-Schlüssel und GitHub-Zugangsdaten werden niemals gespeichert,
-  protokolliert oder exportiert; eine spätere App-Eingabe nutzt den geschützten
-  Schlüsselbund des Betriebssystems.
+- GitHub-Zugangsdaten werden niemals gespeichert. KI-Anbieterschlüssel werden
+  ausschließlich kennwortverschlüsselt im lokalen Profilfach abgelegt und nie
+  protokolliert oder exportiert.
 - Eine Übertragung von Modul- oder Kampagneninhalten an einen KI-Anbieter wird
   vorher sichtbar gemacht und benötigt die Zustimmung des Nutzers.
 - Private Sicherungen sind optional und vom öffentlichen Quellcode getrennt.
 - Eine spätere GitHub-Sicherung verwendet exportierte Kampagnenpakete statt der
   laufenden Datenbank. Geheimnisse werden ausdrücklich ausgeschlossen.
+
+## App-Kennwort und KI-Profile
+
+Beim ersten Start legt der Nutzer ein App-Kennwort fest. Dieses Kennwort wird
+nicht gespeichert. Es leitet mit einer speicherharten Ableitung einen Schlüssel
+ab, der ausschließlich im Arbeitsspeicher gehalten wird. Anbieterprofile werden
+authentifiziert mit AES-256-GCM verschlüsselt in den lokalen Einstellungen
+gespeichert.
+
+Nach einem Neustart ist die App gesperrt. Ein Zurücksetzen bei vergessenem
+Kennwort löscht ausschließlich die verschlüsselten KI-Profile; Kampagnen bleiben
+erhalten. Die erste Ausbaustufe verschlüsselt nicht die Kampagnendatenbank selbst.
+
+Unterstützte Profilarten sind OpenAI, OpenRouter, Groq, Ollama und LM Studio.
+Mehrere Profile desselben Anbieters sind erlaubt. Lokale HTTP-Adressen sind nur
+für Loopback-Ziele zulässig; entfernte Anbieter benötigen HTTPS. Das aktive
+Profil wird für kreative Entwürfe und die KI-Erzählung verwendet.
 
 ## Umsetzungsreihenfolge
 

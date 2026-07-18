@@ -23,6 +23,15 @@ const responseSchema = z.object({
   })),
 });
 
+const chatCompletionSchema = z.object({
+  choices: z.array(z.object({
+    message: z.object({
+      content: z.string().nullable(),
+      refusal: z.string().nullable().optional(),
+    }),
+  })).min(1),
+});
+
 const flatWorldDraftSchema = z.object({
   type: z.enum(["npc", "location", "faction", "item"]),
   name: z.string(),
@@ -142,37 +151,68 @@ function worldDetails(flat: z.infer<typeof flatWorldDraftSchema>): WorldEntityDe
 
 export class OpenAiCreativeDraftProvider implements CreativeDraftProvider {
   public constructor(
-    private readonly apiKey: string,
+    private readonly apiKey: string | null,
     private readonly model: string,
     private readonly httpClient: HttpClient = fetch,
+    private readonly baseUrl = "https://api.openai.com/v1",
+    private readonly apiStyle: "responses" | "chat-completions" = "responses",
   ) {}
 
   private async generate(kind: "campaign" | "character" | "world" | "scene", request: CreativeDraftRequest): Promise<unknown> {
     const validated = creativeDraftRequestSchema.parse(request);
-    const response = await this.httpClient("https://api.openai.com/v1/responses", {
+    const format = {
+      type: "json_schema",
+      name: `${kind}_draft`,
+      strict: true,
+      schema: schemaFor(kind),
+    };
+    const input = JSON.stringify({
+      preference: validated.preference || "Surprise me with a distinctive idea.",
+      variation: validated.variation,
+      campaign: validated.campaign,
+    });
+    const chat = this.apiStyle === "chat-completions";
+    const response = await this.httpClient(`${this.baseUrl.replace(/\/$/, "")}/${chat ? "chat/completions" : "responses"}`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
+      headers: {
+        ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(chat ? {
+        model: this.model,
+        max_tokens: 2_500,
+        messages: [
+          { role: "system", content: instructions(kind, validated.locale) },
+          { role: "user", content: input },
+        ],
+        response_format: { type: "json_schema", json_schema: format },
+      } : {
         model: this.model,
         store: false,
         max_output_tokens: 2_500,
         reasoning: { effort: "low" },
         instructions: instructions(kind, validated.locale),
-        input: JSON.stringify({
-          preference: validated.preference || "Surprise me with a distinctive idea.",
-          variation: validated.variation,
-          campaign: validated.campaign,
-        }),
-        text: { format: {
-          type: "json_schema",
-          name: `${kind}_draft`,
-          strict: true,
-          schema: schemaFor(kind),
-        } },
+        input,
+        text: { format },
       }),
     });
-    if (!response.ok) throw new CreativeDraftProviderError(`OpenAI request failed (${response.status})`);
-    const parsed = responseSchema.safeParse(await response.json());
+    if (!response.ok) throw new CreativeDraftProviderError(`AI request failed (${response.status})`);
+    const payload: unknown = await response.json();
+    if (chat) {
+      const parsed = chatCompletionSchema.safeParse(payload);
+      if (!parsed.success) throw new CreativeDraftProviderError("AI response was malformed");
+      const firstChoice = parsed.data.choices[0];
+      if (!firstChoice) throw new CreativeDraftProviderError("AI returned no draft");
+      const message = firstChoice.message;
+      if (message.refusal) throw new CreativeDraftProviderError("AI refused the draft request");
+      if (!message.content) throw new CreativeDraftProviderError("AI returned no draft");
+      try {
+        return JSON.parse(message.content);
+      } catch {
+        throw new CreativeDraftProviderError("AI draft was not valid JSON");
+      }
+    }
+    const parsed = responseSchema.safeParse(payload);
     if (!parsed.success) throw new CreativeDraftProviderError("OpenAI response was malformed");
     const content = parsed.data.output.flatMap((item) => item.content ?? []);
     if (content.some((item) => item.type === "refusal")) {

@@ -4,22 +4,31 @@ import { MockNarrativeProvider } from "@/ai/mock-narrative-provider";
 import { OpenAiNarrativeProvider } from "@/ai/openai-narrative-provider";
 import { prisma } from "@/db/prisma";
 import { PrismaNarrativeRepository } from "@/repositories/prisma/prisma-narrative-repository";
+import { loadActiveAiProfile } from "@/services/ai-profile-vault-service";
 import { NarrativeService } from "@/services/narrative-service";
 
-const modelSchema = z.string().trim().min(1).max(120);
+const modelSchema = z.string().trim().min(1).max(160);
 
-function createProvider(): NarrativeProvider {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
-  if (!apiKey) return new MockNarrativeProvider();
-  const model = modelSchema.parse(process.env.OPENAI_MODEL ?? "gpt-5.6-luna");
-  return new OpenAiNarrativeProvider(apiKey, model);
+export async function getNarrativeService(): Promise<NarrativeService> {
+  const profile = await loadActiveAiProfile();
+  let provider: NarrativeProvider;
+  if (profile) {
+    provider = new OpenAiNarrativeProvider(
+      profile.apiKey,
+      profile.model,
+      fetch,
+      profile.baseUrl,
+      profile.provider === "openai" ? "responses" : "chat-completions",
+    );
+  } else {
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
+    provider = apiKey
+      ? new OpenAiNarrativeProvider(apiKey, modelSchema.parse(process.env.OPENAI_MODEL ?? "gpt-5-mini"))
+      : new MockNarrativeProvider();
+  }
+  return new NarrativeService(new PrismaNarrativeRepository(prisma), provider);
 }
 
-export const narrativeService = new NarrativeService(
-  new PrismaNarrativeRepository(prisma),
-  createProvider(),
-);
-
-export const narrativeProviderMode = process.env.OPENAI_API_KEY?.trim()
-  ? "openai"
-  : "demo";
+export async function getNarrativeProviderMode(): Promise<"openai" | "demo"> {
+  return (await loadActiveAiProfile()) || process.env.OPENAI_API_KEY?.trim() ? "openai" : "demo";
+}

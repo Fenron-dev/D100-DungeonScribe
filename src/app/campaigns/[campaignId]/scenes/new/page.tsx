@@ -8,7 +8,7 @@ import { characterService } from "@/services/character-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
-import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
+import { getCreativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +46,7 @@ export default async function NewScenePage({ params }: NewScenePageProps) {
         characters={characters}
         entities={entities}
         messages={messages}
-        providerMode={creativeDraftProviderMode}
+        providerMode={await getCreativeDraftProviderMode()}
         threads={threads}
       />
     </div>

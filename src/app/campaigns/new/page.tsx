@@ -2,9 +2,9 @@ import Link from "next/link";
 import { createCampaignAction } from "@/features/campaigns/actions";
 import { CampaignCreationStudio } from "@/features/campaigns/campaign-creation-studio";
 import { getMessages } from "@/i18n/messages";
-import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
+import { getCreativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
-export default function NewCampaignPage() {
+export default async function NewCampaignPage() {
   const messages = getMessages();
   const copy = messages.campaigns;
 
@@ -21,7 +21,7 @@ export default function NewCampaignPage() {
       <CampaignCreationStudio
         action={createCampaignAction}
         messages={messages}
-        providerMode={creativeDraftProviderMode}
+        providerMode={await getCreativeDraftProviderMode()}
       />
     </div>
   );

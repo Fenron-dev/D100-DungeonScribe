@@ -21,6 +21,15 @@ const openAiResponseSchema = z.object({
   ),
 });
 
+const chatCompletionSchema = z.object({
+  choices: z.array(z.object({
+    message: z.object({
+      content: z.string().nullable(),
+      refusal: z.string().nullable().optional(),
+    }),
+  })).min(1),
+});
+
 export class NarrativeProviderError extends Error {
   public constructor(message: string) {
     super(message);
@@ -43,46 +52,72 @@ function systemInstructions(locale: "de" | "en"): string {
 
 export class OpenAiNarrativeProvider implements NarrativeProvider {
   public constructor(
-    private readonly apiKey: string,
+    private readonly apiKey: string | null,
     private readonly model: string,
     private readonly httpClient: HttpClient = fetch,
+    private readonly baseUrl = "https://api.openai.com/v1",
+    private readonly apiStyle: "responses" | "chat-completions" = "responses",
   ) {}
 
   public async generateNarration(request: NarrationRequest): Promise<NarrationResult> {
     const validatedRequest = narrationRequestSchema.parse(request);
-    const response = await this.httpClient("https://api.openai.com/v1/responses", {
+    const format = {
+      type: "json_schema",
+      name: "narration_result",
+      strict: true,
+      schema: {
+        type: "object",
+        properties: { narration: { type: "string" } },
+        required: ["narration"],
+        additionalProperties: false,
+      },
+    };
+    const input = JSON.stringify({
+      direction: validatedRequest.direction,
+      context: validatedRequest.context,
+    });
+    const chat = this.apiStyle === "chat-completions";
+    const response = await this.httpClient(`${this.baseUrl.replace(/\/$/, "")}/${chat ? "chat/completions" : "responses"}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${this.apiKey}`,
+        ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: JSON.stringify(chat ? {
+        model: this.model,
+        max_tokens: 2_500,
+        messages: [
+          { role: "system", content: systemInstructions(validatedRequest.locale) },
+          { role: "user", content: input },
+        ],
+        response_format: { type: "json_schema", json_schema: format },
+      } : {
         model: this.model,
         store: false,
         max_output_tokens: 2_500,
         reasoning: { effort: "low" },
         instructions: systemInstructions(validatedRequest.locale),
-        input: JSON.stringify({
-          direction: validatedRequest.direction,
-          context: validatedRequest.context,
-        }),
-        text: {
-          format: {
-            type: "json_schema",
-            name: "narration_result",
-            strict: true,
-            schema: {
-              type: "object",
-              properties: { narration: { type: "string" } },
-              required: ["narration"],
-              additionalProperties: false,
-            },
-          },
-        },
+        input,
+        text: { format },
       }),
     });
-    if (!response.ok) throw new NarrativeProviderError(`OpenAI request failed (${response.status})`);
-    const parsed = openAiResponseSchema.safeParse(await response.json());
+    if (!response.ok) throw new NarrativeProviderError(`AI request failed (${response.status})`);
+    const payload: unknown = await response.json();
+    if (chat) {
+      const parsed = chatCompletionSchema.safeParse(payload);
+      if (!parsed.success) throw new NarrativeProviderError("AI response was malformed");
+      const firstChoice = parsed.data.choices[0];
+      if (!firstChoice) throw new NarrativeProviderError("AI returned no narration");
+      const message = firstChoice.message;
+      if (message.refusal) throw new NarrativeProviderError("AI refused the narration request");
+      if (!message.content) throw new NarrativeProviderError("AI returned no narration");
+      try {
+        return narrationResultSchema.parse(JSON.parse(message.content));
+      } catch {
+        throw new NarrativeProviderError("AI narration did not match the schema");
+      }
+    }
+    const parsed = openAiResponseSchema.safeParse(payload);
     if (!parsed.success) throw new NarrativeProviderError("OpenAI response was malformed");
     const content = parsed.data.output.flatMap((item) => item.content ?? []);
     if (content.some((item) => item.type === "refusal")) {

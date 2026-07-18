@@ -4,7 +4,7 @@ import { createWorldEntityAction } from "@/features/world-entities/actions";
 import { WorldEntityCreationStudio } from "@/features/world-entities/world-entity-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
-import { creativeDraftProviderMode } from "@/services/creative-draft-service-instance";
+import { getCreativeDraftProviderMode } from "@/services/creative-draft-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +38,7 @@ export default async function NewWorldEntityPage({
         action={action}
         campaignId={campaign.id}
         messages={messages}
-        providerMode={creativeDraftProviderMode}
+        providerMode={await getCreativeDraftProviderMode()}
       />
     </div>
   );
