@@ -197,7 +197,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     .fill("Hinter der Tür raschelt Pergament, obwohl kein Wind weht.");
   await page.getByRole("button", { name: "Nachricht speichern" }).click();
   await expect(
-    page.getByText("Hinter der Tür raschelt Pergament, obwohl kein Wind weht."),
+    page.locator("#scene-dialogue-panel").getByRole("paragraph").filter({
+      hasText: /^Hinter der Tür raschelt Pergament, obwohl kein Wind weht\.$/,
+    }),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Spielleiter" }).click();
   await expect(page.getByText("Demo-Modus", { exact: true })).toBeVisible();
@@ -216,7 +218,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   );
   await aiMessage.getByRole("button", { name: "Änderung speichern" }).click();
   await expect(
-    page.getByText("Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen."),
+    page.locator("#game-master-panel").getByRole("paragraph").filter({
+      hasText: /^Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen\.$/,
+    }),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Eintrag" }).click();
   await page
@@ -247,7 +251,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Ereignis erzeugen" }).click();
   await page.getByRole("tab", { name: "Journal" }).click();
   const journalPanel = page.locator("#journal-panel");
-  await expect(journalPanel.getByText("Elara folgt den frischen Spuren in das Kartenarchiv.")).toBeVisible();
+  await expect(journalPanel.getByRole("paragraph").filter({
+    hasText: /^Elara folgt den frischen Spuren in das Kartenarchiv\.$/,
+  })).toBeVisible();
   await expect(journalPanel.getByText("Die verborgenen Runen der Karte lesen")).toBeVisible();
   await expect(journalPanel.getByText("core-adventure v1")).toBeVisible();
   await expect(journalPanel.getByText("Ist die verborgene Karte noch vollständig?")).toBeVisible();
