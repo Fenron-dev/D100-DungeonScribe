@@ -12,4 +12,8 @@ Pro Kampagne darf höchstens eine Szene aktiv sein. Diese Invariante wird sowohl
 
 Eine aktive Szene wird mit einer vom Benutzer bearbeiteten Zusammenfassung abgeschlossen. Abschlussstatus, Zusammenfassung und reale Endzeit werden atomar gespeichert. Einzelne Veränderungen an Weltobjekten, Wissen oder Handlungssträngen bleiben eigenständige Aktionen und werden nicht aus freiem Zusammenfassungstext abgeleitet.
 
-Start und Abschluss erzeugen `SCENE_STARTED` und `SCENE_COMPLETED`. Die Chronik zeigt beide in der Kategorie „Szenen“. Nachrichten, Würfe, Spielzeit und Szenenprüfung durch das Orakel folgen in späteren Arbeitspaketen.
+## Spielprotokoll und Proben
+
+Aktive Szenen besitzen ein zeitlich geordnetes Spielprotokoll. Freie Einträge unterscheiden Handlungen und Beobachtungen. Proben werden ausschließlich von der W6-Pool-Regel-Engine ausgewertet: Charakter, Handlung, Schwierigkeit, passender Archetyp, passende Eigenschaft sowie je ein optionaler Vor- und Nachteil bilden die Eingabe. Gespeichert werden die vollständige Eingabe, Würfel, Schwelle, Erfolge, Erfolgsgrad, Modifikatoren, Erklärung sowie ID und Version des verwendeten Regelwerks. Eine passende Eigenschaft muss tatsächlich zum handelnden, an der Szene beteiligten Charakter gehören.
+
+Start, Protokolleintrag, Probe und Abschluss erzeugen `SCENE_STARTED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“. Orakel, Spielzeit und KI-gestützte Nachrichten folgen in späteren Arbeitspaketen.

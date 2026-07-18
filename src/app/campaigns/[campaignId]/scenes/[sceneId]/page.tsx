@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { completeSceneAction } from "@/features/scenes/actions";
+import {
+  addSceneNoteAction,
+  completeSceneAction,
+  rollSceneCheckAction,
+} from "@/features/scenes/actions";
 import { SceneCompletionForm } from "@/features/scenes/scene-completion-form";
+import { SceneNoteForm, SceneRollForm } from "@/features/scenes/scene-journal-forms";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
+import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
 
@@ -22,10 +28,11 @@ export default async function ScenePage({ params }: ScenePageProps) {
     sceneService.findById(campaignId, sceneId),
   ]);
   if (!campaign || !scene) notFound();
-  const [characters, entities, threads] = await Promise.all([
+  const [characters, entities, threads, journal] = await Promise.all([
     characterService.list(campaign.id),
     worldEntityService.list(campaign.id),
     storyThreadService.list(campaign.id),
+    sceneJournalService.list(campaign.id, scene.id),
   ]);
   const messages = getMessages();
   const copy = messages.scenes;
@@ -41,6 +48,11 @@ export default async function ScenePage({ params }: ScenePageProps) {
     .filter((name): name is string => Boolean(name));
   const locationName = scene.locationId ? entityNames.get(scene.locationId) : null;
   const completionAction = completeSceneAction.bind(null, campaign.id, scene.id);
+  const noteAction = addSceneNoteAction.bind(null, campaign.id, scene.id);
+  const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
+  const participantCharacters = characters.filter((character) =>
+    scene.participantCharacterIds.includes(character.id),
+  );
 
   return (
     <article className="scene-detail">
@@ -85,8 +97,51 @@ export default async function ScenePage({ params }: ScenePageProps) {
         ) : null}
       </div>
 
+      <section className="scene-journal">
+        <h2>{copy.journalTitle}</h2>
+        <p>{copy.journalDescription}</p>
+        {journal.length === 0 ? <p className="empty-copy">{copy.journalEmpty}</p> : (
+          <ol className="scene-journal-list">
+            {journal.map((entry) => {
+              if (entry.type === "note") {
+                return (
+                  <li className="scene-journal-entry" key={entry.value.id}>
+                    <span className="journal-entry-kind">{copy.noteKinds[entry.value.kind]}</span>
+                    <p>{entry.value.content}</p>
+                  </li>
+                );
+              }
+              const characterName = characterNames.get(entry.value.characterId) ?? copy.rollCharacterLabel;
+              return (
+                <li className="scene-journal-entry scene-roll-entry" key={entry.value.id}>
+                  <div className="scene-roll-heading">
+                    <span className="journal-entry-kind">{copy.rollResultTitle} · {characterName}</span>
+                    <strong className={`roll-outcome outcome-${entry.value.result.degree}`}>
+                      {copy.outcomes[entry.value.result.degree]}
+                    </strong>
+                  </div>
+                  <p>{entry.value.action}</p>
+                  <dl className="roll-facts">
+                    <div><dt>{copy.diceLabel}</dt><dd>{entry.value.result.dice.join(", ")}</dd></div>
+                    <div><dt>{copy.successesLabel}</dt><dd>{entry.value.result.successes}</dd></div>
+                    <div><dt>{copy.thresholdLabel}</dt><dd>{entry.value.result.threshold}</dd></div>
+                    <div><dt>{copy.rulesetLabel}</dt><dd>{entry.value.rulesetId} v{entry.value.rulesetVersion}</dd></div>
+                  </dl>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </section>
+
       {scene.status === "active" ? (
-        <SceneCompletionForm action={completionAction} messages={messages} />
+        <>
+          <div className="scene-journal-forms">
+            <SceneNoteForm action={noteAction} messages={messages} />
+            <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />
+          </div>
+          <SceneCompletionForm action={completionAction} messages={messages} />
+        </>
       ) : scene.summary ? (
         <section className="scene-summary">
           <h2>{copy.summaryTitle}</h2>

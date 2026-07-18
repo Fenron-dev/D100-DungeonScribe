@@ -17,7 +17,7 @@ const modifierSchema = z.object({
   label: z.string().trim().min(1).max(120),
 });
 
-const checkInputSchema = z
+export const checkInputSchema = z
   .object({
     characterId: z.string().trim().min(1).max(80),
     action: z.string().trim().min(1).max(500),
@@ -40,6 +40,49 @@ const checkInputSchema = z
       });
     }
   });
+
+const appliedModifierSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["archetype", "trait", "advantage", "disadvantage", "pool_limit"]),
+  diceDelta: z.number().int(),
+  label: z.string().nullable(),
+  labelKey: z.string().nullable(),
+});
+
+const outcomeDegreeSchema = z.enum([
+  "critical_failure",
+  "failure",
+  "success_with_cost",
+  "success",
+  "strong_success",
+]);
+
+export const checkResultSchema = z.object({
+  dice: z.array(z.number().int().min(1).max(6)),
+  diceCount: z.number().int().positive(),
+  threshold: z.number().int().min(2).max(6),
+  successes: z.number().int().nonnegative(),
+  degree: outcomeDegreeSchema,
+  effectLevel: z.number().int().nonnegative(),
+  appliedModifiers: z.array(appliedModifierSchema),
+  availableChoices: z.array(
+    z.object({
+      id: z.literal("accept_cost"),
+      resultingDegree: z.literal("success_with_cost"),
+      labelKey: z.literal("rules.choice.accept_cost"),
+    }),
+  ),
+  explanation: z.object({
+    baseDice: z.number().int().positive(),
+    requestedDiceCount: z.number().int(),
+    diceCount: z.number().int().positive(),
+    poolWasLimited: z.boolean(),
+    threshold: z.number().int().min(2).max(6),
+    successes: z.number().int().nonnegative(),
+    ones: z.number().int().nonnegative(),
+    degree: outcomeDegreeSchema,
+  }),
+});
 
 export class InvalidRulesetError extends Error {
   public constructor(public readonly issues: ValidationIssue[]) {

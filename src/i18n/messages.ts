@@ -296,6 +296,40 @@ export interface MessageCatalog {
     validationMessage: string;
     saveError: string;
     activeExistsError: string;
+    journalTitle: string;
+    journalDescription: string;
+    journalEmpty: string;
+    noteTitle: string;
+    noteKindLabel: string;
+    noteKinds: Record<"action" | "observation", string>;
+    noteContentLabel: string;
+    saveNoteAction: string;
+    savingNoteAction: string;
+    rollTitle: string;
+    rollDescription: string;
+    rollCharacterLabel: string;
+    rollCharacterPlaceholder: string;
+    rollActionLabel: string;
+    difficultyLabel: string;
+    difficulties: Record<"easy" | "normal" | "hard", string>;
+    matchingTraitLabel: string;
+    archetypeMatchesLabel: string;
+    archetypeMatchesHint: string;
+    advantageLabel: string;
+    disadvantageLabel: string;
+    rollAction: string;
+    rollingAction: string;
+    journalSaveError: string;
+    traitMismatchError: string;
+    rollResultTitle: string;
+    outcomes: Record<
+      "critical_failure" | "failure" | "success_with_cost" | "success" | "strong_success",
+      string
+    >;
+    diceLabel: string;
+    successesLabel: string;
+    thresholdLabel: string;
+    rulesetLabel: string;
   };
   chronicle: {
     sectionTitle: string;
@@ -335,6 +369,8 @@ export interface MessageCatalog {
       | "THREAD_CREATED"
       | "THREAD_UPDATED"
       | "SCENE_STARTED"
+      | "SCENE_NOTE_ADDED"
+      | "DICE_ROLLED"
       | "SCENE_COMPLETED",
       string
     >;
@@ -700,6 +736,45 @@ const germanMessages = {
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Die Szene konnte nicht gespeichert werden.",
     activeExistsError: "Diese Kampagne besitzt bereits eine aktive Szene.",
+    journalTitle: "Spielprotokoll",
+    journalDescription:
+      "Handlungen, Beobachtungen und Proben bleiben in ihrer zeitlichen Reihenfolge erhalten.",
+    journalEmpty: "Für diese Szene gibt es noch keinen Protokolleintrag.",
+    noteTitle: "Eintrag festhalten",
+    noteKindLabel: "Eintragsart",
+    noteKinds: { action: "Handlung", observation: "Beobachtung" },
+    noteContentLabel: "Eintrag",
+    saveNoteAction: "Eintrag speichern",
+    savingNoteAction: "Eintrag wird gespeichert …",
+    rollTitle: "Probe auswerten",
+    rollDescription:
+      "Die Regel-Engine bildet den Würfelpool aus Archetyp, Eigenschaft sowie Vor- und Nachteilen.",
+    rollCharacterLabel: "Handelnder Charakter",
+    rollCharacterPlaceholder: "Charakter auswählen",
+    rollActionLabel: "Beabsichtigte Handlung",
+    difficultyLabel: "Schwierigkeit",
+    difficulties: { easy: "Leicht", normal: "Normal", hard: "Schwer" },
+    matchingTraitLabel: "Passende Eigenschaft (optional)",
+    archetypeMatchesLabel: "Archetyp passt zur Handlung",
+    archetypeMatchesHint: "Gibt einen zusätzlichen Würfel.",
+    advantageLabel: "Vorteil (optional)",
+    disadvantageLabel: "Nachteil (optional)",
+    rollAction: "Würfeln",
+    rollingAction: "Probe wird ausgewertet …",
+    journalSaveError: "Der Protokolleintrag konnte nicht gespeichert werden.",
+    traitMismatchError: "Die Eigenschaft gehört nicht zum ausgewählten Charakter.",
+    rollResultTitle: "Probe",
+    outcomes: {
+      critical_failure: "Kritischer Fehlschlag",
+      failure: "Fehlschlag",
+      success_with_cost: "Erfolg mit Kosten",
+      success: "Erfolg",
+      strong_success: "Starker Erfolg",
+    },
+    diceLabel: "Würfel",
+    successesLabel: "Erfolge",
+    thresholdLabel: "Erfolg ab",
+    rulesetLabel: "Regelwerk",
   },
   chronicle: {
     sectionTitle: "Chronik",
@@ -740,6 +815,8 @@ const germanMessages = {
       THREAD_CREATED: "Handlungsstrang eröffnet",
       THREAD_UPDATED: "Handlungsstrang geändert",
       SCENE_STARTED: "Szene begonnen",
+      SCENE_NOTE_ADDED: "Szeneneintrag festgehalten",
+      DICE_ROLLED: "Probe ausgewertet",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
@@ -1106,6 +1183,45 @@ const englishMessages = {
     validationMessage: "Please check the highlighted fields.",
     saveError: "The scene could not be saved.",
     activeExistsError: "This campaign already has an active scene.",
+    journalTitle: "Play log",
+    journalDescription:
+      "Actions, observations, and checks remain in their chronological order.",
+    journalEmpty: "This scene has no log entries yet.",
+    noteTitle: "Record an entry",
+    noteKindLabel: "Entry type",
+    noteKinds: { action: "Action", observation: "Observation" },
+    noteContentLabel: "Entry",
+    saveNoteAction: "Save entry",
+    savingNoteAction: "Saving entry …",
+    rollTitle: "Resolve a check",
+    rollDescription:
+      "The rules engine builds the dice pool from archetype, trait, advantages, and disadvantages.",
+    rollCharacterLabel: "Acting character",
+    rollCharacterPlaceholder: "Choose a character",
+    rollActionLabel: "Intended action",
+    difficultyLabel: "Difficulty",
+    difficulties: { easy: "Easy", normal: "Normal", hard: "Hard" },
+    matchingTraitLabel: "Matching trait (optional)",
+    archetypeMatchesLabel: "Archetype matches the action",
+    archetypeMatchesHint: "Adds one die.",
+    advantageLabel: "Advantage (optional)",
+    disadvantageLabel: "Disadvantage (optional)",
+    rollAction: "Roll",
+    rollingAction: "Resolving check …",
+    journalSaveError: "The log entry could not be saved.",
+    traitMismatchError: "The trait does not belong to the selected character.",
+    rollResultTitle: "Check",
+    outcomes: {
+      critical_failure: "Critical failure",
+      failure: "Failure",
+      success_with_cost: "Success with a cost",
+      success: "Success",
+      strong_success: "Strong success",
+    },
+    diceLabel: "Dice",
+    successesLabel: "Successes",
+    thresholdLabel: "Success on",
+    rulesetLabel: "Ruleset",
   },
   chronicle: {
     sectionTitle: "Chronicle",
@@ -1146,6 +1262,8 @@ const englishMessages = {
       THREAD_CREATED: "Story thread opened",
       THREAD_UPDATED: "Story thread changed",
       SCENE_STARTED: "Scene started",
+      SCENE_NOTE_ADDED: "Scene entry recorded",
+      DICE_ROLLED: "Check resolved",
       SCENE_COMPLETED: "Scene completed",
     },
     sources: {

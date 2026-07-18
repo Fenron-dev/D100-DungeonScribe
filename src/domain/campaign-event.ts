@@ -13,6 +13,8 @@ export const campaignEventTypes = [
   "THREAD_CREATED",
   "THREAD_UPDATED",
   "SCENE_STARTED",
+  "SCENE_NOTE_ADDED",
+  "DICE_ROLLED",
   "SCENE_COMPLETED",
 ] as const;
 

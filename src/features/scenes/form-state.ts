@@ -47,3 +47,18 @@ export type SceneCompletionAction = (
   state: SceneCompletionState,
   formData: FormData,
 ) => Promise<SceneCompletionState>;
+
+export interface SceneJournalFormState {
+  message: "validation" | "save_error" | "trait_mismatch" | null;
+  errors: string[];
+}
+
+export const initialSceneJournalFormState: SceneJournalFormState = {
+  message: null,
+  errors: [],
+};
+
+export type SceneJournalFormAction = (
+  state: SceneJournalFormState,
+  formData: FormData,
+) => Promise<SceneJournalFormState>;

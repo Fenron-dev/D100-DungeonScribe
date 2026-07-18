@@ -32,6 +32,8 @@ model Campaign {
   knowledgeEntries KnowledgeEntry[]
   storyThreads StoryThread[]
   scenes Scene[]
+  sceneNotes SceneNote[]
+  diceRolls DiceRoll[]
 
   @@index([status, updatedAt])
 }
@@ -55,8 +57,45 @@ model Scene {
   updatedAt               DateTime @updatedAt
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  notes SceneNote[]
+  diceRolls DiceRoll[]
 
   @@index([campaignId, status, startedAtReal])
+}
+
+model SceneNote {
+  id         String   @id @default(cuid())
+  campaignId String
+  sceneId    String
+  kind       String
+  content    String
+  createdAt  DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, createdAt])
+  @@index([campaignId, createdAt])
+}
+
+model DiceRoll {
+  id             String   @id @default(cuid())
+  campaignId     String
+  sceneId        String
+  characterId    String
+  action         String
+  difficulty     String
+  input          Json
+  result         Json
+  rulesetId      String
+  rulesetVersion Int
+  createdAt      DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, createdAt])
+  @@index([campaignId, createdAt])
 }
 
 model StoryThread {

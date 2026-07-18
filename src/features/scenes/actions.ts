@@ -6,14 +6,72 @@ import type {
   SceneCompletionState,
   SceneFormErrors,
   SceneFormState,
+  SceneJournalFormState,
 } from "@/features/scenes/form-state";
 import { sceneDraftSchema, sceneSummarySchema } from "@/schemas/scene";
+import { diceRollDraftSchema, sceneNoteDraftSchema } from "@/schemas/scene-journal";
+import { SceneTraitMismatchError } from "@/services/scene-journal-service";
+import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { ActiveSceneExistsError } from "@/services/scene-service";
 import { sceneService } from "@/services/scene-service-instance";
 
 function readText(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
+}
+
+export async function addSceneNoteAction(
+  campaignId: string,
+  sceneId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const result = sceneNoteDraftSchema.safeParse({
+    kind: readText(formData, "kind"),
+    content: readText(formData, "content"),
+  });
+  if (!result.success) {
+    return { message: "validation", errors: result.error.issues.map(({ message }) => message) };
+  }
+  try {
+    await sceneJournalService.addNote(campaignId, sceneId, result.data);
+  } catch (error) {
+    reportPersistenceError("create", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function rollSceneCheckAction(
+  campaignId: string,
+  sceneId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const result = diceRollDraftSchema.safeParse({
+    characterId: readText(formData, "characterId"),
+    action: readText(formData, "action"),
+    difficulty: readText(formData, "difficulty"),
+    archetypeMatches: formData.get("archetypeMatches") === "on",
+    matchingTrait: readText(formData, "matchingTrait"),
+    advantage: readText(formData, "advantage"),
+    disadvantage: readText(formData, "disadvantage"),
+  });
+  if (!result.success) {
+    return { message: "validation", errors: result.error.issues.map(({ message }) => message) };
+  }
+  try {
+    await sceneJournalService.roll(campaignId, sceneId, result.data);
+  } catch (error) {
+    if (error instanceof SceneTraitMismatchError) {
+      return { message: "trait_mismatch", errors: [] };
+    }
+    reportPersistenceError("create", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
 }
 
 function readTextList(formData: FormData, key: string): string[] {
