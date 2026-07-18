@@ -36,6 +36,7 @@ model Campaign {
   sceneMessages SceneMessage[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
+  oracleRandomEvents OracleRandomEvent[]
   diceRolls DiceRoll[]
 
   @@index([status, updatedAt])
@@ -64,6 +65,7 @@ model Scene {
   messages SceneMessage[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
+  oracleRandomEvents OracleRandomEvent[]
   diceRolls DiceRoll[]
 
   @@index([campaignId, status, startedAtReal])
@@ -132,6 +134,25 @@ model OracleInspiration {
   secondaryCategory String
   secondaryTermId   String
   createdAt         DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, createdAt])
+  @@index([campaignId, createdAt])
+}
+
+model OracleRandomEvent {
+  id               String   @id @default(cuid())
+  campaignId       String
+  sceneId          String
+  context          String?
+  trigger          String
+  focus            String
+  actionId         String
+  subjectId        String
+  affectedEntityId String?
+  createdAt        DateTime @default(now())
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)

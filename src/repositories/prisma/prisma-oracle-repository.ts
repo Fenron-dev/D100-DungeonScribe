@@ -1,10 +1,16 @@
 import {
+  eventFocuses,
   inspirationTables,
+  randomEventActionIds,
+  randomEventSubjectIds,
   type InspirationInput,
   type InspirationResult,
   type InspirationTermId,
   type OracleInspiration,
+  type OracleRandomEvent,
   type OracleRecord,
+  type RandomEventInput,
+  type RandomEventResult,
   type YesNoOracleInput,
   type YesNoOracleResult,
 } from "@/oracle/types";
@@ -13,13 +19,20 @@ import type { OracleRepository } from "@/repositories/oracle-repository";
 import {
   inspirationCategorySchema,
   inspirationTermIdSchema,
+  eventFocusSchema,
   oracleAnswerSchema,
   oracleLikelihoodSchema,
+  randomEventActionIdSchema,
+  randomEventSubjectIdSchema,
+  randomEventTriggerSchema,
 } from "@/schemas/oracle";
 
 type OracleRow = Awaited<ReturnType<PrismaClient["oracleRecord"]["findUnique"]>>;
 type InspirationRow = Awaited<
   ReturnType<PrismaClient["oracleInspiration"]["findUnique"]>
+>;
+type RandomEventRow = Awaited<
+  ReturnType<PrismaClient["oracleRandomEvent"]["findUnique"]>
 >;
 
 function parseTermId(value: string): InspirationTermId {
@@ -84,6 +97,34 @@ export function mapOracleInspiration(
       secondaryCategory,
       secondaryIndex,
       secondaryTableSize: secondaryTable.length,
+    },
+    createdAt: row.createdAt,
+  };
+}
+
+export function mapOracleRandomEvent(
+  row: NonNullable<RandomEventRow>,
+): OracleRandomEvent {
+  const focus = eventFocusSchema.parse(row.focus);
+  const actionId = randomEventActionIdSchema.parse(row.actionId);
+  const subjectId = randomEventSubjectIdSchema.parse(row.subjectId);
+  return {
+    id: row.id,
+    campaignId: row.campaignId,
+    sceneId: row.sceneId,
+    context: row.context,
+    trigger: randomEventTriggerSchema.parse(row.trigger),
+    focus,
+    actionId,
+    subjectId,
+    affectedEntityId: row.affectedEntityId,
+    explanation: {
+      focusIndex: eventFocuses.indexOf(focus),
+      focusTableSize: eventFocuses.length,
+      actionIndex: randomEventActionIds.indexOf(actionId),
+      actionTableSize: randomEventActionIds.length,
+      subjectIndex: randomEventSubjectIds.indexOf(subjectId),
+      subjectTableSize: randomEventSubjectIds.length,
     },
     createdAt: row.createdAt,
   };
@@ -176,6 +217,49 @@ export class PrismaOracleRepository implements OracleRepository {
         },
       });
       return mapOracleInspiration(inspiration);
+    });
+  }
+
+  public async createRandomEvent(
+    campaignId: string,
+    sceneId: string,
+    input: RandomEventInput,
+    result: RandomEventResult,
+  ): Promise<OracleRandomEvent | null> {
+    const scene = await this.client.scene.findFirst({
+      where: { id: sceneId, campaignId, status: "active" },
+      select: { id: true },
+    });
+    if (!scene) return null;
+    return this.client.$transaction(async (transaction) => {
+      const randomEvent = await transaction.oracleRandomEvent.create({
+        data: {
+          campaignId,
+          sceneId,
+          context: input.context,
+          trigger: input.trigger,
+          focus: result.focus,
+          actionId: result.actionId,
+          subjectId: result.subjectId,
+          affectedEntityId: result.affectedEntityId,
+        },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "ORACLE_RANDOM_EVENT_GENERATED",
+          summary: "Zufallsereignis erzeugt",
+          payload: {
+            sceneId,
+            oracleRandomEventId: randomEvent.id,
+            trigger: input.trigger,
+            focus: result.focus,
+          },
+          source: "oracle",
+          reversible: false,
+        },
+      });
+      return mapOracleRandomEvent(randomEvent);
     });
   }
 }

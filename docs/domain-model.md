@@ -26,6 +26,8 @@ Der Szenenbaustein unterstützt aktive und abgeschlossene Szenen. Er speichert e
 
 `OracleRecord` speichert eine Ja-Nein-Frage mit Wahrscheinlichkeit, beiden Rohwürfeln, Rohsumme, Modifikator, begrenztem Endwert, Antwort und Pasch-Markierung. Damit bleibt das Ergebnis erklärbar und kann später als geprüfter Auslöser für Zufallsereignisse dienen.
 
+`OracleInspiration` speichert eine optionale Detailfrage sowie zwei Kategorien und stabile Begriffsschlüssel. `OracleRandomEvent` hält einen optionalen Kontext, den manuellen Auslöser, einen Ereignisschwerpunkt sowie stabile Handlungs- und Gegenstandsschlüssel fest. Beide Modelle speichern Orakeldeutungen, aber keine automatisch übernommenen Weltänderungen.
+
 `OracleInspiration` speichert eine optionale Detailfrage, zwei Inspirationskategorien und zwei stabile Begriffsschlüssel. Die Begriffe werden nicht als übersetzter Text persistiert; damit bleibt die Ziehung sprachunabhängig. Kategorien und Schlüssel werden beim Lesen validiert.
 
 ### World Entity

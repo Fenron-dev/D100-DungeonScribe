@@ -100,3 +100,36 @@ export function InspirationForm({
     </form>
   );
 }
+
+export function RandomEventForm({
+  action,
+  messages,
+}: {
+  action: OracleFormAction;
+  messages: ReturnType<typeof getMessages>;
+}) {
+  const [state, formAction, isPending] = useActionState(action, initialOracleFormState);
+  const copy = messages.oracle;
+  return (
+    <form className="scene-journal-form oracle-form" action={formAction} noValidate>
+      <h3>{copy.randomEventTitle}</h3>
+      <p>{copy.randomEventDescription}</p>
+      {state.message ? (
+        <div className="form-message" role="alert">
+          <p>{state.message === "validation" ? copy.validationMessage : copy.saveError}</p>
+          {state.errors.length > 0 ? (
+            <ul>{state.errors.map((error) => <li key={error}>{error}</li>)}</ul>
+          ) : null}
+        </div>
+      ) : null}
+      <div className="form-field">
+        <label htmlFor="random-event-context">{copy.randomEventContextLabel}</label>
+        <input id="random-event-context" name="context" maxLength={500} />
+        <small>{copy.randomEventContextHint}</small>
+      </div>
+      <button className="button" type="submit" disabled={isPending}>
+        {isPending ? copy.generatingEventAction : copy.generateEventAction}
+      </button>
+    </form>
+  );
+}

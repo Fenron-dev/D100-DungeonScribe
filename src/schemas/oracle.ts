@@ -2,8 +2,12 @@ import { z } from "zod";
 import {
   inspirationCategories,
   inspirationTermIds,
+  eventFocuses,
   oracleAnswers,
   oracleLikelihoods,
+  randomEventActionIds,
+  randomEventSubjectIds,
+  randomEventTriggers,
 } from "@/oracle/types";
 
 export const yesNoOracleInputSchema = z.object({
@@ -30,4 +34,19 @@ export const inspirationInputSchema = z.object({
     .nullable(),
   primaryCategory: inspirationCategorySchema,
   secondaryCategory: inspirationCategorySchema,
+});
+
+export const randomEventTriggerSchema = z.enum(randomEventTriggers);
+export const eventFocusSchema = z.enum(eventFocuses);
+export const randomEventActionIdSchema = z.enum(randomEventActionIds);
+export const randomEventSubjectIdSchema = z.enum(randomEventSubjectIds);
+
+export const randomEventInputSchema = z.object({
+  context: z
+    .string()
+    .trim()
+    .max(500, "Der Ereigniskontext darf höchstens 500 Zeichen enthalten.")
+    .transform((value) => (value.length > 0 ? value : null))
+    .nullable(),
+  trigger: randomEventTriggerSchema,
 });

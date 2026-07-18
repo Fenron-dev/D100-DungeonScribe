@@ -114,3 +114,72 @@ export interface OracleInspiration extends InspirationInput, InspirationResult {
   sceneId: string;
   createdAt: Date;
 }
+
+export const randomEventTriggers = ["manual"] as const;
+export type RandomEventTrigger = (typeof randomEventTriggers)[number];
+
+export const eventFocuses = [
+  "distant_threat",
+  "new_person",
+  "existing_person",
+  "faction_acts",
+  "thread_progresses",
+  "thread_escalates",
+  "positive_opportunity",
+  "resource_loss",
+  "unusual_discovery",
+] as const;
+export type EventFocus = (typeof eventFocuses)[number];
+
+export const randomEventActionIds = [
+  "event_action.advance",
+  "event_action.hinder",
+  "event_action.reveal",
+  "event_action.protect",
+  "event_action.demand",
+  "event_action.abandon",
+  "event_action.transform",
+  "event_action.pursue",
+  "event_action.divide",
+] as const;
+export type RandomEventActionId = (typeof randomEventActionIds)[number];
+
+export const randomEventSubjectIds = [
+  "event_subject.alliance",
+  "event_subject.secret",
+  "event_subject.passage",
+  "event_subject.resource",
+  "event_subject.promise",
+  "event_subject.authority",
+  "event_subject.refuge",
+  "event_subject.evidence",
+  "event_subject.stranger",
+] as const;
+export type RandomEventSubjectId = (typeof randomEventSubjectIds)[number];
+
+export interface RandomEventInput {
+  context: string | null;
+  trigger: RandomEventTrigger;
+}
+
+export interface RandomEventResult {
+  focus: EventFocus;
+  actionId: RandomEventActionId;
+  subjectId: RandomEventSubjectId;
+  affectedEntityId: string | null;
+  explanation: {
+    focusIndex: number;
+    focusTableSize: number;
+    actionIndex: number;
+    actionTableSize: number;
+    subjectIndex: number;
+    subjectTableSize: number;
+  };
+}
+
+export interface OracleRandomEvent extends RandomEventInput, RandomEventResult {
+  id: string;
+  campaignId: string;
+  sceneId: string;
+  createdAt: Date;
+}

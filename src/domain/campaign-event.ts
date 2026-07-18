@@ -18,6 +18,7 @@ export const campaignEventTypes = [
   "DICE_ROLLED",
   "ORACLE_ANSWERED",
   "ORACLE_INSPIRATION_DRAWN",
+  "ORACLE_RANDOM_EVENT_GENERATED",
   "SCENE_COMPLETED",
 ] as const;
 

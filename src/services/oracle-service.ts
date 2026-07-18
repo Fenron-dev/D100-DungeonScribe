@@ -1,9 +1,14 @@
-import type { OracleInspiration, OracleRecord } from "@/oracle/types";
+import type { OracleInspiration, OracleRandomEvent, OracleRecord } from "@/oracle/types";
 import type { InspirationOracle } from "@/oracle/inspiration-oracle";
+import type { RandomEventOracle } from "@/oracle/random-event-oracle";
 import type { YesNoOracle } from "@/oracle/yes-no-oracle";
 import type { OracleRepository } from "@/repositories/oracle-repository";
 import { campaignIdSchema } from "@/schemas/campaign";
-import { inspirationInputSchema, yesNoOracleInputSchema } from "@/schemas/oracle";
+import {
+  inspirationInputSchema,
+  randomEventInputSchema,
+  yesNoOracleInputSchema,
+} from "@/schemas/oracle";
 import { sceneIdSchema } from "@/schemas/scene";
 
 export class OracleContextNotFoundError extends Error {
@@ -18,6 +23,7 @@ export class OracleService {
     private readonly repository: OracleRepository,
     private readonly yesNoOracle: Pick<YesNoOracle, "ask">,
     private readonly inspirationOracle: Pick<InspirationOracle, "draw">,
+    private readonly randomEventOracle: Pick<RandomEventOracle, "generate">,
   ) {}
 
   public async askYesNo(
@@ -50,6 +56,22 @@ export class OracleService {
         validInput.primaryCategory,
         validInput.secondaryCategory,
       ),
+    );
+    if (!record) throw new OracleContextNotFoundError();
+    return record;
+  }
+
+  public async generateRandomEvent(
+    campaignId: string,
+    sceneId: string,
+    input: unknown,
+  ): Promise<OracleRandomEvent> {
+    const validInput = randomEventInputSchema.parse(input);
+    const record = await this.repository.createRandomEvent(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      validInput,
+      this.randomEventOracle.generate(),
     );
     if (!record) throw new OracleContextNotFoundError();
     return record;

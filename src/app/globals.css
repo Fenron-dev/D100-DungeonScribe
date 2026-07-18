@@ -1484,6 +1484,24 @@ h2 {
   background: linear-gradient(120deg, rgb(82 61 116 / 16%), rgb(15 21 18 / 88%));
 }
 
+.random-event-entry {
+  border-left-color: rgb(216 143 91 / 88%);
+  background: linear-gradient(120deg, rgb(117 61 34 / 18%), rgb(15 21 18 / 90%));
+}
+
+.random-event-focus {
+  display: block;
+  margin-top: 0.7rem;
+  color: var(--color-accent-strong);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.random-event-prompt {
+  margin-bottom: 0.55rem;
+  font-weight: 700;
+}
+
 .inspiration-terms {
   display: flex;
   align-items: center;

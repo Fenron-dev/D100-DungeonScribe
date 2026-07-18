@@ -1,4 +1,10 @@
-import type { InspirationCategory, InspirationTermId } from "@/oracle/types";
+import type {
+  EventFocus,
+  InspirationCategory,
+  InspirationTermId,
+  RandomEventActionId,
+  RandomEventSubjectId,
+} from "@/oracle/types";
 
 export const supportedLocales = ["de", "en"] as const;
 
@@ -372,6 +378,17 @@ export interface MessageCatalog {
     drawingAction: string;
     inspirationResultTitle: string;
     terms: Record<InspirationTermId, string>;
+    randomEventTitle: string;
+    randomEventDescription: string;
+    randomEventContextLabel: string;
+    randomEventContextHint: string;
+    generateEventAction: string;
+    generatingEventAction: string;
+    randomEventResultTitle: string;
+    randomEventInterpretationHint: string;
+    eventFocuses: Record<EventFocus, string>;
+    eventActions: Record<RandomEventActionId, string>;
+    eventSubjects: Record<RandomEventSubjectId, string>;
   };
   chronicle: {
     sectionTitle: string;
@@ -416,6 +433,7 @@ export interface MessageCatalog {
       | "DICE_ROLLED"
       | "ORACLE_ANSWERED"
       | "ORACLE_INSPIRATION_DRAWN"
+      | "ORACLE_RANDOM_EVENT_GENERATED"
       | "SCENE_COMPLETED",
       string
     >;
@@ -904,6 +922,41 @@ const germanMessages = {
       "complication.price": "Preis", "complication.mistake": "Irrtum",
       "complication.attention": "Aufmerksamkeit", "complication.shortage": "Mangel",
     },
+    randomEventTitle: "Unerwartetes Ereignis",
+    randomEventDescription:
+      "Erzeuge einen Schwerpunkt sowie zwei Deutungsbegriffe für eine überraschende Wendung.",
+    randomEventContextLabel: "Ereigniskontext (optional)",
+    randomEventContextHint: "Zum Beispiel: Was unterbricht die Suche?",
+    generateEventAction: "Ereignis erzeugen",
+    generatingEventAction: "Ereignis wird erzeugt …",
+    randomEventResultTitle: "Unerwartetes Ereignis",
+    randomEventInterpretationHint:
+      "Deute das Ergebnis passend zur Szene. Es verändert die Kampagne nicht automatisch.",
+    eventFocuses: {
+      distant_threat: "Entfernte Bedrohung",
+      new_person: "Neue Person",
+      existing_person: "Bestehende Person",
+      faction_acts: "Fraktion handelt",
+      thread_progresses: "Handlungsstrang schreitet fort",
+      thread_escalates: "Handlungsstrang verschärft sich",
+      positive_opportunity: "Positive Gelegenheit",
+      resource_loss: "Verlust einer Ressource",
+      unusual_discovery: "Ungewöhnliche Entdeckung",
+    },
+    eventActions: {
+      "event_action.advance": "Vorantreiben", "event_action.hinder": "Behindern",
+      "event_action.reveal": "Enthüllen", "event_action.protect": "Beschützen",
+      "event_action.demand": "Fordern", "event_action.abandon": "Aufgeben",
+      "event_action.transform": "Verwandeln", "event_action.pursue": "Verfolgen",
+      "event_action.divide": "Trennen",
+    },
+    eventSubjects: {
+      "event_subject.alliance": "Bündnis", "event_subject.secret": "Geheimnis",
+      "event_subject.passage": "Durchgang", "event_subject.resource": "Ressource",
+      "event_subject.promise": "Versprechen", "event_subject.authority": "Autorität",
+      "event_subject.refuge": "Zuflucht", "event_subject.evidence": "Beweis",
+      "event_subject.stranger": "Fremder",
+    },
   },
   chronicle: {
     sectionTitle: "Chronik",
@@ -949,6 +1002,7 @@ const germanMessages = {
       DICE_ROLLED: "Probe ausgewertet",
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
       ORACLE_INSPIRATION_DRAWN: "Orakelinspiration gezogen",
+      ORACLE_RANDOM_EVENT_GENERATED: "Zufallsereignis erzeugt",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
@@ -1438,6 +1492,41 @@ const englishMessages = {
       "complication.price": "Price", "complication.mistake": "Mistake",
       "complication.attention": "Attention", "complication.shortage": "Shortage",
     },
+    randomEventTitle: "Unexpected event",
+    randomEventDescription:
+      "Generate a focus and two prompts for a surprising turn.",
+    randomEventContextLabel: "Event context (optional)",
+    randomEventContextHint: "For example: What interrupts the search?",
+    generateEventAction: "Generate event",
+    generatingEventAction: "Generating event …",
+    randomEventResultTitle: "Unexpected event",
+    randomEventInterpretationHint:
+      "Interpret the result for the current scene. It does not change the campaign automatically.",
+    eventFocuses: {
+      distant_threat: "Distant threat",
+      new_person: "New person",
+      existing_person: "Existing person",
+      faction_acts: "Faction acts",
+      thread_progresses: "Story thread progresses",
+      thread_escalates: "Story thread escalates",
+      positive_opportunity: "Positive opportunity",
+      resource_loss: "Loss of a resource",
+      unusual_discovery: "Unusual discovery",
+    },
+    eventActions: {
+      "event_action.advance": "Advance", "event_action.hinder": "Hinder",
+      "event_action.reveal": "Reveal", "event_action.protect": "Protect",
+      "event_action.demand": "Demand", "event_action.abandon": "Abandon",
+      "event_action.transform": "Transform", "event_action.pursue": "Pursue",
+      "event_action.divide": "Divide",
+    },
+    eventSubjects: {
+      "event_subject.alliance": "Alliance", "event_subject.secret": "Secret",
+      "event_subject.passage": "Passage", "event_subject.resource": "Resource",
+      "event_subject.promise": "Promise", "event_subject.authority": "Authority",
+      "event_subject.refuge": "Refuge", "event_subject.evidence": "Evidence",
+      "event_subject.stranger": "Stranger",
+    },
   },
   chronicle: {
     sectionTitle: "Chronicle",
@@ -1483,6 +1572,7 @@ const englishMessages = {
       DICE_ROLLED: "Check resolved",
       ORACLE_ANSWERED: "Oracle question answered",
       ORACLE_INSPIRATION_DRAWN: "Oracle inspiration drawn",
+      ORACLE_RANDOM_EVENT_GENERATED: "Random event generated",
       SCENE_COMPLETED: "Scene completed",
     },
     sources: {

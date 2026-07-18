@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import type { OracleFormState } from "@/features/oracle/form-state";
-import { inspirationInputSchema, yesNoOracleInputSchema } from "@/schemas/oracle";
+import {
+  inspirationInputSchema,
+  randomEventInputSchema,
+  yesNoOracleInputSchema,
+} from "@/schemas/oracle";
 import { oracleService } from "@/services/oracle-service-instance";
 
 function readText(formData: FormData, key: string): string {
@@ -63,6 +67,35 @@ export async function drawInspirationAction(
     const name =
       typeof technicalError?.name === "string" ? technicalError.name : "UnknownError";
     console.error(`[oracle] inspiration failed (${name})`);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function generateRandomEventAction(
+  campaignId: string,
+  sceneId: string,
+  _state: OracleFormState,
+  formData: FormData,
+): Promise<OracleFormState> {
+  const result = randomEventInputSchema.safeParse({
+    context: readText(formData, "context"),
+    trigger: "manual",
+  });
+  if (!result.success) {
+    return {
+      message: "validation",
+      errors: result.error.issues.map(({ message }) => message),
+    };
+  }
+  try {
+    await oracleService.generateRandomEvent(campaignId, sceneId, result.data);
+  } catch (error) {
+    const technicalError = error as { name?: unknown };
+    const name =
+      typeof technicalError?.name === "string" ? technicalError.name : "UnknownError";
+    console.error(`[oracle] random event failed (${name})`);
     return { message: "save_error", errors: [] };
   }
   revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);

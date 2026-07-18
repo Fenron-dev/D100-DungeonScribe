@@ -24,10 +24,22 @@ Für eine offene Inspiration wählt der Spieler zwei Kategorien aus: Handlung, T
 
 Gespeichert werden die optionale Frage, beide Kategorien und stabile Begriffsschlüssel. Die sichtbare Übersetzung erfolgt erst in der Oberfläche, sodass dieselbe Ziehung auch nach einem Sprachwechsel erhalten bleibt. Das Ereignis `ORACLE_INSPIRATION_DRAWN` wird atomar mit dem Ergebnis gespeichert. Inspirationen sind Deutungshilfen und erzeugen keine Fakten oder Weltänderungen.
 
+## Unerwartete Ereignisse
+
+Ein unerwartetes Ereignis kann in einer aktiven Szene bewusst erzeugt werden. Ein optionaler Kontext rahmt die Deutung ein. Das Orakel zieht unabhängig aus drei stabilen Tabellen:
+
+- einen Schwerpunkt wie entfernte Bedrohung, neue oder bestehende Person, Fraktionshandlung, Entwicklung oder Verschärfung eines Handlungsstrangs, Gelegenheit, Ressourcenverlust oder Entdeckung
+- eine Handlung
+- einen Gegenstand der Handlung
+
+Gespeichert werden Kontext, Auslöser, Schwerpunkt und beide Begriffsschlüssel. Die Auswertung enthält zusätzlich die gezogenen Tabellenpositionen und Tabellengrößen. Das Ergebnis erscheint als `ORACLE_RANDOM_EVENT_GENERATED` im Szenenjournal und in der Chronik. Es ist eine Deutungshilfe: Selbst ein Schwerpunkt wie „Handlungsstrang verschärft sich“ ändert keinen Handlungsstrang automatisch.
+
+In diesem Arbeitspaket ist die bewusste manuelle Anforderung der einzige aktive Auslöser. Pasch, kritischer Fehlschlag und hohe Spannung sind als spätere Auslöser vorgesehen. Dadurch entsteht kein unerwarteter neuer Kampagnenzustand, bevor der Spieler die Wendung gedeutet und ausdrücklich übernommen hat.
+
 ## Noch nicht enthalten
 
-- Zufallsereignisse
 - Spannung oder Chaos
+- automatische Auslösung durch Pasch, kritischen Fehlschlag oder Spannung
 - automatische Änderungen an Welt, Wissen oder Handlungssträngen
 
 Orakelergebnisse liefern eine Entscheidungshilfe. Sie verändern andere Kampagnendaten niemals automatisch.

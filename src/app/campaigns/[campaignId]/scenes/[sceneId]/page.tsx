@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { askOracleAction, drawInspirationAction } from "@/features/oracle/actions";
-import { InspirationForm, OracleForm } from "@/features/oracle/oracle-form";
+import {
+  askOracleAction,
+  drawInspirationAction,
+  generateRandomEventAction,
+} from "@/features/oracle/actions";
+import {
+  InspirationForm,
+  OracleForm,
+  RandomEventForm,
+} from "@/features/oracle/oracle-form";
 import {
   addSceneNoteAction,
   addSceneMessageAction,
@@ -60,6 +68,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
   const oracleAction = askOracleAction.bind(null, campaign.id, scene.id);
   const inspirationAction = drawInspirationAction.bind(null, campaign.id, scene.id);
+  const randomEventAction = generateRandomEventAction.bind(null, campaign.id, scene.id);
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
   );
@@ -113,6 +122,27 @@ export default async function ScenePage({ params }: ScenePageProps) {
         {journal.length === 0 ? <p className="empty-copy">{copy.journalEmpty}</p> : (
           <ol className="scene-journal-list">
             {journal.map((entry) => {
+              if (entry.type === "random_event") {
+                return (
+                  <li className="scene-journal-entry random-event-entry" key={entry.value.id}>
+                    <span className="journal-entry-kind">
+                      {messages.oracle.randomEventResultTitle}
+                    </span>
+                    {entry.value.context ? (
+                      <p className="oracle-question">{entry.value.context}</p>
+                    ) : null}
+                    <strong className="random-event-focus">
+                      {messages.oracle.eventFocuses[entry.value.focus]}
+                    </strong>
+                    <p className="random-event-prompt">
+                      <span>{messages.oracle.eventActions[entry.value.actionId]}</span>
+                      {" · "}
+                      <span>{messages.oracle.eventSubjects[entry.value.subjectId]}</span>
+                    </p>
+                    <small>{messages.oracle.randomEventInterpretationHint}</small>
+                  </li>
+                );
+              }
               if (entry.type === "inspiration") {
                 return (
                   <li className="scene-journal-entry inspiration-entry" key={entry.value.id}>
@@ -217,6 +247,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
             <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />
             <OracleForm action={oracleAction} messages={messages} />
             <InspirationForm action={inspirationAction} messages={messages} />
+            <RandomEventForm action={randomEventAction} messages={messages} />
           </div>
           <SceneCompletionForm action={completionAction} messages={messages} />
         </>
