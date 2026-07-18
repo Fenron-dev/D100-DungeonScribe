@@ -298,7 +298,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht angepasst" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "KI-Erzählung erzeugt" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "KI-Erzählung erzeugt" }).first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelfrage beantwortet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelinspiration gezogen" })).toBeVisible();
