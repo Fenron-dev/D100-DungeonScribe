@@ -151,7 +151,7 @@ jobs:
           test "$INSPIRATION_COUNT" = "1"
           test "$RANDOM_EVENT_COUNT" -ge "1"
           test "$RANDOM_EVENT_COUNT" -le "2"
-          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 22))"
+          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 23))"
 
       - name: Create archive and checksum
         run: |

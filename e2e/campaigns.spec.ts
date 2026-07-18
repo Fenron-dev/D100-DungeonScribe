@@ -163,6 +163,16 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(
     page.getByText("Hinter der Tür raschelt Pergament, obwohl kein Wind weht."),
   ).toBeVisible();
+  await expect(page.getByText("Demo-Modus", { exact: true })).toBeVisible();
+  await page
+    .getByLabel("Was soll als Nächstes erzählt werden?")
+    .fill("Lass ein leises Klopfen hinter dem Kartenregal hörbar werden.");
+  await page.getByRole("button", { name: "Erzählung erzeugen" }).click();
+  const aiMessage = page.locator(".scene-message-entry.source-ai").filter({
+    hasText: "Die Szene nimmt die Richtung",
+  });
+  await expect(aiMessage).toBeVisible();
+  await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
   await page
     .getByLabel("Eintrag", { exact: true })
     .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
@@ -219,14 +229,15 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText(/2[12] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/2[23] Ereignisse/)).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
-  await expect(page.getByText(/1[01] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/1[12] Ereignisse/)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene begonnen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene abgeschlossen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "KI-Erzählung erzeugt" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelfrage beantwortet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelinspiration gezogen" })).toBeVisible();

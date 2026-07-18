@@ -103,7 +103,7 @@ Befehl
 -> beides atomar speichern
 ```
 
-Ereignisquellen sind `player`, `rule_engine`, `oracle`, `ai` und `manual`. `ai` bezeichnet nur einen vom Benutzer oder einer expliziten Regel übernommenen KI-Vorschlag, niemals eine ungeprüfte Modellantwort.
+Ereignisquellen sind `player`, `rule_engine`, `oracle`, `ai` und `manual`. `ai` bezeichnet ausschließlich lokal schema-validierte KI-Ausgaben. Erzähltexte dürfen nach einer bewusst ausgelösten Anfrage direkt als solche gespeichert werden; KI-Vorschläge für Welt- oder Regeländerungen benötigen weiterhin eine gesonderte Bestätigung und dürfen niemals als ungeprüfte Modellantwort übernommen werden.
 
 ## KI-Änderungsvorschläge
 

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { generateNarrationAction } from "@/features/ai/actions";
+import { NarrativeForm } from "@/features/ai/narrative-form";
 import {
   askOracleAction,
   drawInspirationAction,
@@ -27,6 +29,7 @@ import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
+import { narrativeProviderMode } from "@/services/narrative-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
 
@@ -69,6 +72,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const oracleAction = askOracleAction.bind(null, campaign.id, scene.id);
   const inspirationAction = drawInspirationAction.bind(null, campaign.id, scene.id);
   const randomEventAction = generateRandomEventAction.bind(null, campaign.id, scene.id);
+  const narrationAction = generateNarrationAction.bind(null, campaign.id, scene.id);
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
   );
@@ -216,12 +220,15 @@ export default async function ScenePage({ params }: ScenePageProps) {
               if (entry.type === "message") {
                 return (
                   <li
-                    className={`scene-journal-entry scene-message-entry message-${entry.value.role}`}
+                    className={`scene-journal-entry scene-message-entry message-${entry.value.role} source-${entry.value.source}`}
                     key={entry.value.id}
                   >
                     <span className="journal-entry-kind">
                       {copy.messageRoles[entry.value.role]}
                     </span>
+                    <small className={`message-source source-${entry.value.source}`}>
+                      {copy.messageSources[entry.value.source]}
+                    </small>
                     <p>{entry.value.content}</p>
                   </li>
                 );
@@ -260,6 +267,11 @@ export default async function ScenePage({ params }: ScenePageProps) {
       {scene.status === "active" ? (
         <>
           <div className="scene-journal-forms">
+            <NarrativeForm
+              action={narrationAction}
+              messages={messages}
+              mode={narrativeProviderMode}
+            />
             <SceneMessageForm action={messageAction} messages={messages} />
             <SceneNoteForm action={noteAction} messages={messages} />
             <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />

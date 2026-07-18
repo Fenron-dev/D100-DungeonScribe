@@ -316,9 +316,19 @@ export interface MessageCatalog {
     messageDescription: string;
     messageRoleLabel: string;
     messageRoles: Record<"player" | "narrator", string>;
+    messageSources: Record<"manual" | "ai", string>;
     messageContentLabel: string;
     sendMessageAction: string;
     sendingMessageAction: string;
+    aiNarrationTitle: string;
+    aiNarrationDescription: string;
+    aiDirectionLabel: string;
+    aiGenerateAction: string;
+    aiGeneratingAction: string;
+    aiNarrationError: string;
+    aiDemoMode: string;
+    aiOpenAiMode: string;
+    aiDemoHint: string;
     noteTitle: string;
     noteKindLabel: string;
     noteKinds: Record<"action" | "observation", string>;
@@ -440,6 +450,7 @@ export interface MessageCatalog {
       | "SCENE_STARTED"
       | "SCENE_NOTE_ADDED"
       | "SCENE_MESSAGE_ADDED"
+      | "AI_NARRATION_GENERATED"
       | "DICE_ROLLED"
       | "ORACLE_ANSWERED"
       | "ORACLE_INSPIRATION_DRAWN"
@@ -829,9 +840,21 @@ const germanMessages = {
       "Halte Spielerhandlungen und manuelle Erzählantworten als fortlaufenden Dialog fest.",
     messageRoleLabel: "Beitrag von",
     messageRoles: { player: "Spieler", narrator: "Erzähler" },
+    messageSources: { manual: "Manuell", ai: "KI-erzeugt" },
     messageContentLabel: "Nachricht",
     sendMessageAction: "Nachricht speichern",
     sendingMessageAction: "Nachricht wird gespeichert …",
+    aiNarrationTitle: "KI-Spielleiter",
+    aiNarrationDescription:
+      "Gib eine gewünschte Richtung vor. Die Antwort erzählt weiter, entscheidet aber nicht für deinen Charakter und verändert keine Weltfakten.",
+    aiDirectionLabel: "Was soll als Nächstes erzählt werden?",
+    aiGenerateAction: "Erzählung erzeugen",
+    aiGeneratingAction: "Erzählung wird erzeugt …",
+    aiNarrationError: "Die Erzählung konnte nicht erzeugt oder gespeichert werden.",
+    aiDemoMode: "Demo-Modus",
+    aiOpenAiMode: "OpenAI",
+    aiDemoHint:
+      "Es ist kein API-Schlüssel eingerichtet. Daher entsteht eine lokale, vorhersehbare Demo-Antwort ohne externe Übertragung.",
     noteTitle: "Eintrag festhalten",
     noteKindLabel: "Eintragsart",
     noteKinds: { action: "Handlung", observation: "Beobachtung" },
@@ -1025,6 +1048,7 @@ const germanMessages = {
       SCENE_STARTED: "Szene begonnen",
       SCENE_NOTE_ADDED: "Szeneneintrag festgehalten",
       SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
+      AI_NARRATION_GENERATED: "KI-Erzählung erzeugt",
       DICE_ROLLED: "Probe ausgewertet",
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
       ORACLE_INSPIRATION_DRAWN: "Orakelinspiration gezogen",
@@ -1036,7 +1060,7 @@ const germanMessages = {
       player: "Spieler",
       rule_engine: "Regel-Engine",
       oracle: "Orakel",
-      ai: "Bestätigter KI-Vorschlag",
+      ai: "KI-erzeugt",
       manual: "Manuell",
     },
     reversibleBadge: "Änderbar",
@@ -1415,9 +1439,21 @@ const englishMessages = {
       "Record player actions and manual narration as an ongoing dialogue.",
     messageRoleLabel: "Contribution by",
     messageRoles: { player: "Player", narrator: "Narrator" },
+    messageSources: { manual: "Manual", ai: "AI-generated" },
     messageContentLabel: "Message",
     sendMessageAction: "Save message",
     sendingMessageAction: "Saving message …",
+    aiNarrationTitle: "AI game master",
+    aiNarrationDescription:
+      "Provide a direction. The response continues the story but does not decide for your character or change world facts.",
+    aiDirectionLabel: "What should be narrated next?",
+    aiGenerateAction: "Generate narration",
+    aiGeneratingAction: "Generating narration …",
+    aiNarrationError: "The narration could not be generated or saved.",
+    aiDemoMode: "Demo mode",
+    aiOpenAiMode: "OpenAI",
+    aiDemoHint:
+      "No API key is configured, so a predictable local demo response is used without external transmission.",
     noteTitle: "Record an entry",
     noteKindLabel: "Entry type",
     noteKinds: { action: "Action", observation: "Observation" },
@@ -1611,6 +1647,7 @@ const englishMessages = {
       SCENE_STARTED: "Scene started",
       SCENE_NOTE_ADDED: "Scene entry recorded",
       SCENE_MESSAGE_ADDED: "Scene message recorded",
+      AI_NARRATION_GENERATED: "AI narration generated",
       DICE_ROLLED: "Check resolved",
       ORACLE_ANSWERED: "Oracle question answered",
       ORACLE_INSPIRATION_DRAWN: "Oracle inspiration drawn",
@@ -1622,7 +1659,7 @@ const englishMessages = {
       player: "Player",
       rule_engine: "Rules engine",
       oracle: "Oracle",
-      ai: "Approved AI proposal",
+      ai: "AI-generated",
       manual: "Manual",
     },
     reversibleBadge: "Changeable",

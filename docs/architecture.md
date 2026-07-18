@@ -99,11 +99,13 @@ interface AiProvider {
 }
 ```
 
-OpenAI wird als erster Adapter umgesetzt. Vorgesehen ist die serverseitige Responses API. Strukturierte Ergebnisse werden gegen explizite Schemas erzeugt und anschließend erneut lokal mit Zod validiert. Die Domain kennt weder SDK-Typen noch Modellbezeichnungen. Modell und Anbieter werden über validierte Konfiguration gewählt.
+OpenAI ist als erster Adapter über die serverseitige Responses API umgesetzt. Strukturierte Ergebnisse werden gegen ein explizites JSON-Schema erzeugt und anschließend erneut lokal mit Zod validiert. Die Domain kennt weder SDK-Typen noch Modellbezeichnungen. Modell und Anbieter werden über validierte Konfiguration gewählt. Ohne API-Schlüssel übernimmt ein deterministischer Mockadapter, damit Entwicklung, CI und lokaler Betrieb keine externe Anfrage auslösen.
 
 Die aktuelle OpenAI-Dokumentation führt aktuelle Modelle über die Responses API und weist strukturierte Ausgaben als unterstützte Funktion aus. Diese externe Fähigkeit wird dennoch nur im Adapter verwendet: [OpenAI API Models](https://developers.openai.com/api/docs/models).
 
 API-Schlüssel werden ausschließlich serverseitig aus Umgebungsvariablen oder einer späteren verschlüsselten lokalen Konfiguration gelesen. Kampagnendaten werden nach dem Prinzip der minimal notwendigen Kontextmenge übermittelt.
+
+Die erste Erzählfunktion lädt ausschließlich Kampagnenname und -idee, Genre, Stimmung, Spannung, aktuellen Szenenbeginn und -ziel, Namen der Beteiligten sowie Titel offener relevanter Handlungsstränge. Wissenseinträge, Geheimnisse, Charakterdetails und frühere Nachrichten sind nicht Teil dieser Abfrage. Der Adapter fordert keine serverseitige Speicherung der Antwort an. Fehlerprotokolle enthalten nur den Fehlerklassennamen, nicht Schlüssel, Prompt, Kontext oder Antwort.
 
 ## Internationalisierung
 
@@ -156,7 +158,7 @@ src/
 
 - konkrete Paketversionen bis Phase 1
 - spezialisierte i18n-Bibliothek bis zu einer tatsächlich umschaltbaren zweiten Sprache
-- konkretes OpenAI-Modell bis Phase 8
+- verschlüsselte lokale Schlüsselverwaltung bis zu einem Einstellungsbereich; aktuell bleiben Schlüssel in der serverseitigen Umgebung
 - Docker-Betrieb bis nach einem funktionierenden lokalen MVP
 - Authentifizierung bis zu einer tatsächlichen externen Bereitstellung
 - vollständiges Event Sourcing ist nicht vorgesehen

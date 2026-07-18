@@ -1445,6 +1445,49 @@ h2 {
   grid-column: 1 / -1;
 }
 
+.ai-narrative-form {
+  grid-column: 1 / -1;
+  border-color: rgb(154 127 204 / 52%);
+  background: linear-gradient(145deg, rgb(42 34 61 / 26%), rgb(15 21 18 / 98%));
+}
+
+.ai-form-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ai-form-heading h3 {
+  margin: 0;
+}
+
+.provider-mode,
+.message-source {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgb(154 127 204 / 55%);
+  border-radius: 99rem;
+  color: rgb(208 187 245);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.provider-demo {
+  border-color: var(--color-border);
+  color: var(--color-muted);
+}
+
+.message-source {
+  margin-left: 0.55rem;
+}
+
+.source-ai {
+  border-color: rgb(154 127 204 / 55%);
+}
+
 .oracle-form {
   border-color: rgb(138 114 183 / 48%);
   background: linear-gradient(145deg, rgb(42 34 61 / 22%), rgb(15 21 18 / 98%));
