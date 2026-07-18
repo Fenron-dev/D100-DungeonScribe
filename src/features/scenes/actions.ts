@@ -8,7 +8,7 @@ import type {
   SceneFormState,
   SceneJournalFormState,
 } from "@/features/scenes/form-state";
-import { sceneDraftSchema, sceneSummarySchema } from "@/schemas/scene";
+import { sceneCompletionInputSchema, sceneDraftSchema } from "@/schemas/scene";
 import {
   diceRollDraftSchema,
   sceneMessageDraftSchema,
@@ -178,7 +178,10 @@ export async function completeSceneAction(
   _state: SceneCompletionState,
   formData: FormData,
 ): Promise<SceneCompletionState> {
-  const result = sceneSummarySchema.safeParse(readText(formData, "summary"));
+  const result = sceneCompletionInputSchema.safeParse({
+    summary: readText(formData, "summary"),
+    tensionAdjustment: readText(formData, "tensionAdjustment"),
+  });
   if (!result.success) {
     return {
       message: "validation",

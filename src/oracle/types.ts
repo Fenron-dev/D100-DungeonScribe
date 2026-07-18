@@ -32,6 +32,8 @@ export interface YesNoOracleResult {
   adjustedTotal: number;
   answer: OracleAnswer;
   isDouble: boolean;
+  tensionAtRoll: number;
+  randomEventTriggered: boolean;
   explanation: {
     likelihood: OracleLikelihood;
     rawTotal: number;
@@ -39,6 +41,8 @@ export interface YesNoOracleResult {
     adjustedTotal: number;
     wasLimited: boolean;
     answer: OracleAnswer;
+    tensionAtRoll: number;
+    randomEventTriggered: boolean;
   };
 }
 
@@ -115,7 +119,7 @@ export interface OracleInspiration extends InspirationInput, InspirationResult {
   createdAt: Date;
 }
 
-export const randomEventTriggers = ["manual"] as const;
+export const randomEventTriggers = ["manual", "double"] as const;
 export type RandomEventTrigger = (typeof randomEventTriggers)[number];
 
 export const eventFocuses = [

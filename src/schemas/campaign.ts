@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { campaignStatuses } from "@/domain/campaign";
+import {
+  campaignTensionMaximum,
+  campaignTensionMinimum,
+} from "@/oracle/tension";
 
 const optionalShortText = z
   .string()
@@ -30,5 +34,11 @@ export const campaignIdSchema = z
   .max(64, "Kampagnen-ID ist ungültig.");
 
 export const campaignStatusSchema = z.enum(campaignStatuses);
+
+export const campaignTensionSchema = z
+  .number()
+  .int()
+  .min(campaignTensionMinimum)
+  .max(campaignTensionMaximum);
 
 export type CampaignDraftInput = z.input<typeof campaignDraftSchema>;

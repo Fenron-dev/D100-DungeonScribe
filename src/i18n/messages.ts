@@ -47,6 +47,8 @@ export interface MessageCatalog {
     nameLabel: string;
     genreLabel: string;
     moodLabel: string;
+    tensionLabel: string;
+    tensionDescription: string;
     optionalHint: string;
     createTitle: string;
     createDescription: string;
@@ -296,6 +298,9 @@ export interface MessageCatalog {
     completeTitle: string;
     completeDescription: string;
     summaryLabel: string;
+    tensionAdjustmentLabel: string;
+    tensionAdjustmentHint: string;
+    tensionAdjustments: Record<"decrease" | "steady" | "increase", string>;
     completeAction: string;
     completingAction: string;
     summaryTitle: string;
@@ -367,6 +372,9 @@ export interface MessageCatalog {
     diceLabel: string;
     calculationLabel: string;
     doubleBadge: string;
+    tensionAtRollLabel: string;
+    doubleTriggerRule: string;
+    eventTriggeredBadge: string;
     inspirationTitle: string;
     inspirationDescription: string;
     detailQuestionLabel: string;
@@ -386,6 +394,8 @@ export interface MessageCatalog {
     generatingEventAction: string;
     randomEventResultTitle: string;
     randomEventInterpretationHint: string;
+    randomEventTriggerLabel: string;
+    randomEventTriggers: Record<"manual" | "double", string>;
     eventFocuses: Record<EventFocus, string>;
     eventActions: Record<RandomEventActionId, string>;
     eventSubjects: Record<RandomEventSubjectId, string>;
@@ -434,6 +444,7 @@ export interface MessageCatalog {
       | "ORACLE_ANSWERED"
       | "ORACLE_INSPIRATION_DRAWN"
       | "ORACLE_RANDOM_EVENT_GENERATED"
+      | "TENSION_CHANGED"
       | "SCENE_COMPLETED",
       string
     >;
@@ -495,6 +506,8 @@ const germanMessages = {
     nameLabel: "Name",
     genreLabel: "Genre",
     moodLabel: "Stimmung",
+    tensionLabel: "Spannung",
+    tensionDescription: "Beeinflusst, welche Pasche unerwartete Ereignisse auslösen.",
     optionalHint: "optional",
     createTitle: "Eine neue Geschichte beginnen",
     createDescription:
@@ -791,6 +804,14 @@ const germanMessages = {
     completeDescription:
       "Fasse die wichtigsten Geschehnisse zusammen. Einzelne Weltänderungen bleiben weiterhin eigene, nachvollziehbare Aktionen.",
     summaryLabel: "Szenenzusammenfassung",
+    tensionAdjustmentLabel: "Spannung nach der Szene",
+    tensionAdjustmentHint:
+      "Sinkt oder steigt höchstens um eine Stufe und bleibt zwischen 1 und 6.",
+    tensionAdjustments: {
+      decrease: "Ruhiger (−1)",
+      steady: "Unverändert (±0)",
+      increase: "Angespannter (+1)",
+    },
     completeAction: "Szene abschließen",
     completingAction: "Szene wird abgeschlossen …",
     summaryTitle: "Zusammenfassung",
@@ -877,6 +898,9 @@ const germanMessages = {
     diceLabel: "2W6",
     calculationLabel: "Auswertung",
     doubleBadge: "Pasch",
+    tensionAtRollLabel: "Spannung beim Wurf",
+    doubleTriggerRule: "Ein Pasch löst aus, wenn sein Würfelwert höchstens der Spannung entspricht.",
+    eventTriggeredBadge: "Ereignis ausgelöst",
     inspirationTitle: "Offene Inspiration",
     inspirationDescription:
       "Ziehe zwei Begriffe für eine offene Idee oder als Antwort auf eine optionale Detailfrage.",
@@ -932,6 +956,8 @@ const germanMessages = {
     randomEventResultTitle: "Unerwartetes Ereignis",
     randomEventInterpretationHint:
       "Deute das Ergebnis passend zur Szene. Es verändert die Kampagne nicht automatisch.",
+    randomEventTriggerLabel: "Auslöser",
+    randomEventTriggers: { manual: "Manuell", double: "Pasch und Spannung" },
     eventFocuses: {
       distant_threat: "Entfernte Bedrohung",
       new_person: "Neue Person",
@@ -1003,6 +1029,7 @@ const germanMessages = {
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
       ORACLE_INSPIRATION_DRAWN: "Orakelinspiration gezogen",
       ORACLE_RANDOM_EVENT_GENERATED: "Zufallsereignis erzeugt",
+      TENSION_CHANGED: "Spannung angepasst",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
@@ -1069,6 +1096,8 @@ const englishMessages = {
     nameLabel: "Name",
     genreLabel: "Genre",
     moodLabel: "Mood",
+    tensionLabel: "Tension",
+    tensionDescription: "Determines which doubles trigger unexpected events.",
     optionalHint: "optional",
     createTitle: "Begin a new story",
     createDescription: "You can refine the premise at any time later.",
@@ -1361,6 +1390,14 @@ const englishMessages = {
     completeDescription:
       "Summarize the important events. Individual world changes remain separate, traceable actions.",
     summaryLabel: "Scene summary",
+    tensionAdjustmentLabel: "Tension after the scene",
+    tensionAdjustmentHint:
+      "Changes by at most one level and remains between 1 and 6.",
+    tensionAdjustments: {
+      decrease: "Calmer (−1)",
+      steady: "Unchanged (±0)",
+      increase: "More tense (+1)",
+    },
     completeAction: "Complete scene",
     completingAction: "Completing scene …",
     summaryTitle: "Summary",
@@ -1447,6 +1484,9 @@ const englishMessages = {
     diceLabel: "2d6",
     calculationLabel: "Evaluation",
     doubleBadge: "Double",
+    tensionAtRollLabel: "Tension at roll",
+    doubleTriggerRule: "A double triggers when its die value is at most the current tension.",
+    eventTriggeredBadge: "Event triggered",
     inspirationTitle: "Open inspiration",
     inspirationDescription:
       "Draw two terms for an open idea or as an answer to an optional detail question.",
@@ -1502,6 +1542,8 @@ const englishMessages = {
     randomEventResultTitle: "Unexpected event",
     randomEventInterpretationHint:
       "Interpret the result for the current scene. It does not change the campaign automatically.",
+    randomEventTriggerLabel: "Trigger",
+    randomEventTriggers: { manual: "Manual", double: "Double and tension" },
     eventFocuses: {
       distant_threat: "Distant threat",
       new_person: "New person",
@@ -1573,6 +1615,7 @@ const englishMessages = {
       ORACLE_ANSWERED: "Oracle question answered",
       ORACLE_INSPIRATION_DRAWN: "Oracle inspiration drawn",
       ORACLE_RANDOM_EVENT_GENERATED: "Random event generated",
+      TENSION_CHANGED: "Tension adjusted",
       SCENE_COMPLETED: "Scene completed",
     },
     sources: {

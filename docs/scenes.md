@@ -12,10 +12,12 @@ Pro Kampagne darf höchstens eine Szene aktiv sein. Diese Invariante wird sowohl
 
 Eine aktive Szene wird mit einer vom Benutzer bearbeiteten Zusammenfassung abgeschlossen. Abschlussstatus, Zusammenfassung und reale Endzeit werden atomar gespeichert. Einzelne Veränderungen an Weltobjekten, Wissen oder Handlungssträngen bleiben eigenständige Aktionen und werden nicht aus freiem Zusammenfassungstext abgeleitet.
 
+Beim Abschluss entscheidet der Spieler außerdem, ob die Kampagnenspannung um eine Stufe sinkt, gleich bleibt oder steigt. Der Wert bleibt zwischen 1 und 6. Eine tatsächliche Änderung wird in derselben Transaktion gespeichert und durch `TENSION_CHANGED` nachvollziehbar; die Zusammenfassung selbst verändert keine weiteren Weltobjekte.
+
 ## Spielprotokoll und Proben
 
 Aktive Szenen besitzen ein zeitlich geordnetes Spielprotokoll. `SceneMessage` bildet den fortlaufenden Szenendialog ab und unterscheidet manuelle Spieler- und Erzählerbeiträge. Diese Trennung ist unabhängig von späteren Anbieterrollen; die Quelle wird separat gespeichert, sodass zukünftig manuelle und KI-erzeugte Erzählbeiträge erkennbar bleiben. Freie Einträge unterscheiden ergänzend dauerhafte Handlungen und Beobachtungen.
 
 Proben werden ausschließlich von der W6-Pool-Regel-Engine ausgewertet: Charakter, Handlung, Schwierigkeit, passender Archetyp, passende Eigenschaft sowie je ein optionaler Vor- und Nachteil bilden die Eingabe. Gespeichert werden die vollständige Eingabe, Würfel, Schwelle, Erfolge, Erfolgsgrad, Modifikatoren, Erklärung sowie ID und Version des verwendeten Regelwerks. Eine passende Eigenschaft muss tatsächlich zum handelnden, an der Szene beteiligten Charakter gehören.
 
-Start, Nachricht, Protokolleintrag, Probe, Orakelfrage, Inspiration, unerwartetes Ereignis und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED`, `ORACLE_ANSWERED`, `ORACLE_INSPIRATION_DRAWN`, `ORACLE_RANDOM_EVENT_GENERATED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“. Spielzeit und KI-erzeugte Erzählantworten folgen in späteren Arbeitspaketen.
+Start, Nachricht, Protokolleintrag, Probe, Orakelfrage, Inspiration, unerwartetes Ereignis, Spannungsänderung und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED`, `ORACLE_ANSWERED`, `ORACLE_INSPIRATION_DRAWN`, `ORACLE_RANDOM_EVENT_GENERATED`, `TENSION_CHANGED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“. Spielzeit und KI-erzeugte Erzählantworten folgen in späteren Arbeitspaketen.

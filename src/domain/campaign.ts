@@ -8,6 +8,7 @@ export interface Campaign {
   premise: string;
   genre: string | null;
   mood: string | null;
+  tension: number;
   status: CampaignStatus;
   createdAt: Date;
   updatedAt: Date;

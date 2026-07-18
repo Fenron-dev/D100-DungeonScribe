@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { sceneStatuses } from "@/domain/scene";
+import { tensionAdjustments } from "@/oracle/tension";
 import { characterIdSchema } from "@/schemas/character";
 import { storyThreadIdSchema } from "@/schemas/story-thread";
 import { worldEntityIdSchema } from "@/schemas/world-entity";
@@ -57,6 +58,13 @@ export const sceneSummarySchema = z
   .trim()
   .min(1, "Bitte fasse den Szenenabschluss zusammen.")
   .max(8_000, "Die Zusammenfassung darf höchstens 8.000 Zeichen enthalten.");
+
+export const tensionAdjustmentSchema = z.enum(tensionAdjustments);
+
+export const sceneCompletionInputSchema = z.object({
+  summary: sceneSummarySchema,
+  tensionAdjustment: tensionAdjustmentSchema,
+});
 
 export const sceneIdSchema = z
   .string()

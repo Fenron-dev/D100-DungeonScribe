@@ -1,4 +1,5 @@
 import type { RandomSource } from "@/rules/random-source";
+import { evaluateDoubleEventTrigger, isCampaignTension } from "@/oracle/tension";
 import type {
   OracleAnswer,
   OracleLikelihood,
@@ -26,7 +27,10 @@ function determineAnswer(total: number): OracleAnswer {
 export class YesNoOracle {
   public constructor(private readonly randomSource: RandomSource) {}
 
-  public ask(likelihood: OracleLikelihood): YesNoOracleResult {
+  public ask(likelihood: OracleLikelihood, tension: number): YesNoOracleResult {
+    if (!isCampaignTension(tension)) {
+      throw new RangeError("Campaign tension must be an integer from 1 to 6.");
+    }
     const firstDie = this.randomSource.nextInt(1, 6);
     const secondDie = this.randomSource.nextInt(1, 6);
     const rawTotal = firstDie + secondDie;
@@ -34,13 +38,17 @@ export class YesNoOracle {
     const unboundedTotal = rawTotal + modifier;
     const adjustedTotal = Math.min(12, Math.max(2, unboundedTotal));
     const answer = determineAnswer(adjustedTotal);
+    const dice: [number, number] = [firstDie, secondDie];
+    const randomEventTriggered = evaluateDoubleEventTrigger(dice, tension);
     return {
-      dice: [firstDie, secondDie],
+      dice,
       rawTotal,
       modifier,
       adjustedTotal,
       answer,
       isDouble: firstDie === secondDie,
+      tensionAtRoll: tension,
+      randomEventTriggered,
       explanation: {
         likelihood,
         rawTotal,
@@ -48,6 +56,8 @@ export class YesNoOracle {
         adjustedTotal,
         wasLimited: adjustedTotal !== unboundedTotal,
         answer,
+        tensionAtRoll: tension,
+        randomEventTriggered,
       },
     };
   }

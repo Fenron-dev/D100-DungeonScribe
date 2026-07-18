@@ -13,20 +13,29 @@ import type {
 import { YesNoOracle } from "@/oracle/yes-no-oracle";
 import { InspirationOracle } from "@/oracle/inspiration-oracle";
 import { RandomEventOracle } from "@/oracle/random-event-oracle";
-import type { OracleRepository } from "@/repositories/oracle-repository";
+import type {
+  AutomaticRandomEvent,
+  OracleRepository,
+} from "@/repositories/oracle-repository";
 import { FixedRandomSource } from "@/rules/testing/fixed-random-source";
 import { OracleContextNotFoundError, OracleService } from "@/services/oracle-service";
 
 class InMemoryOracleRepository implements OracleRepository {
   public saved: OracleRecord | null = null;
+  public savedAutomaticEvent: AutomaticRandomEvent | null = null;
   public constructor(private readonly available = true) {}
+  public async findActiveTension(): Promise<number | null> {
+    return this.available ? 3 : null;
+  }
   public async create(
     campaignId: string,
     sceneId: string,
     input: YesNoOracleInput,
     result: YesNoOracleResult,
+    automaticEvent: AutomaticRandomEvent | null,
   ): Promise<OracleRecord | null> {
     if (!this.available) return null;
+    this.savedAutomaticEvent = automaticEvent;
     this.saved = {
       id: "oracle-1",
       campaignId,
@@ -107,6 +116,29 @@ describe("OracleService", () => {
         likelihood: "even",
       }),
     ).rejects.toBeInstanceOf(OracleContextNotFoundError);
+  });
+
+  it("stores a random event with a triggering double in the same operation", async () => {
+    const repository = new InMemoryOracleRepository();
+    const service = new OracleService(
+      repository,
+      new YesNoOracle(new FixedRandomSource([2, 2])),
+      new InspirationOracle(new FixedRandomSource([0, 1])),
+      new RandomEventOracle(new FixedRandomSource([3, 4, 5])),
+    );
+    const record = await service.askYesNo("campaign-1", "scene-1", {
+      question: "Kommt jemand durch die Tür?",
+      likelihood: "even",
+    });
+    expect(record.randomEventTriggered).toBe(true);
+    expect(repository.savedAutomaticEvent).toMatchObject({
+      input: { context: "Kommt jemand durch die Tür?", trigger: "double" },
+      result: {
+        focus: "faction_acts",
+        actionId: "event_action.demand",
+        subjectId: "event_subject.authority",
+      },
+    });
   });
 
   it("stores a reproducible inspiration for an optional detail question", async () => {

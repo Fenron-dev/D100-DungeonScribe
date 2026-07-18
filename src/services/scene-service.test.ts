@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Scene, SceneDraft } from "@/domain/scene";
+import type { Scene, SceneCompletion, SceneDraft } from "@/domain/scene";
 import type { SceneRepository } from "@/repositories/scene-repository";
 import {
   ActiveSceneExistsError,
@@ -9,6 +9,7 @@ import {
 
 class InMemorySceneRepository implements SceneRepository {
   private readonly scenes: Scene[] = [];
+  public lastCompletion: SceneCompletion | null = null;
 
   public async create(campaignId: string, draft: SceneDraft) {
     if (campaignId === "missing") return null;
@@ -44,15 +45,20 @@ class InMemorySceneRepository implements SceneRepository {
     return this.scenes.filter((scene) => scene.campaignId === campaignId);
   }
 
+  public async findCampaignTension(campaignId: string) {
+    return campaignId === "missing" ? null : 3;
+  }
+
   public async complete(
     campaignId: string,
     sceneId: string,
-    summary: string,
+    completion: SceneCompletion,
     endedAtReal: Date,
   ) {
     const scene = await this.findById(campaignId, sceneId);
     if (!scene || scene.status !== "active") return null;
-    Object.assign(scene, { status: "completed", summary, endedAtReal });
+    this.lastCompletion = completion;
+    Object.assign(scene, { status: "completed", summary: completion.summary, endedAtReal });
     return scene;
   }
 }
@@ -71,12 +77,16 @@ const draft = {
 describe("SceneService", () => {
   it("starts and completes a normalized scene", async () => {
     const endedAt = new Date("2026-07-17T18:00:00.000Z");
-    const service = new SceneService(new InMemorySceneRepository(), () => endedAt);
+    const repository = new InMemorySceneRepository();
+    const service = new SceneService(repository, () => endedAt);
     const scene = await service.create("campaign-1", draft);
     const completed = await service.complete(
       "campaign-1",
       scene.id,
-      " Mara findet eine verborgene Karte. ",
+      {
+        summary: " Mara findet eine verborgene Karte. ",
+        tensionAdjustment: "increase",
+      },
     );
 
     expect(scene).toMatchObject({ title: "Die Straße im Nebel", objective: null });
@@ -84,6 +94,11 @@ describe("SceneService", () => {
       status: "completed",
       summary: "Mara findet eine verborgene Karte.",
       endedAtReal: endedAt,
+    });
+    expect(repository.lastCompletion?.tension).toMatchObject({
+      previous: 3,
+      adjustment: "increase",
+      next: 4,
     });
   });
 

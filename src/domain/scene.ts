@@ -1,3 +1,5 @@
+import type { TensionAdjustmentResult } from "@/oracle/tension";
+
 export const sceneStatuses = ["active", "completed"] as const;
 
 export type SceneStatus = (typeof sceneStatuses)[number];
@@ -22,4 +24,9 @@ export interface Scene extends SceneDraft {
   endedAtReal: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface SceneCompletion {
+  summary: string;
+  tension: TensionAdjustmentResult;
 }

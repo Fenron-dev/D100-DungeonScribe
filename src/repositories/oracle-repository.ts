@@ -10,12 +10,19 @@ import type {
   YesNoOracleResult,
 } from "@/oracle/types";
 
+export interface AutomaticRandomEvent {
+  input: RandomEventInput;
+  result: RandomEventResult;
+}
+
 export interface OracleRepository {
+  findActiveTension(campaignId: string, sceneId: string): Promise<number | null>;
   create(
     campaignId: string,
     sceneId: string,
     input: YesNoOracleInput,
     result: YesNoOracleResult,
+    automaticEvent: AutomaticRandomEvent | null,
   ): Promise<OracleRecord | null>;
   createInspiration(
     campaignId: string,

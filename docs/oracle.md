@@ -16,7 +16,7 @@ Die Engine würfelt 2W6, addiert den Modifikator und begrenzt den Endwert auf 2 
 
 ## Nachvollziehbarkeit und Speicherung
 
-Gespeichert werden Frage, Wahrscheinlichkeit, beide Würfel, Rohsumme, Modifikator, Endwert, Antwort und Pasch-Markierung. Das Ergebnis erscheint chronologisch im Spielprotokoll und erzeugt atomar `ORACLE_ANSWERED` mit der Quelle `oracle`. Ein Pasch löst in diesem Arbeitspaket noch kein Zufallsereignis aus; die Markierung bereitet diesen späteren Baustein lediglich vor.
+Gespeichert werden Frage, Wahrscheinlichkeit, beide Würfel, Rohsumme, Modifikator, Endwert, Antwort, Pasch-Markierung, Spannung beim Wurf und Ereignisauslösung. Das Ergebnis erscheint chronologisch im Spielprotokoll und erzeugt atomar `ORACLE_ANSWERED` mit der Quelle `oracle`.
 
 ## Offene Inspiration und Detailfragen
 
@@ -34,12 +34,18 @@ Ein unerwartetes Ereignis kann in einer aktiven Szene bewusst erzeugt werden. Ei
 
 Gespeichert werden Kontext, Auslöser, Schwerpunkt und beide Begriffsschlüssel. Die Auswertung enthält zusätzlich die gezogenen Tabellenpositionen und Tabellengrößen. Das Ergebnis erscheint als `ORACLE_RANDOM_EVENT_GENERATED` im Szenenjournal und in der Chronik. Es ist eine Deutungshilfe: Selbst ein Schwerpunkt wie „Handlungsstrang verschärft sich“ ändert keinen Handlungsstrang automatisch.
 
-In diesem Arbeitspaket ist die bewusste manuelle Anforderung der einzige aktive Auslöser. Pasch, kritischer Fehlschlag und hohe Spannung sind als spätere Auslöser vorgesehen. Dadurch entsteht kein unerwarteter neuer Kampagnenzustand, bevor der Spieler die Wendung gedeutet und ausdrücklich übernommen hat.
+Ein Ereignis kann bewusst manuell angefordert oder durch einen Ja-Nein-Pasch ausgelöst werden. Die transparente Paschregel verwendet keine zusätzliche Zufallszahl: Der Pasch löst aus, wenn sein Würfelwert höchstens der aktuellen Kampagnenspannung entspricht. Bei Spannung 1 löst nur ein 1er-Pasch aus, bei Spannung 6 jeder Pasch. Orakelantwort, erzeugtes Zufallsereignis und beide Kampagnenereignisse werden gemeinsam in einer Datenbanktransaktion gespeichert.
+
+## Spannung
+
+Jede Kampagne beginnt mit Spannung 3 auf einer Skala von 1 bis 6. Beim Abschluss einer Szene wählt der Spieler „ruhiger“, „unverändert“ oder „angespannter“. Die Domainlogik verändert den Wert um höchstens eine Stufe und begrenzt ihn auf 1 bis 6. Eine tatsächliche Änderung erzeugt atomar `TENSION_CHANGED`; unverändert erzeugt kein zusätzliches Zustandsereignis.
+
+Niedrige Spannung schränkt die auslösenden Pasche ein, hohe Spannung erweitert sie. Spannung verändert weder die Antworttabelle noch bestehende Kampagnendaten und erzeugt für sich allein kein Ereignis.
 
 ## Noch nicht enthalten
 
-- Spannung oder Chaos
-- automatische Auslösung durch Pasch, kritischen Fehlschlag oder Spannung
+- automatische Auslösung durch kritischen Fehlschlag
+- weitergehende aggressive Handlungsstrang- oder Szenenunterbrechungen
 - automatische Änderungen an Welt, Wissen oder Handlungssträngen
 
 Orakelergebnisse liefern eine Entscheidungshilfe. Sie verändern andere Kampagnendaten niemals automatisch.

@@ -15,7 +15,10 @@ import {
   type YesNoOracleResult,
 } from "@/oracle/types";
 import type { PrismaClient } from "@/generated/prisma/client";
-import type { OracleRepository } from "@/repositories/oracle-repository";
+import type {
+  AutomaticRandomEvent,
+  OracleRepository,
+} from "@/repositories/oracle-repository";
 import {
   inspirationCategorySchema,
   inspirationTermIdSchema,
@@ -26,6 +29,7 @@ import {
   randomEventSubjectIdSchema,
   randomEventTriggerSchema,
 } from "@/schemas/oracle";
+import { campaignTensionSchema } from "@/schemas/campaign";
 
 type OracleRow = Awaited<ReturnType<PrismaClient["oracleRecord"]["findUnique"]>>;
 type InspirationRow = Awaited<
@@ -55,6 +59,8 @@ export function mapOracleRecord(row: NonNullable<OracleRow>): OracleRecord {
     adjustedTotal: row.adjustedTotal,
     answer,
     isDouble: row.isDouble,
+    tensionAtRoll: campaignTensionSchema.parse(row.tensionAtRoll),
+    randomEventTriggered: row.randomEventTriggered,
     explanation: {
       likelihood,
       rawTotal: row.rawTotal,
@@ -62,6 +68,8 @@ export function mapOracleRecord(row: NonNullable<OracleRow>): OracleRecord {
       adjustedTotal: row.adjustedTotal,
       wasLimited: row.rawTotal + row.modifier !== row.adjustedTotal,
       answer,
+      tensionAtRoll: campaignTensionSchema.parse(row.tensionAtRoll),
+      randomEventTriggered: row.randomEventTriggered,
     },
     createdAt: row.createdAt,
   };
@@ -133,11 +141,23 @@ export function mapOracleRandomEvent(
 export class PrismaOracleRepository implements OracleRepository {
   public constructor(private readonly client: PrismaClient) {}
 
+  public async findActiveTension(
+    campaignId: string,
+    sceneId: string,
+  ): Promise<number | null> {
+    const scene = await this.client.scene.findFirst({
+      where: { id: sceneId, campaignId, status: "active", campaign: { status: "active" } },
+      select: { campaign: { select: { tension: true } } },
+    });
+    return scene ? campaignTensionSchema.parse(scene.campaign.tension) : null;
+  }
+
   public async create(
     campaignId: string,
     sceneId: string,
     input: YesNoOracleInput,
     result: YesNoOracleResult,
+    automaticEvent: AutomaticRandomEvent | null,
   ): Promise<OracleRecord | null> {
     const scene = await this.client.scene.findFirst({
       where: { id: sceneId, campaignId, status: "active" },
@@ -158,6 +178,8 @@ export class PrismaOracleRepository implements OracleRepository {
           adjustedTotal: result.adjustedTotal,
           answer: result.answer,
           isDouble: result.isDouble,
+          tensionAtRoll: result.tensionAtRoll,
+          randomEventTriggered: result.randomEventTriggered,
         },
       });
       await transaction.campaignEvent.create({
@@ -174,6 +196,36 @@ export class PrismaOracleRepository implements OracleRepository {
           reversible: false,
         },
       });
+      if (automaticEvent) {
+        const randomEvent = await transaction.oracleRandomEvent.create({
+          data: {
+            campaignId,
+            sceneId,
+            context: automaticEvent.input.context,
+            trigger: automaticEvent.input.trigger,
+            focus: automaticEvent.result.focus,
+            actionId: automaticEvent.result.actionId,
+            subjectId: automaticEvent.result.subjectId,
+            affectedEntityId: automaticEvent.result.affectedEntityId,
+          },
+        });
+        await transaction.campaignEvent.create({
+          data: {
+            campaignId,
+            eventType: "ORACLE_RANDOM_EVENT_GENERATED",
+            summary: "Zufallsereignis durch Pasch ausgelöst",
+            payload: {
+              sceneId,
+              oracleRandomEventId: randomEvent.id,
+              trigger: automaticEvent.input.trigger,
+              focus: automaticEvent.result.focus,
+              oracleRecordId: record.id,
+            },
+            source: "oracle",
+            reversible: false,
+          },
+        });
+      }
       return mapOracleRecord(record);
     });
   }

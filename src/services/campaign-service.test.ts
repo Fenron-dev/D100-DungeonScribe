@@ -18,6 +18,7 @@ class InMemoryCampaignRepository implements CampaignRepository {
     const campaign: Campaign = {
       id: `campaign-${this.nextId++}`,
       ...draft,
+      tension: 3,
       status: "active",
       createdAt: now,
       updatedAt: now,
@@ -84,6 +85,7 @@ describe("CampaignService", () => {
     expect(campaign.name).toBe("Die Straßen im Nebel");
     expect(campaign.genre).toBe("Fantasy");
     expect(campaign.status).toBe("active");
+    expect(campaign.tension).toBe(3);
   });
 
   it("updates and archives a campaign", async () => {

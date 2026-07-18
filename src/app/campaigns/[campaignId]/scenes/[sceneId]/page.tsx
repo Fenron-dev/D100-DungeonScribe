@@ -83,6 +83,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
           <span className={`status-badge status-${scene.status}`}>
             {scene.status === "active" ? copy.activeStatus : copy.completedStatus}
           </span>
+          <span className="tension-badge">
+            {messages.campaigns.tensionLabel}: {campaign.tension} / 6
+          </span>
           <h1>{scene.title}</h1>
         </div>
       </header>
@@ -128,6 +131,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
                     <span className="journal-entry-kind">
                       {messages.oracle.randomEventResultTitle}
                     </span>
+                    <small className="random-event-trigger">
+                      {messages.oracle.randomEventTriggerLabel}: {messages.oracle.randomEventTriggers[entry.value.trigger]}
+                    </small>
                     {entry.value.context ? (
                       <p className="oracle-question">{entry.value.context}</p>
                     ) : null}
@@ -177,6 +183,11 @@ export default async function ScenePage({ params }: ScenePageProps) {
                       {entry.value.isDouble ? (
                         <span className="oracle-double">{messages.oracle.doubleBadge}</span>
                       ) : null}
+                      {entry.value.randomEventTriggered ? (
+                        <span className="oracle-event-triggered">
+                          {messages.oracle.eventTriggeredBadge}
+                        </span>
+                      ) : null}
                     </div>
                     <p className="oracle-question">{entry.value.question}</p>
                     <strong className="oracle-answer">
@@ -191,7 +202,14 @@ export default async function ScenePage({ params }: ScenePageProps) {
                         <dt>{messages.oracle.calculationLabel}</dt>
                         <dd>{entry.value.rawTotal} {modifier} = {entry.value.adjustedTotal}</dd>
                       </div>
+                      <div>
+                        <dt>{messages.oracle.tensionAtRollLabel}</dt>
+                        <dd>{entry.value.tensionAtRoll} / 6</dd>
+                      </div>
                     </dl>
+                    {entry.value.isDouble ? (
+                      <small>{messages.oracle.doubleTriggerRule}</small>
+                    ) : null}
                   </li>
                 );
               }

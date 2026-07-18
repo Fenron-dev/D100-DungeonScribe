@@ -4,7 +4,7 @@ import type {
   CampaignListOptions,
   CampaignRepository,
 } from "@/repositories/campaign-repository";
-import { campaignStatusSchema } from "@/schemas/campaign";
+import { campaignStatusSchema, campaignTensionSchema } from "@/schemas/campaign";
 
 type CampaignRow = Awaited<
   ReturnType<PrismaClient["campaign"]["findUnique"]>
@@ -17,6 +17,7 @@ function mapCampaign(row: NonNullable<CampaignRow>): Campaign {
     premise: row.premise,
     genre: row.genre,
     mood: row.mood,
+    tension: campaignTensionSchema.parse(row.tension),
     status: campaignStatusSchema.parse(row.status),
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,

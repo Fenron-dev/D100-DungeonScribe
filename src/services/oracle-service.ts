@@ -31,12 +31,24 @@ export class OracleService {
     sceneId: string,
     input: unknown,
   ): Promise<OracleRecord> {
+    const validCampaignId = campaignIdSchema.parse(campaignId);
+    const validSceneId = sceneIdSchema.parse(sceneId);
     const validInput = yesNoOracleInputSchema.parse(input);
+    const tension = await this.repository.findActiveTension(validCampaignId, validSceneId);
+    if (tension === null) throw new OracleContextNotFoundError();
+    const result = this.yesNoOracle.ask(validInput.likelihood, tension);
+    const automaticEvent = result.randomEventTriggered
+      ? {
+          input: { context: validInput.question, trigger: "double" as const },
+          result: this.randomEventOracle.generate(),
+        }
+      : null;
     const record = await this.repository.create(
-      campaignIdSchema.parse(campaignId),
-      sceneIdSchema.parse(sceneId),
+      validCampaignId,
+      validSceneId,
       validInput,
-      this.yesNoOracle.ask(validInput.likelihood),
+      result,
+      automaticEvent,
     );
     if (!record) throw new OracleContextNotFoundError();
     return record;

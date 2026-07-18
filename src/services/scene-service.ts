@@ -1,7 +1,12 @@
 import type { Scene } from "@/domain/scene";
+import { adjustTension } from "@/oracle/tension";
 import type { SceneRepository } from "@/repositories/scene-repository";
 import { campaignIdSchema } from "@/schemas/campaign";
-import { sceneDraftSchema, sceneIdSchema, sceneSummarySchema } from "@/schemas/scene";
+import {
+  sceneCompletionInputSchema,
+  sceneDraftSchema,
+  sceneIdSchema,
+} from "@/schemas/scene";
 
 export class SceneNotFoundError extends Error {
   public constructor() {
@@ -54,12 +59,19 @@ export class SceneService {
   public async complete(
     campaignId: string,
     sceneId: string,
-    summaryInput: unknown,
+    completionInput: unknown,
   ): Promise<Scene> {
+    const validCampaignId = campaignIdSchema.parse(campaignId);
+    const validInput = sceneCompletionInputSchema.parse(completionInput);
+    const currentTension = await this.repository.findCampaignTension(validCampaignId);
+    if (currentTension === null) throw new SceneNotFoundError();
     const scene = await this.repository.complete(
-      campaignIdSchema.parse(campaignId),
+      validCampaignId,
       sceneIdSchema.parse(sceneId),
-      sceneSummarySchema.parse(summaryInput),
+      {
+        summary: validInput.summary,
+        tension: adjustTension(currentTension, validInput.tensionAdjustment),
+      },
       this.now(),
     );
     if (!scene) throw new SceneNotFoundError();

@@ -13,7 +13,7 @@ describe("YesNoOracle", () => {
     { dice: [6, 6], answer: "yes_and", adjustedTotal: 12 },
   ] as const)("maps $adjustedTotal to $answer", ({ dice, answer, adjustedTotal }) => {
     const oracle = new YesNoOracle(new FixedRandomSource([...dice]));
-    const result = oracle.ask("even");
+    const result = oracle.ask("even", 3);
     expect(result.answer).toBe(answer);
     expect(result.adjustedTotal).toBe(adjustedTotal);
   });
@@ -25,17 +25,24 @@ describe("YesNoOracle", () => {
     { likelihood: "likely", modifier: 2 },
     { likelihood: "nearly_certain", modifier: 4 },
   ] as const)("applies the $likelihood modifier", ({ likelihood, modifier }) => {
-    const result = new YesNoOracle(new FixedRandomSource([3, 4])).ask(likelihood);
+    const result = new YesNoOracle(new FixedRandomSource([3, 4])).ask(likelihood, 3);
     expect(result.modifier).toBe(modifier);
     expect(result.adjustedTotal).toBe(7 + modifier);
   });
 
   it("limits the adjusted result and records a double", () => {
-    const low = new YesNoOracle(new FixedRandomSource([1, 1])).ask("nearly_impossible");
-    const high = new YesNoOracle(new FixedRandomSource([6, 6])).ask("nearly_certain");
+    const low = new YesNoOracle(new FixedRandomSource([1, 1])).ask("nearly_impossible", 3);
+    const high = new YesNoOracle(new FixedRandomSource([6, 6])).ask("nearly_certain", 3);
     expect(low).toMatchObject({ adjustedTotal: 2, isDouble: true });
     expect(low.explanation.wasLimited).toBe(true);
     expect(high).toMatchObject({ adjustedTotal: 12, isDouble: true });
     expect(high.explanation.wasLimited).toBe(true);
+  });
+
+  it("records the transparent tension rule for random events", () => {
+    const triggered = new YesNoOracle(new FixedRandomSource([3, 3])).ask("even", 3);
+    const notTriggered = new YesNoOracle(new FixedRandomSource([4, 4])).ask("even", 3);
+    expect(triggered).toMatchObject({ tensionAtRoll: 3, randomEventTriggered: true });
+    expect(notTriggered).toMatchObject({ tensionAtRoll: 3, randomEventTriggered: false });
   });
 });

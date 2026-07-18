@@ -20,6 +20,7 @@ model Campaign {
   premise    String
   genre      String?
   mood       String?
+  tension    Int      @default(3)
   status     String   @default("active")
   archivedAt DateTime?
   createdAt  DateTime @default(now())
@@ -103,19 +104,21 @@ model SceneMessage {
 }
 
 model OracleRecord {
-  id            String   @id @default(cuid())
-  campaignId    String
-  sceneId       String
-  question      String
-  likelihood    String
-  dieOne        Int
-  dieTwo        Int
-  rawTotal      Int
-  modifier      Int
-  adjustedTotal Int
-  answer        String
-  isDouble      Boolean
-  createdAt     DateTime @default(now())
+  id                   String   @id @default(cuid())
+  campaignId           String
+  sceneId              String
+  question             String
+  likelihood           String
+  dieOne               Int
+  dieTwo               Int
+  rawTotal             Int
+  modifier             Int
+  adjustedTotal        Int
+  answer               String
+  isDouble             Boolean
+  tensionAtRoll        Int
+  randomEventTriggered Boolean @default(false)
+  createdAt            DateTime @default(now())
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)

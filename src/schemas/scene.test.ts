@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { sceneDraftSchema, sceneSummarySchema } from "./scene";
+import {
+  sceneCompletionInputSchema,
+  sceneDraftSchema,
+  sceneSummarySchema,
+} from "./scene";
 
 const validScene = {
   title: " Die Straße im Nebel ",
@@ -38,5 +42,22 @@ describe("sceneSummarySchema", () => {
     expect(sceneSummarySchema.parse("  Mara entdeckt eine verborgene Karte.  ")).toBe(
       "Mara entdeckt eine verborgene Karte.",
     );
+  });
+});
+
+describe("sceneCompletionInputSchema", () => {
+  it("validates the explicit tension adjustment", () => {
+    expect(
+      sceneCompletionInputSchema.parse({
+        summary: "Die Gefahr wächst.",
+        tensionAdjustment: "increase",
+      }),
+    ).toEqual({ summary: "Die Gefahr wächst.", tensionAdjustment: "increase" });
+    expect(
+      sceneCompletionInputSchema.safeParse({
+        summary: "Die Gefahr wächst.",
+        tensionAdjustment: "double",
+      }).success,
+    ).toBe(false);
   });
 });

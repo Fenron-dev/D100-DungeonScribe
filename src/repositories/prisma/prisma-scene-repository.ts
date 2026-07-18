@@ -1,8 +1,9 @@
 import { z } from "zod";
-import type { Scene, SceneDraft } from "@/domain/scene";
+import type { Scene, SceneCompletion, SceneDraft } from "@/domain/scene";
 import type { PrismaClient } from "@/generated/prisma/client";
 import type { SceneRepository } from "@/repositories/scene-repository";
 import { sceneDraftSchema, sceneStatusSchema } from "@/schemas/scene";
+import { campaignTensionSchema } from "@/schemas/campaign";
 
 type SceneRow = Awaited<ReturnType<PrismaClient["scene"]["findUnique"]>>;
 
@@ -132,10 +133,18 @@ export class PrismaSceneRepository implements SceneRepository {
     return scenes.map(mapScene);
   }
 
+  public async findCampaignTension(campaignId: string): Promise<number | null> {
+    const campaign = await this.client.campaign.findFirst({
+      where: { id: campaignId, status: "active" },
+      select: { tension: true },
+    });
+    return campaign ? campaignTensionSchema.parse(campaign.tension) : null;
+  }
+
   public async complete(
     campaignId: string,
     sceneId: string,
-    summary: string,
+    completion: SceneCompletion,
     endedAtReal: Date,
   ): Promise<Scene | null> {
     const existing = await this.client.scene.findFirst({
@@ -145,8 +154,29 @@ export class PrismaSceneRepository implements SceneRepository {
     return this.client.$transaction(async (transaction) => {
       const scene = await transaction.scene.update({
         where: { id: sceneId },
-        data: { status: "completed", summary, endedAtReal },
+        data: { status: "completed", summary: completion.summary, endedAtReal },
       });
+      if (completion.tension.next !== completion.tension.previous) {
+        await transaction.campaign.update({
+          where: { id: campaignId },
+          data: { tension: completion.tension.next },
+        });
+        await transaction.campaignEvent.create({
+          data: {
+            campaignId,
+            eventType: "TENSION_CHANGED",
+            summary: "Spannung angepasst",
+            payload: {
+              sceneId,
+              previous: completion.tension.previous,
+              next: completion.tension.next,
+              adjustment: completion.tension.adjustment,
+            },
+            source: "manual",
+            reversible: false,
+          },
+        });
+      }
       await transaction.campaignEvent.create({
         data: {
           campaignId,

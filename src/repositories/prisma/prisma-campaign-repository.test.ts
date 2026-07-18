@@ -37,7 +37,10 @@ describe("PrismaCampaignRepository", () => {
   it("persists a campaign and its creation event", async () => {
     const campaign = await repository.create(draft);
 
-    await expect(repository.findById(campaign.id)).resolves.toMatchObject(draft);
+    await expect(repository.findById(campaign.id)).resolves.toMatchObject({
+      ...draft,
+      tension: 3,
+    });
     await expect(
       client.campaignEvent.findMany({ where: { campaignId: campaign.id } }),
     ).resolves.toMatchObject([

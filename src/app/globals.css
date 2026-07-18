@@ -1479,6 +1479,30 @@ h2 {
   text-transform: uppercase;
 }
 
+.oracle-event-triggered {
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgb(216 143 91 / 70%);
+  border-radius: 99rem;
+  color: rgb(239 184 126);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tension-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgb(216 143 91 / 60%);
+  border-radius: 99rem;
+  color: rgb(239 184 126);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .inspiration-entry {
   border-left-color: rgb(190 132 195 / 82%);
   background: linear-gradient(120deg, rgb(82 61 116 / 16%), rgb(15 21 18 / 88%));
@@ -1495,6 +1519,11 @@ h2 {
   color: var(--color-accent-strong);
   font-family: var(--font-display);
   font-size: 1.35rem;
+}
+
+.random-event-trigger {
+  display: block;
+  color: var(--color-muted);
 }
 
 .random-event-prompt {

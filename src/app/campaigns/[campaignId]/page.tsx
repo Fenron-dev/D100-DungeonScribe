@@ -100,6 +100,11 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
           <p>{campaign.premise}</p>
         </div>
         <dl className="campaign-metadata">
+          <div>
+            <dt>{copy.tensionLabel}</dt>
+            <dd>{campaign.tension} / 6</dd>
+            <small>{copy.tensionDescription}</small>
+          </div>
           {campaign.genre ? (
             <div>
               <dt>{copy.genreLabel}</dt>
