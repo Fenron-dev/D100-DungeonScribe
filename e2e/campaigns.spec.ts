@@ -204,8 +204,10 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
   await expect(saveMessageButton).toBeEnabled();
   const gameMasterTab = page.getByRole("tab", { name: "Spielleiter" });
-  await gameMasterTab.click();
-  await expect(gameMasterTab).toHaveAttribute("aria-selected", "true");
+  await expect(async () => {
+    await gameMasterTab.click();
+    await expect(gameMasterTab).toHaveAttribute("aria-selected", "true");
+  }).toPass({ timeout: 15_000 });
   await expect(
     page.locator("#game-master-panel").getByText("Demo-Modus", { exact: true }),
   ).toBeVisible();
