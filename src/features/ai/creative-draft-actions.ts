@@ -12,6 +12,16 @@ const preferenceSchema = z.string().trim().max(500);
 export interface CreativeDraftActionResult<T> {
   draft: T | null;
   error: boolean;
+  revision: number;
+}
+
+function preferenceFrom(formData: FormData): string {
+  const value = formData.get("preference");
+  return typeof value === "string" ? value : "";
+}
+
+function nextRevision(current: number): number {
+  return Number.isSafeInteger(current) && current >= 0 ? current + 1 : 1;
 }
 
 function reportDraftError(kind: "campaign" | "character" | "world", error: unknown): void {
@@ -32,52 +42,61 @@ async function campaignContext(campaignId: string): Promise<CampaignDraft | null
 }
 
 export async function generateCampaignDraftAction(
-  preference: string,
+  state: CreativeDraftActionResult<CampaignDraft>,
+  formData: FormData,
 ): Promise<CreativeDraftActionResult<CampaignDraft>> {
-  const parsed = preferenceSchema.safeParse(preference);
-  if (!parsed.success) return { draft: null, error: true };
+  const parsed = preferenceSchema.safeParse(preferenceFrom(formData));
+  if (!parsed.success) return { ...state, error: true };
   try {
-    return { draft: await creativeDraftService.generateCampaign(parsed.data), error: false };
+    return {
+      draft: await creativeDraftService.generateCampaign(parsed.data),
+      error: false,
+      revision: nextRevision(state.revision),
+    };
   } catch (error) {
     reportDraftError("campaign", error);
-    return { draft: null, error: true };
+    return { ...state, error: true };
   }
 }
 
 export async function generateCharacterDraftAction(
   campaignId: string,
-  preference: string,
+  state: CreativeDraftActionResult<CharacterDraft>,
+  formData: FormData,
 ): Promise<CreativeDraftActionResult<CharacterDraft>> {
-  const parsed = preferenceSchema.safeParse(preference);
-  if (!parsed.success) return { draft: null, error: true };
+  const parsed = preferenceSchema.safeParse(preferenceFrom(formData));
+  if (!parsed.success) return { ...state, error: true };
   try {
     const campaign = await campaignContext(campaignId);
-    if (!campaign) return { draft: null, error: true };
+    if (!campaign) return { ...state, error: true };
     return {
       draft: await creativeDraftService.generateCharacter(parsed.data, campaign),
       error: false,
+      revision: nextRevision(state.revision),
     };
   } catch (error) {
     reportDraftError("character", error);
-    return { draft: null, error: true };
+    return { ...state, error: true };
   }
 }
 
 export async function generateWorldEntityDraftAction(
   campaignId: string,
-  preference: string,
+  state: CreativeDraftActionResult<WorldEntityDraft>,
+  formData: FormData,
 ): Promise<CreativeDraftActionResult<WorldEntityDraft>> {
-  const parsed = preferenceSchema.safeParse(preference);
-  if (!parsed.success) return { draft: null, error: true };
+  const parsed = preferenceSchema.safeParse(preferenceFrom(formData));
+  if (!parsed.success) return { ...state, error: true };
   try {
     const campaign = await campaignContext(campaignId);
-    if (!campaign) return { draft: null, error: true };
+    if (!campaign) return { ...state, error: true };
     return {
       draft: await creativeDraftService.generateWorldEntity(parsed.data, campaign),
       error: false,
+      revision: nextRevision(state.revision),
     };
   } catch (error) {
     reportDraftError("world", error);
-    return { draft: null, error: true };
+    return { ...state, error: true };
   }
 }
