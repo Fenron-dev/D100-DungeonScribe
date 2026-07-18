@@ -94,3 +94,19 @@ export async function testAiProfileAction(profileId: string): Promise<void> {
   }
   redirect(`/settings?test=${connected ? "ok" : "failed"}`);
 }
+
+export async function updateAiProfileModelAction(
+  profileId: string,
+  formData: FormData,
+): Promise<void> {
+  const model = z.string().trim().min(1).max(160).safeParse(text(formData, "model"));
+  const vault = await loadAiProfileVault();
+  if (!model.success || !vault) redirect("/settings?error=profile");
+  const profiles = vault.profiles.map((profile) =>
+    profile.id === profileId ? { ...profile, model: model.data } : profile,
+  );
+  if (!profiles.some(({ id }) => id === profileId)) redirect("/settings?error=profile");
+  await saveAiProfileVault({ ...vault, profiles });
+  revalidatePath("/settings");
+  redirect("/settings?saved=1");
+}

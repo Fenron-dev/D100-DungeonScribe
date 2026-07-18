@@ -128,6 +128,12 @@ Mehrere Profile desselben Anbieters sind erlaubt. Lokale HTTP-Adressen sind nur
 für Loopback-Ziele zulässig; entfernte Anbieter benötigen HTTPS. Das aktive
 Profil wird für kreative Entwürfe und die KI-Erzählung verwendet.
 
+ChatGPT- und Codex-Abonnements sind keine Zugangsdaten für die separat
+abgerechnete OpenAI API und werden nicht über inoffizielle Sitzungstokens
+eingebunden. OpenRouter-Profile können ihren validierten Modellkatalog laden.
+Die Oberfläche filtert auf Wunsch kostenlose Modelle mit strukturierten
+Ausgaben und bietet `openrouter/free` als robusten Test-Router an.
+
 ## Umsetzungsreihenfolge
 
 1. Klarer Spielstart und zentraler Spielbereich

@@ -70,6 +70,34 @@ class InMemoryJournalRepository implements SceneJournalRepository {
     this.entries.push({ type: "message", value: message });
     return message;
   }
+  public async updateNote(
+    _campaignId: string,
+    _sceneId: string,
+    noteId: string,
+    content: string,
+  ): Promise<SceneNote | null> {
+    const entry = this.entries.find(
+      (candidate): candidate is Extract<SceneJournalEntry, { type: "note" }> =>
+        candidate.type === "note" && candidate.value.id === noteId,
+    );
+    if (!entry) return null;
+    entry.value.content = content;
+    return entry.value;
+  }
+  public async updateMessage(
+    _campaignId: string,
+    _sceneId: string,
+    messageId: string,
+    content: string,
+  ): Promise<SceneMessage | null> {
+    const entry = this.entries.find(
+      (candidate): candidate is Extract<SceneJournalEntry, { type: "message" }> =>
+        candidate.type === "message" && candidate.value.id === messageId,
+    );
+    if (!entry) return null;
+    entry.value.content = content;
+    return entry.value;
+  }
   public async addRoll(
     campaignId: string,
     sceneId: string,
@@ -121,6 +149,26 @@ describe("SceneJournalService", () => {
     });
     expect(note.kind).toBe("observation");
     expect(repository.entries).toHaveLength(1);
+  });
+
+  it("updates a narration after it was generated", async () => {
+    const repository = new InMemoryJournalRepository();
+    const service = new SceneJournalService(
+      repository,
+      new D6PoolRuleEngine(new FixedRandomSource([5])),
+      coreAdventureRuleset,
+    );
+    await repository.addMessage("campaign-1", "scene-1", {
+      role: "narrator",
+      content: "Die Tür ist offen.",
+    });
+    const message = await service.updateMessage(
+      "campaign-1",
+      "scene-1",
+      "message-1",
+      { content: "Die Tür steht einen Spalt offen." },
+    );
+    expect(message.content).toBe("Die Tür steht einen Spalt offen.");
   });
 
   it("evaluates and stores a fully explained deterministic check", async () => {

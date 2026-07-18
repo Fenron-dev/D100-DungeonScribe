@@ -22,6 +22,7 @@ const request: NarrationRequest = {
       objective: "Den Eingang finden",
       participants: ["Elara"],
       activeThreads: ["Der verlorene Weg"],
+      recentMessages: [],
     },
   },
 };

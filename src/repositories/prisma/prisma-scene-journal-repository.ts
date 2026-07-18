@@ -156,6 +156,68 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
     });
   }
 
+  public async updateNote(
+    campaignId: string,
+    sceneId: string,
+    noteId: string,
+    content: string,
+  ): Promise<SceneNote | null> {
+    const existing = await this.client.sceneNote.findFirst({
+      where: { id: noteId, campaignId, sceneId },
+      select: { id: true },
+    });
+    if (!existing) return null;
+    return this.client.$transaction(async (transaction) => {
+      const note = await transaction.sceneNote.update({
+        where: { id: noteId },
+        data: { content },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "SCENE_NOTE_UPDATED",
+          summary: "Journaleintrag angepasst",
+          payload: { sceneId, noteId, fields: ["content"] },
+          source: "manual",
+          reversible: false,
+        },
+      });
+      return mapNote(note);
+    });
+  }
+
+  public async updateMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    content: string,
+  ): Promise<SceneMessage | null> {
+    const existing = await this.client.sceneMessage.findFirst({
+      where: { id: messageId, campaignId, sceneId },
+      select: { id: true, role: true },
+    });
+    if (!existing) return null;
+    return this.client.$transaction(async (transaction) => {
+      const message = await transaction.sceneMessage.update({
+        where: { id: messageId },
+        data: { content },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "SCENE_MESSAGE_UPDATED",
+          summary: existing.role === "narrator"
+            ? "Erzähltext angepasst"
+            : "Spielerbeitrag angepasst",
+          payload: { sceneId, messageId, fields: ["content"] },
+          source: "manual",
+          reversible: false,
+        },
+      });
+      return mapMessage(message);
+    });
+  }
+
   public async addRoll(
     campaignId: string,
     sceneId: string,

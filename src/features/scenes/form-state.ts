@@ -49,7 +49,16 @@ export type SceneCompletionAction = (
 ) => Promise<SceneCompletionState>;
 
 export interface SceneJournalFormState {
-  message: "validation" | "save_error" | "trait_mismatch" | null;
+  message:
+    | "validation"
+    | "save_error"
+    | "trait_mismatch"
+    | "rate_limit"
+    | "credits"
+    | "model_unavailable"
+    | "model_incompatible"
+    | "provider_error"
+    | null;
   errors: string[];
 }
 

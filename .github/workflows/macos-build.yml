@@ -145,13 +145,13 @@ jobs:
           test "$THREAD_COUNT" = "1"
           test "$SCENE_COUNT" = "1"
           test "$NOTE_COUNT" = "1"
-          test "$MESSAGE_COUNT" = "3"
+          test "$MESSAGE_COUNT" = "4"
           test "$ROLL_COUNT" = "1"
           test "$ORACLE_COUNT" = "1"
           test "$INSPIRATION_COUNT" = "1"
           test "$RANDOM_EVENT_COUNT" -ge "1"
           test "$RANDOM_EVENT_COUNT" -le "2"
-          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 23))"
+          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 25))"
 
       - name: Create archive and checksum
         run: |

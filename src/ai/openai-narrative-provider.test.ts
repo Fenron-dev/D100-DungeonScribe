@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  NarrativeProviderError,
   OpenAiNarrativeProvider,
 } from "@/ai/openai-narrative-provider";
+import { NarrativeProviderError } from "@/ai/narrative-provider";
 import type { HttpClient } from "@/ai/http-client";
 import type { NarrationRequest } from "@/ai/narrative-provider";
 import { defaultCampaignStyle } from "@/domain/campaign-style";
@@ -26,6 +26,10 @@ const request: NarrationRequest = {
       objective: null,
       participants: ["Elara"],
       activeThreads: [],
+      recentMessages: [
+        { role: "player", content: "Ich betrete den Turm." },
+        { role: "narrator", content: "Die Tür fällt hinter dir zu." },
+      ],
     },
   },
 };
@@ -54,10 +58,14 @@ describe("OpenAiNarrativeProvider", () => {
     expect(init?.headers).toMatchObject({ Authorization: "Bearer test-api-key" });
     const body = JSON.parse(String(init?.body)) as {
       store: boolean;
+      input: string;
+      instructions: string;
       text: { format: { strict: boolean; type: string } };
     };
     expect(body.store).toBe(false);
     expect(body.text.format).toMatchObject({ type: "json_schema", strict: true });
+    expect(body.input).toContain("Die Tür fällt hinter dir zu.");
+    expect(body.instructions).toContain("Never replay");
   });
 
   it("rejects refusals before they cross the provider boundary", async () => {
@@ -97,5 +105,20 @@ describe("OpenAiNarrativeProvider", () => {
     expect(init?.headers).not.toMatchObject({ Authorization: expect.any(String) });
     const body = JSON.parse(String(init?.body)) as { response_format: { type: string } };
     expect(body.response_format.type).toBe("json_schema");
+  });
+
+  it("classifies a free-provider rate limit without exposing response data", async () => {
+    const provider = new OpenAiNarrativeProvider(
+      "test-api-key",
+      "openrouter/free",
+      async () => ({ ok: false, status: 429, json: async () => ({ secret: "ignored" }) }),
+      "https://openrouter.ai/api/v1",
+      "chat-completions",
+    );
+    await expect(provider.generateNarration(request)).rejects.toMatchObject({
+      name: "NarrativeProviderError",
+      reason: "rate_limit",
+      message: "AI request failed (429)",
+    });
   });
 });

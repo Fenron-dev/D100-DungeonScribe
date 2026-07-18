@@ -1850,6 +1850,85 @@ h2 {
   background: rgb(255 255 255 / 2%);
 }
 
+.scene-tabs {
+  margin: 2rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: rgb(255 255 255 / 2%);
+  overflow: hidden;
+}
+
+.scene-tab-list {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.6rem 0.6rem 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.scene-tab {
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: var(--color-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scene-tab:hover {
+  color: var(--color-text);
+  background: rgb(255 255 255 / 4%);
+}
+
+.scene-tab[aria-selected="true"] {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-accent-strong);
+}
+
+.scene-tab:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: -3px;
+}
+
+.scene-tab-panel {
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.scene-tab-panel[hidden] {
+  display: none;
+}
+
+.scene-workspace-panel {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.scene-workspace-panel > .scene-journal-form,
+.scene-tab-panel > .scene-journal-form,
+.scene-tab-panel > .scene-completion {
+  margin: 0;
+}
+
+.journal-entry-edit {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.journal-entry-edit summary {
+  width: fit-content;
+  color: var(--color-accent-strong);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.journal-entry-edit form {
+  margin-top: 1rem;
+}
+
 .lock-page {
   display: grid;
   min-height: 100vh;

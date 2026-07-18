@@ -7,6 +7,8 @@ import { campaignIdSchema } from "@/schemas/campaign";
 import {
   diceRollDraftSchema,
   sceneMessageDraftSchema,
+  sceneMessageContentSchema,
+  sceneNoteContentSchema,
   sceneNoteDraftSchema,
 } from "@/schemas/scene-journal";
 import { sceneIdSchema } from "@/schemas/scene";
@@ -55,6 +57,40 @@ export class SceneJournalService {
       campaignIdSchema.parse(campaignId),
       sceneIdSchema.parse(sceneId),
       sceneMessageDraftSchema.parse(input),
+    );
+    if (!message) throw new SceneJournalNotFoundError();
+    return message;
+  }
+
+  public async updateNote(
+    campaignId: string,
+    sceneId: string,
+    noteId: string,
+    input: unknown,
+  ): Promise<SceneNote> {
+    const { content } = sceneNoteContentSchema.parse(input);
+    const note = await this.repository.updateNote(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      noteId,
+      content,
+    );
+    if (!note) throw new SceneJournalNotFoundError();
+    return note;
+  }
+
+  public async updateMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    input: unknown,
+  ): Promise<SceneMessage> {
+    const { content } = sceneMessageContentSchema.parse(input);
+    const message = await this.repository.updateMessage(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      messageId,
+      content,
     );
     if (!message) throw new SceneJournalNotFoundError();
     return message;

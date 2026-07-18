@@ -37,6 +37,7 @@ class MemoryNarrativeRepository implements NarrativeRepository {
           objective: null,
           participants: [],
           activeThreads: [],
+          recentMessages: [],
         },
       },
     };

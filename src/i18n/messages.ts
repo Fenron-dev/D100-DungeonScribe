@@ -20,6 +20,52 @@ export interface MessageCatalog {
     library: string;
     settings: string;
   };
+  aiSettings: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    saved: string;
+    testOk: string;
+    testFailed: string;
+    saveError: string;
+    profilesTitle: string;
+    active: string;
+    empty: string;
+    newProfileTitle: string;
+    securityTitle: string;
+    lockAction: string;
+    resetAction: string;
+    testAction: string;
+    activateAction: string;
+    deleteAction: string;
+    profileNameLabel: string;
+    profileNamePlaceholder: string;
+    providerLabel: string;
+    serverAddressLabel: string;
+    modelLabel: string;
+    apiKeyLabel: string;
+    optional: string;
+    apiKeyHint: string;
+    saveProfileAction: string;
+    switchModelLabel: string;
+    saveModelAction: string;
+    freeOnlyLabel: string;
+    catalogCountLabel: string;
+    freeRouterHint: string;
+    lockEyebrow: string;
+    unlockTitle: string;
+    setupTitle: string;
+    unlockDescription: string;
+    setupDescription: string;
+    invalidUnlockMessage: string;
+    setupPasswordError: string;
+    passwordLabel: string;
+    passwordRepeatLabel: string;
+    waitingAction: string;
+    unlockAction: string;
+    savePasswordAction: string;
+    forgotPasswordAction: string;
+  };
   home: {
     eyebrow: string;
     title: string;
@@ -367,6 +413,17 @@ export interface MessageCatalog {
     journalTitle: string;
     journalDescription: string;
     journalEmpty: string;
+    playTabsLabel: string;
+    gameMasterTab: string;
+    dialogueTab: string;
+    journalTab: string;
+    toolTabsLabel: string;
+    noteTab: string;
+    rollTab: string;
+    oracleTab: string;
+    inspirationTab: string;
+    randomEventTab: string;
+    completeTab: string;
     messageTitle: string;
     messageDescription: string;
     messageRoleLabel: string;
@@ -375,12 +432,19 @@ export interface MessageCatalog {
     messageContentLabel: string;
     sendMessageAction: string;
     sendingMessageAction: string;
+    askGameMasterAction: string;
+    askingGameMasterAction: string;
     aiNarrationTitle: string;
     aiNarrationDescription: string;
     aiDirectionLabel: string;
     aiGenerateAction: string;
     aiGeneratingAction: string;
     aiNarrationError: string;
+    aiRateLimitError: string;
+    aiCreditsError: string;
+    aiModelUnavailableError: string;
+    aiModelIncompatibleError: string;
+    aiProviderError: string;
     aiDemoMode: string;
     aiOpenAiMode: string;
     aiDemoHint: string;
@@ -390,6 +454,12 @@ export interface MessageCatalog {
     noteContentLabel: string;
     saveNoteAction: string;
     savingNoteAction: string;
+    editEntryAction: string;
+    editEntryLabel: string;
+    saveEntryAction: string;
+    savingEntryAction: string;
+    completeHelpTitle: string;
+    completeHelpDescription: string;
     rollTitle: string;
     rollDescription: string;
     rollCharacterLabel: string;
@@ -504,7 +574,9 @@ export interface MessageCatalog {
       | "THREAD_UPDATED"
       | "SCENE_STARTED"
       | "SCENE_NOTE_ADDED"
+      | "SCENE_NOTE_UPDATED"
       | "SCENE_MESSAGE_ADDED"
+      | "SCENE_MESSAGE_UPDATED"
       | "AI_NARRATION_GENERATED"
       | "DICE_ROLLED"
       | "ORACLE_ANSWERED"
@@ -536,6 +608,52 @@ const germanMessages = {
     campaigns: "Kampagnen",
     library: "Bibliothek",
     settings: "Einstellungen",
+  },
+  aiSettings: {
+    eyebrow: "Lokal und verschlüsselt",
+    title: "KI-Profile",
+    description: "Speichere mehrere Anbieter und Modelle und wechsle mit einem Klick. Schlüssel werden niemals unverschlüsselt abgelegt.",
+    saved: "Profil wurde sicher gespeichert.",
+    testOk: "Verbindung erfolgreich.",
+    testFailed: "Verbindung fehlgeschlagen. Bitte Serveradresse, Modell und Schlüssel prüfen.",
+    saveError: "Das Profil konnte nicht gespeichert werden. Bitte Eingaben und Schlüssel prüfen.",
+    profilesTitle: "Gespeicherte Profile",
+    active: "Aktiv",
+    empty: "Noch kein KI-Profil gespeichert. Bis dahin verwendet die App den Demo-Modus.",
+    newProfileTitle: "Neues Profil",
+    securityTitle: "App-Schutz",
+    lockAction: "App sperren",
+    resetAction: "Kennwort und KI-Profile zurücksetzen",
+    testAction: "Verbindung testen",
+    activateAction: "Aktivieren",
+    deleteAction: "Löschen",
+    profileNameLabel: "Profilname",
+    profileNamePlaceholder: "Zum Beispiel: OpenRouter – kostenlos",
+    providerLabel: "Anbieter",
+    serverAddressLabel: "Serveradresse",
+    modelLabel: "Modell",
+    apiKeyLabel: "API-Schlüssel",
+    optional: "optional",
+    apiKeyHint: "Der Schlüssel wird vor dem Speichern mit deinem App-Kennwort verschlüsselt.",
+    saveProfileAction: "Profil speichern",
+    switchModelLabel: "OpenRouter-Modell wechseln",
+    saveModelAction: "Modell speichern",
+    freeOnlyLabel: "Nur kostenlose, kompatible Modelle",
+    catalogCountLabel: "Modelle im aktuellen Katalog",
+    freeRouterHint: "„openrouter/free“ wählt automatisch ein verfügbares Gratis-Modell mit den benötigten Funktionen.",
+    lockEyebrow: "Privater Bereich",
+    unlockTitle: "D100 DungeonScribe entsperren",
+    setupTitle: "App-Kennwort festlegen",
+    unlockDescription: "Deine KI-Profile werden erst nach der Eingabe im Arbeitsspeicher entschlüsselt.",
+    setupDescription: "Das Kennwort schützt deine verschlüsselten KI-Profile. Es wird nicht gespeichert und kann nicht wiederhergestellt werden.",
+    invalidUnlockMessage: "Das Kennwort ist nicht richtig.",
+    setupPasswordError: "Beide Eingaben müssen übereinstimmen und mindestens zehn Zeichen enthalten.",
+    passwordLabel: "Kennwort",
+    passwordRepeatLabel: "Kennwort wiederholen",
+    waitingAction: "Bitte warten …",
+    unlockAction: "Entsperren",
+    savePasswordAction: "Kennwort speichern",
+    forgotPasswordAction: "Kennwort vergessen? Nur KI-Profile zurücksetzen",
   },
   home: {
     eyebrow: "Deine Chronik. Deine Regeln. Deine Welt.",
@@ -955,6 +1073,17 @@ const germanMessages = {
     journalDescription:
       "Handlungen, Beobachtungen und Proben bleiben in ihrer zeitlichen Reihenfolge erhalten.",
     journalEmpty: "Für diese Szene gibt es noch keinen Protokolleintrag.",
+    playTabsLabel: "Spiel und Protokoll",
+    gameMasterTab: "Spielleiter",
+    dialogueTab: "Szenendialog",
+    journalTab: "Journal",
+    toolTabsLabel: "Werkzeuge und Szenenabschluss",
+    noteTab: "Eintrag",
+    rollTab: "Probe",
+    oracleTab: "Orakel",
+    inspirationTab: "Inspiration",
+    randomEventTab: "Ereignis",
+    completeTab: "Abschließen",
     messageTitle: "Szenendialog",
     messageDescription:
       "Halte Spielerhandlungen und manuelle Erzählantworten als fortlaufenden Dialog fest.",
@@ -964,6 +1093,8 @@ const germanMessages = {
     messageContentLabel: "Nachricht",
     sendMessageAction: "Nachricht speichern",
     sendingMessageAction: "Nachricht wird gespeichert …",
+    askGameMasterAction: "An Spielleiter senden",
+    askingGameMasterAction: "Spielleiter antwortet …",
     aiNarrationTitle: "KI-Spielleiter",
     aiNarrationDescription:
       "Gib eine gewünschte Richtung vor. Die Antwort erzählt weiter, entscheidet aber nicht für deinen Charakter und verändert keine Weltfakten.",
@@ -971,6 +1102,16 @@ const germanMessages = {
     aiGenerateAction: "Erzählung erzeugen",
     aiGeneratingAction: "Erzählung wird erzeugt …",
     aiNarrationError: "Die Erzählung konnte nicht erzeugt oder gespeichert werden.",
+    aiRateLimitError:
+      "Das kostenlose Modell ist gerade ausgelastet oder das Anfragelimit wurde erreicht. Bitte kurz warten oder ein anderes Modell wählen.",
+    aiCreditsError:
+      "Der Anbieter lehnt die Anfrage wegen des Kontostands oder Nutzungslimits ab.",
+    aiModelUnavailableError:
+      "Das gewählte Modell ist nicht mehr verfügbar. Bitte in den Einstellungen ein anderes Modell wählen.",
+    aiModelIncompatibleError:
+      "Das gewählte Modell liefert nicht das von der App benötigte strukturierte Format. Bitte ein kompatibles Modell oder „openrouter/free“ wählen.",
+    aiProviderError:
+      "Der KI-Anbieter konnte die Anfrage gerade nicht verarbeiten. Dein Spielereintrag bleibt gespeichert.",
     aiDemoMode: "Demo-Modus",
     aiOpenAiMode: "KI-Profil",
     aiDemoHint:
@@ -981,6 +1122,13 @@ const germanMessages = {
     noteContentLabel: "Eintrag",
     saveNoteAction: "Eintrag speichern",
     savingNoteAction: "Eintrag wird gespeichert …",
+    editEntryAction: "Text bearbeiten",
+    editEntryLabel: "Überarbeiteter Text",
+    saveEntryAction: "Änderung speichern",
+    savingEntryAction: "Änderung wird gespeichert …",
+    completeHelpTitle: "Wann sollte ich die Szene abschließen?",
+    completeHelpDescription:
+      "Schließe sie ab, wenn ein klares Teilziel erreicht oder gescheitert ist, sich Ort, Zeit oder Fokus deutlich ändern oder ein spannender Abschnitt endet. Meist sind etwa drei bis zehn bedeutsame Wechsel zwischen dir und dem Spielleiter ein guter Richtwert – entscheidend ist der natürliche Einschnitt, nicht die Länge.",
     rollTitle: "Probe auswerten",
     rollDescription:
       "Die Regel-Engine bildet den Würfelpool aus Archetyp, Eigenschaft sowie Vor- und Nachteilen.",
@@ -1167,7 +1315,9 @@ const germanMessages = {
       THREAD_UPDATED: "Handlungsstrang geändert",
       SCENE_STARTED: "Szene begonnen",
       SCENE_NOTE_ADDED: "Szeneneintrag festgehalten",
+      SCENE_NOTE_UPDATED: "Szeneneintrag angepasst",
       SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
+      SCENE_MESSAGE_UPDATED: "Szenennachricht angepasst",
       AI_NARRATION_GENERATED: "KI-Erzählung erzeugt",
       DICE_ROLLED: "Probe ausgewertet",
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
@@ -1204,6 +1354,52 @@ const englishMessages = {
     campaigns: "Campaigns",
     library: "Library",
     settings: "Settings",
+  },
+  aiSettings: {
+    eyebrow: "Local and encrypted",
+    title: "AI profiles",
+    description: "Save multiple providers and models and switch with one click. Keys are never stored unencrypted.",
+    saved: "Profile saved securely.",
+    testOk: "Connection successful.",
+    testFailed: "Connection failed. Check the server address, model, and key.",
+    saveError: "The profile could not be saved. Check the fields and key.",
+    profilesTitle: "Saved profiles",
+    active: "Active",
+    empty: "No AI profile saved yet. The app uses demo mode until then.",
+    newProfileTitle: "New profile",
+    securityTitle: "App protection",
+    lockAction: "Lock app",
+    resetAction: "Reset password and AI profiles",
+    testAction: "Test connection",
+    activateAction: "Activate",
+    deleteAction: "Delete",
+    profileNameLabel: "Profile name",
+    profileNamePlaceholder: "For example: OpenRouter – free",
+    providerLabel: "Provider",
+    serverAddressLabel: "Server address",
+    modelLabel: "Model",
+    apiKeyLabel: "API key",
+    optional: "optional",
+    apiKeyHint: "The key is encrypted with your app password before it is stored.",
+    saveProfileAction: "Save profile",
+    switchModelLabel: "Switch OpenRouter model",
+    saveModelAction: "Save model",
+    freeOnlyLabel: "Free compatible models only",
+    catalogCountLabel: "models in the current catalog",
+    freeRouterHint: "openrouter/free automatically selects an available free model with the required capabilities.",
+    lockEyebrow: "Private area",
+    unlockTitle: "Unlock D100 DungeonScribe",
+    setupTitle: "Set app password",
+    unlockDescription: "Your AI profiles are decrypted in memory only after entering the password.",
+    setupDescription: "The password protects your encrypted AI profiles. It is not stored and cannot be recovered.",
+    invalidUnlockMessage: "The password is incorrect.",
+    setupPasswordError: "Both entries must match and contain at least ten characters.",
+    passwordLabel: "Password",
+    passwordRepeatLabel: "Repeat password",
+    waitingAction: "Please wait …",
+    unlockAction: "Unlock",
+    savePasswordAction: "Save password",
+    forgotPasswordAction: "Forgot password? Reset AI profiles only",
   },
   home: {
     eyebrow: "Your chronicle. Your rules. Your world.",
@@ -1619,6 +1815,17 @@ const englishMessages = {
     journalDescription:
       "Actions, observations, and checks remain in their chronological order.",
     journalEmpty: "This scene has no log entries yet.",
+    playTabsLabel: "Play and log",
+    gameMasterTab: "Game master",
+    dialogueTab: "Scene dialogue",
+    journalTab: "Journal",
+    toolTabsLabel: "Tools and scene completion",
+    noteTab: "Entry",
+    rollTab: "Check",
+    oracleTab: "Oracle",
+    inspirationTab: "Inspiration",
+    randomEventTab: "Event",
+    completeTab: "Complete",
     messageTitle: "Scene dialogue",
     messageDescription:
       "Record player actions and manual narration as an ongoing dialogue.",
@@ -1628,6 +1835,8 @@ const englishMessages = {
     messageContentLabel: "Message",
     sendMessageAction: "Save message",
     sendingMessageAction: "Saving message …",
+    askGameMasterAction: "Send to game master",
+    askingGameMasterAction: "Game master is responding …",
     aiNarrationTitle: "AI game master",
     aiNarrationDescription:
       "Provide a direction. The response continues the story but does not decide for your character or change world facts.",
@@ -1635,6 +1844,16 @@ const englishMessages = {
     aiGenerateAction: "Generate narration",
     aiGeneratingAction: "Generating narration …",
     aiNarrationError: "The narration could not be generated or saved.",
+    aiRateLimitError:
+      "The free model is busy or its request limit was reached. Wait briefly or select another model.",
+    aiCreditsError:
+      "The provider rejected the request because of the account balance or usage limit.",
+    aiModelUnavailableError:
+      "The selected model is no longer available. Choose another model in settings.",
+    aiModelIncompatibleError:
+      "The model does not return the structured format required by the app. Choose a compatible model or openrouter/free.",
+    aiProviderError:
+      "The AI provider could not process the request. Your player entry remains saved.",
     aiDemoMode: "Demo mode",
     aiOpenAiMode: "AI profile",
     aiDemoHint:
@@ -1645,6 +1864,13 @@ const englishMessages = {
     noteContentLabel: "Entry",
     saveNoteAction: "Save entry",
     savingNoteAction: "Saving entry …",
+    editEntryAction: "Edit text",
+    editEntryLabel: "Revised text",
+    saveEntryAction: "Save change",
+    savingEntryAction: "Saving change …",
+    completeHelpTitle: "When should I complete the scene?",
+    completeHelpDescription:
+      "Complete it when a clear objective succeeds or fails, the location, time, or focus changes substantially, or a dramatic beat ends. Around three to ten meaningful exchanges is often useful, but the natural break matters more than length.",
     rollTitle: "Resolve a check",
     rollDescription:
       "The rules engine builds the dice pool from archetype, trait, advantages, and disadvantages.",
@@ -1831,7 +2057,9 @@ const englishMessages = {
       THREAD_UPDATED: "Story thread changed",
       SCENE_STARTED: "Scene started",
       SCENE_NOTE_ADDED: "Scene entry recorded",
+      SCENE_NOTE_UPDATED: "Scene entry revised",
       SCENE_MESSAGE_ADDED: "Scene message recorded",
+      SCENE_MESSAGE_UPDATED: "Scene message revised",
       AI_NARRATION_GENERATED: "AI narration generated",
       DICE_ROLLED: "Check resolved",
       ORACLE_ANSWERED: "Oracle question answered",

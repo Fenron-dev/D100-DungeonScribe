@@ -1,4 +1,4 @@
-# Szenen ohne KI
+# Szenen und Spielablauf
 
 Eine Szene ist die zentrale konkrete Spieleinheit. Der erste vertikale Szenenbaustein beginnt und beendet Szenen vollständig ohne KI, Orakel oder Chat. Die Kampagne und ihr Ereignisprotokoll bleiben die Quelle der Wahrheit.
 
@@ -18,8 +18,14 @@ Beim Abschluss entscheidet der Spieler außerdem, ob die Kampagnenspannung um ei
 
 Aktive Szenen besitzen ein zeitlich geordnetes Spielprotokoll. `SceneMessage` bildet den fortlaufenden Szenendialog ab und unterscheidet Spieler- und Erzählerbeiträge. Die Quelle bleibt separat gespeichert, sodass manuelle und KI-erzeugte Erzählbeiträge erkennbar sind. Freie Einträge unterscheiden ergänzend dauerhafte Handlungen und Beobachtungen.
 
-Die KI-Erzählung wird nur durch eine bewusste Benutzeraktion ausgelöst. Sie erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen und darf weder Spielerhandlungen bestimmen noch Würfel- oder Regelergebnisse erfinden. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert; daraus folgen keine Weltänderungen.
+Die KI-Erzählung wird nur durch eine bewusste Benutzeraktion ausgelöst. Eine Spielereingabe kann entweder nur gespeichert oder zugleich als Frage beziehungsweise Handlung an den Spielleiter gesendet werden. Im zweiten Fall bleibt der Spielertext auch dann erhalten, wenn der Anbieter keine Antwort liefert.
+
+Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen sowie höchstens die 16 jüngsten Dialogbeiträge bis insgesamt 24.000 Zeichen. Dadurch kann sie an den tatsächlichen Verlauf anschließen, ohne das gesamte Protokoll oder verborgenes Wissen zu sehen. Der Prompt verlangt erkennbaren Fortschritt und verbietet das bloße Wiederholen bereits etablierter Details. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert; daraus folgen keine Weltänderungen.
+
+Spielleiter, Szenendialog und vollständiges Journal bilden eine gemeinsame zugängliche Tab-Reihe. Notiz, Probe, Orakel, Inspiration, Ereignis und Szenenabschluss liegen in einer zweiten Reihe. Spieler-, Erzähler- und freie Journaltexte können auch nachträglich bearbeitet werden. Jede Bearbeitung erzeugt atomar ein eigenes Kampagnenereignis; Würfel- und Orakelergebnisse bleiben unveränderlich.
 
 Proben werden ausschließlich von der W6-Pool-Regel-Engine ausgewertet: Charakter, Handlung, Schwierigkeit, passender Archetyp, passende Eigenschaft sowie je ein optionaler Vor- und Nachteil bilden die Eingabe. Gespeichert werden die vollständige Eingabe, Würfel, Schwelle, Erfolge, Erfolgsgrad, Modifikatoren, Erklärung sowie ID und Version des verwendeten Regelwerks. Eine passende Eigenschaft muss tatsächlich zum handelnden, an der Szene beteiligten Charakter gehören.
 
-Start, manuelle Nachricht, KI-Erzählung, Protokolleintrag, Probe, Orakelfrage, Inspiration, unerwartetes Ereignis, Spannungsänderung und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `AI_NARRATION_GENERATED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED`, `ORACLE_ANSWERED`, `ORACLE_INSPIRATION_DRAWN`, `ORACLE_RANDOM_EVENT_GENERATED`, `TENSION_CHANGED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“.
+Start, manuelle Nachricht, KI-Erzählung, Protokolleintrag, Textbearbeitung, Probe, Orakelfrage, Inspiration, unerwartetes Ereignis, Spannungsänderung und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `AI_NARRATION_GENERATED`, `SCENE_NOTE_ADDED`, `SCENE_MESSAGE_UPDATED`, `SCENE_NOTE_UPDATED`, `DICE_ROLLED`, `ORACLE_ANSWERED`, `ORACLE_INSPIRATION_DRAWN`, `ORACLE_RANDOM_EVENT_GENERATED`, `TENSION_CHANGED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“.
+
+Eine Szene endet an einem natürlichen Einschnitt: wenn ein Teilziel erreicht oder gescheitert ist, Ort, Zeit oder Fokus deutlich wechseln oder ein dramatischer Abschnitt endet. Drei bis zehn bedeutsame Dialogwechsel sind ein Richtwert, keine Regel.

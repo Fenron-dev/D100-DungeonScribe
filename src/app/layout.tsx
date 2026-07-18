@@ -32,7 +32,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   if (!unlocked) {
     return (
       <html lang="de">
-        <body><AppLock configured={configured} /></body>
+        <body><AppLock configured={configured} copy={messages.aiSettings} /></body>
       </html>
     );
   }

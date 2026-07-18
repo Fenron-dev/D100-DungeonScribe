@@ -31,6 +31,9 @@ export const sceneMessageDraftSchema = z.object({
 
 export const sceneMessageSourceSchema = z.enum(["manual", "ai"]);
 
+export const sceneNoteContentSchema = sceneNoteDraftSchema.pick({ content: true });
+export const sceneMessageContentSchema = sceneMessageDraftSchema.pick({ content: true });
+
 export const diceRollDraftSchema = z.object({
   characterId: characterIdSchema,
   action: z

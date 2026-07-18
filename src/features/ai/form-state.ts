@@ -1,5 +1,13 @@
 export interface NarrativeFormState {
-  message: "validation" | "save_error" | null;
+  message:
+    | "validation"
+    | "save_error"
+    | "rate_limit"
+    | "credits"
+    | "model_unavailable"
+    | "model_incompatible"
+    | "provider_error"
+    | null;
   errors: string[];
 }
 

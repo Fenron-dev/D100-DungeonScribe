@@ -20,6 +20,10 @@ export const narrationRequestSchema = z.object({
       objective: z.string().nullable(),
       participants: z.array(z.string()),
       activeThreads: z.array(z.string()),
+      recentMessages: z.array(z.object({
+        role: z.enum(["player", "narrator"]),
+        content: z.string().min(1).max(8_000),
+      })).max(20),
     }),
   }),
 });
@@ -30,6 +34,23 @@ export const narrationResultSchema = z.object({
 
 export type NarrationRequest = z.infer<typeof narrationRequestSchema>;
 export type NarrationResult = z.infer<typeof narrationResultSchema>;
+
+export type NarrativeFailureReason =
+  | "rate_limit"
+  | "credits"
+  | "model_unavailable"
+  | "model_incompatible"
+  | "provider_error";
+
+export class NarrativeProviderError extends Error {
+  public constructor(
+    message: string,
+    public readonly reason: NarrativeFailureReason = "provider_error",
+  ) {
+    super(message);
+    this.name = "NarrativeProviderError";
+  }
+}
 
 export interface NarrativeProvider {
   generateNarration(request: NarrationRequest): Promise<NarrationResult>;

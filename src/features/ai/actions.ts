@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { NarrativeProviderError } from "@/ai/narrative-provider";
 import type { NarrativeFormState } from "@/features/ai/form-state";
 import { getNarrativeService } from "@/services/narrative-service-instance";
 
@@ -30,6 +31,9 @@ export async function generateNarrationAction(
     );
     if (!narration) return { message: "save_error", errors: [] };
   } catch (error) {
+    if (error instanceof NarrativeProviderError) {
+      return { message: error.reason, errors: [] };
+    }
     const technicalError = error as { name?: unknown };
     const name = typeof technicalError.name === "string" ? technicalError.name : "UnknownError";
     console.error(`[ai] narration failed (${name})`);

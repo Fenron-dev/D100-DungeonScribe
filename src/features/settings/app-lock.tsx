@@ -6,33 +6,40 @@ import {
   unlockAppAction,
   resetAppPasswordAction,
 } from "@/features/settings/security-actions";
+import type { MessageCatalog } from "@/i18n/messages";
 
 interface LockFormState { error: boolean }
 const initialLockFormState: LockFormState = { error: false };
 
-export function AppLock({ configured }: { configured: boolean }) {
+export function AppLock({
+  configured,
+  copy,
+}: {
+  configured: boolean;
+  copy: MessageCatalog["aiSettings"];
+}) {
   const action = configured ? unlockAppAction : setupAppPasswordAction;
   const [state, formAction, pending] = useActionState(action, initialLockFormState);
   return (
     <main className="lock-page" id="main-content">
       <section className="lock-card">
-        <p className="eyebrow">Privater Bereich</p>
-        <h1>{configured ? "D100 DungeonScribe entsperren" : "App-Kennwort festlegen"}</h1>
+        <p className="eyebrow">{copy.lockEyebrow}</p>
+        <h1>{configured ? copy.unlockTitle : copy.setupTitle}</h1>
         <p>
           {configured
-            ? "Deine KI-Profile werden erst nach der Eingabe im Arbeitsspeicher entschlüsselt."
-            : "Das Kennwort schützt deine verschlüsselten KI-Profile. Es wird nicht gespeichert und kann nicht wiederhergestellt werden."}
+            ? copy.unlockDescription
+            : copy.setupDescription}
         </p>
         {state.error ? (
           <p className="form-message" role="alert">
             {configured
-              ? "Das Kennwort ist nicht richtig."
-              : "Beide Eingaben müssen übereinstimmen und mindestens zehn Zeichen enthalten."}
+              ? copy.invalidUnlockMessage
+              : copy.setupPasswordError}
           </p>
         ) : null}
         <form action={formAction} className="lock-form">
           <div className="form-field">
-            <label htmlFor="app-password">Kennwort</label>
+            <label htmlFor="app-password">{copy.passwordLabel}</label>
             <input
               id="app-password"
               name="password"
@@ -46,7 +53,7 @@ export function AppLock({ configured }: { configured: boolean }) {
           </div>
           {!configured ? (
             <div className="form-field">
-              <label htmlFor="app-password-confirmation">Kennwort wiederholen</label>
+              <label htmlFor="app-password-confirmation">{copy.passwordRepeatLabel}</label>
               <input
                 id="app-password-confirmation"
                 name="passwordConfirmation"
@@ -59,13 +66,13 @@ export function AppLock({ configured }: { configured: boolean }) {
             </div>
           ) : null}
           <button className="button button-primary" disabled={pending} type="submit">
-            {pending ? "Bitte warten …" : configured ? "Entsperren" : "Kennwort speichern"}
+            {pending ? copy.waitingAction : configured ? copy.unlockAction : copy.savePasswordAction}
           </button>
         </form>
         {configured ? (
           <form action={resetAppPasswordAction}>
             <button className="text-link button-link" type="submit">
-              Kennwort vergessen? Nur KI-Profile zurücksetzen
+              {copy.forgotPasswordAction}
             </button>
           </form>
         ) : null}

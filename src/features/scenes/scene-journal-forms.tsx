@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import type { Character } from "@/domain/character";
 import {
   initialSceneJournalFormState,
   type SceneJournalFormAction,
+  type SceneJournalFormState,
 } from "@/features/scenes/form-state";
 import type { getMessages } from "@/i18n/messages";
 
@@ -13,7 +14,7 @@ function FormMessage({
   errors,
   copy,
 }: {
-  message: "validation" | "save_error" | "trait_mismatch" | null;
+  message: SceneJournalFormState["message"];
   errors: string[];
   copy: ReturnType<typeof getMessages>["scenes"];
 }) {
@@ -23,7 +24,17 @@ function FormMessage({
       ? copy.validationMessage
       : message === "trait_mismatch"
         ? copy.traitMismatchError
-        : copy.journalSaveError;
+        : message === "rate_limit"
+          ? copy.aiRateLimitError
+          : message === "credits"
+            ? copy.aiCreditsError
+            : message === "model_unavailable"
+              ? copy.aiModelUnavailableError
+              : message === "model_incompatible"
+                ? copy.aiModelIncompatibleError
+                : message === "provider_error"
+                  ? copy.aiProviderError
+                  : copy.journalSaveError;
   return (
     <div className="form-message" role="alert">
       <p>{text}</p>
@@ -71,6 +82,7 @@ export function SceneMessageForm({
   messages: ReturnType<typeof getMessages>;
 }) {
   const [state, formAction, isPending] = useActionState(action, initialSceneJournalFormState);
+  const [role, setRole] = useState<"player" | "narrator">("player");
   const copy = messages.scenes;
   return (
     <form className="scene-journal-form scene-message-form" action={formAction} noValidate>
@@ -79,7 +91,12 @@ export function SceneMessageForm({
       <FormMessage message={state.message} errors={state.errors} copy={copy} />
       <div className="form-field">
         <label htmlFor="scene-message-role">{copy.messageRoleLabel}</label>
-        <select id="scene-message-role" name="role" defaultValue="player">
+        <select
+          id="scene-message-role"
+          name="role"
+          value={role}
+          onChange={(event) => setRole(event.target.value === "narrator" ? "narrator" : "player")}
+        >
           <option value="player">{copy.messageRoles.player}</option>
           <option value="narrator">{copy.messageRoles.narrator}</option>
         </select>
@@ -94,10 +111,60 @@ export function SceneMessageForm({
           required
         />
       </div>
-      <button className="button" type="submit" disabled={isPending}>
-        {isPending ? copy.sendingMessageAction : copy.sendMessageAction}
-      </button>
+      <div className="button-row">
+        <button className="button button-secondary" name="submitMode" value="save" type="submit" disabled={isPending}>
+          {isPending ? copy.sendingMessageAction : copy.sendMessageAction}
+        </button>
+        <button
+          className="button"
+          name="submitMode"
+          value="ask-game-master"
+          type="submit"
+          disabled={isPending || role !== "player"}
+        >
+          {isPending ? copy.askingGameMasterAction : copy.askGameMasterAction}
+        </button>
+      </div>
     </form>
+  );
+}
+
+export function SceneEntryEditForm({
+  action,
+  content,
+  entryId,
+  maxLength,
+  messages,
+}: {
+  action: SceneJournalFormAction;
+  content: string;
+  entryId: string;
+  maxLength: number;
+  messages: ReturnType<typeof getMessages>;
+}) {
+  const [state, formAction, isPending] = useActionState(action, initialSceneJournalFormState);
+  const copy = messages.scenes;
+  return (
+    <details className="journal-entry-edit">
+      <summary>{copy.editEntryAction}</summary>
+      <form action={formAction} noValidate>
+        <FormMessage message={state.message} errors={state.errors} copy={copy} />
+        <div className="form-field">
+          <label htmlFor={`journal-entry-content-${entryId}`}>{copy.editEntryLabel}</label>
+          <textarea
+            id={`journal-entry-content-${entryId}`}
+            name="content"
+            rows={5}
+            maxLength={maxLength}
+            defaultValue={content}
+            required
+          />
+        </div>
+        <button className="button button-secondary" type="submit" disabled={isPending}>
+          {isPending ? copy.savingEntryAction : copy.saveEntryAction}
+        </button>
+      </form>
+    </details>
   );
 }
 

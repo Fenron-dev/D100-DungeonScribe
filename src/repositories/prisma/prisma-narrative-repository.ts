@@ -10,6 +10,19 @@ import type { NarrativeRepository } from "@/repositories/narrative-repository";
 
 const idsSchema = z.array(z.string());
 
+function selectRecentMessages(
+  messagesDescending: Array<{ role: string; content: string }>,
+): Array<{ role: string; content: string }> {
+  const selected: Array<{ role: string; content: string }> = [];
+  let characterCount = 0;
+  for (const message of messagesDescending) {
+    if (selected.length > 0 && characterCount + message.content.length > 24_000) break;
+    selected.push(message);
+    characterCount += message.content.length;
+  }
+  return selected.reverse();
+}
+
 export class PrismaNarrativeRepository implements NarrativeRepository {
   public constructor(private readonly client: PrismaClient) {}
 
@@ -27,7 +40,7 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
     const characterIds = idsSchema.parse(scene.participantCharacterIds);
     const entityIds = idsSchema.parse(scene.participantEntityIds);
     const threadIds = idsSchema.parse(scene.relevantThreadIds);
-    const [characters, entities, threads] = await Promise.all([
+    const [characters, entities, threads, recentMessagesDescending] = await Promise.all([
       this.client.character.findMany({
         where: { campaignId, id: { in: characterIds } },
         select: { name: true },
@@ -39,6 +52,12 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
       this.client.storyThread.findMany({
         where: { campaignId, id: { in: threadIds }, status: "open" },
         select: { title: true },
+      }),
+      this.client.sceneMessage.findMany({
+        where: { campaignId, sceneId },
+        orderBy: { createdAt: "desc" },
+        take: 16,
+        select: { role: true, content: true },
       }),
     ]);
     return narrationRequestSchema.parse({
@@ -63,6 +82,10 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
             ...entities.map(({ name }) => name),
           ],
           activeThreads: threads.map(({ title }) => title),
+          recentMessages: selectRecentMessages(recentMessagesDescending).map(({ role, content }) => ({
+            role,
+            content,
+          })),
         },
       },
     });

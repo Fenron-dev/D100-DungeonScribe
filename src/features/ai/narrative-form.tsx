@@ -18,6 +18,19 @@ export function NarrativeForm({
 }) {
   const [state, formAction, isPending] = useActionState(action, initialNarrativeFormState);
   const copy = messages.scenes;
+  const errorMessage = state.message === "validation"
+    ? copy.validationMessage
+    : state.message === "rate_limit"
+      ? copy.aiRateLimitError
+      : state.message === "credits"
+        ? copy.aiCreditsError
+        : state.message === "model_unavailable"
+          ? copy.aiModelUnavailableError
+          : state.message === "model_incompatible"
+            ? copy.aiModelIncompatibleError
+            : state.message === "provider_error"
+              ? copy.aiProviderError
+              : copy.aiNarrationError;
   return (
     <form className="scene-journal-form ai-narrative-form" action={formAction} noValidate>
       <div className="ai-form-heading">
@@ -30,7 +43,7 @@ export function NarrativeForm({
       {mode === "demo" ? <p className="form-hint">{copy.aiDemoHint}</p> : null}
       {state.message ? (
         <div className="form-message" role="alert">
-          <p>{state.message === "validation" ? copy.validationMessage : copy.aiNarrationError}</p>
+          <p>{errorMessage}</p>
         </div>
       ) : null}
       <div className="form-field">

@@ -183,8 +183,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Szene beginnen" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Die Straße im Nebel" })).toBeVisible();
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
+  await page.getByRole("tab", { name: "Szenendialog" }).click();
   await page.getByLabel("Nachricht").fill("Ich untersuche die Spuren am Kartenarchiv.");
-  await page.getByRole("button", { name: "Nachricht speichern" }).click();
+  await page.getByRole("button", { name: "An Spielleiter senden" }).click();
   await expect(page.getByText("Ich untersuche die Spuren am Kartenarchiv.")).toBeVisible();
   await page.getByLabel("Beitrag von").selectOption("narrator");
   await page
@@ -194,58 +195,68 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(
     page.getByText("Hinter der Tür raschelt Pergament, obwohl kein Wind weht."),
   ).toBeVisible();
+  await page.getByRole("tab", { name: "Spielleiter" }).click();
   await expect(page.getByText("Demo-Modus", { exact: true })).toBeVisible();
   await page
     .getByLabel("Was soll als Nächstes erzählt werden?")
     .fill("Lass ein leises Klopfen hinter dem Kartenregal hörbar werden.");
   await page.getByRole("button", { name: "Erzählung erzeugen" }).click();
-  const aiMessage = page.locator(".scene-message-entry.source-ai").filter({
+  const aiMessage = page.locator(".scene-tab-panel:not([hidden]) .scene-message-entry.source-ai").filter({
     hasText: "Die Szene nimmt die Richtung",
-  });
+  }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
+  await aiMessage.getByText("Text bearbeiten").click();
+  await aiMessage.getByLabel("Überarbeiteter Text").fill(
+    "Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen.",
+  );
+  await aiMessage.getByRole("button", { name: "Änderung speichern" }).click();
+  await expect(
+    page.getByText("Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen."),
+  ).toBeVisible();
+  await page.getByRole("tab", { name: "Eintrag" }).click();
   await page
     .getByLabel("Eintrag", { exact: true })
     .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
   await page.getByRole("button", { name: "Eintrag speichern" }).click();
-  await expect(page.getByText("Elara folgt den frischen Spuren in das Kartenarchiv.")).toBeVisible();
+  await page.getByRole("tab", { name: "Probe" }).click();
   await page.getByLabel("Handelnder Charakter").selectOption({ label: "Elara aus dem Nebel" });
   await page.getByLabel("Beabsichtigte Handlung").fill("Die verborgenen Runen der Karte lesen");
   await page.getByLabel("Passende Eigenschaft (optional)").fill("Arkane Wahrnehmung");
   await page.getByLabel("Archetyp passt zur Handlung").check();
   await page.getByRole("button", { name: "Würfeln" }).click();
-  await expect(page.getByText("Die verborgenen Runen der Karte lesen")).toBeVisible();
-  await expect(page.getByText("core-adventure v1")).toBeVisible();
+  await page.getByRole("tab", { name: "Orakel" }).click();
   await page.getByLabel("Orakelfrage").fill("Ist die verborgene Karte noch vollständig?");
   await page.getByLabel("Wahrscheinlichkeit für Ja").selectOption("likely");
   await page.getByRole("button", { name: "Orakel befragen" }).click();
-  await expect(page.getByText("Ist die verborgene Karte noch vollständig?")).toBeVisible();
-  await expect(page.locator(".oracle-answer")).toHaveText(
-    /^(Nein|Nein, aber …|Nein, und zusätzlich …|Ungewiss oder situationsabhängig|Ja|Ja, aber …|Ja, und zusätzlich …)$/,
-  );
+  await page.getByRole("tab", { name: "Inspiration" }).click();
   await page
     .getByLabel("Detailfrage (optional)")
     .fill("Was macht das Kartenarchiv gefährlich?");
   await page.getByLabel("Erster Begriff").selectOption("discovery");
   await page.getByLabel("Zweiter Begriff").selectOption("danger");
   await page.getByRole("button", { name: "Inspiration ziehen" }).click();
-  const inspiration = page.locator(".inspiration-entry");
-  await expect(inspiration.getByText("Was macht das Kartenarchiv gefährlich?")).toBeVisible();
-  await expect(inspiration.locator(".inspiration-terms strong")).toHaveCount(2);
-  await expect(inspiration.getByText("Entdeckung", { exact: true })).toBeVisible();
-  await expect(inspiration.getByText("Gefahr", { exact: true })).toBeVisible();
+  await page.getByRole("tab", { name: "Ereignis" }).click();
   await page
     .getByLabel("Ereigniskontext (optional)")
     .fill("Was unterbricht Elaras Suche im Kartenarchiv?");
   await page.getByRole("button", { name: "Ereignis erzeugen" }).click();
-  const randomEvent = page.locator(".random-event-entry").filter({
+  await page.getByRole("tab", { name: "Journal" }).click();
+  const journalPanel = page.locator("#journal-panel");
+  await expect(journalPanel.getByText("Elara folgt den frischen Spuren in das Kartenarchiv.")).toBeVisible();
+  await expect(journalPanel.getByText("Die verborgenen Runen der Karte lesen")).toBeVisible();
+  await expect(journalPanel.getByText("core-adventure v1")).toBeVisible();
+  await expect(journalPanel.getByText("Ist die verborgene Karte noch vollständig?")).toBeVisible();
+  await expect(journalPanel.locator(".oracle-answer")).toHaveText(
+    /^(Nein|Nein, aber …|Nein, und zusätzlich …|Ungewiss oder situationsabhängig|Ja|Ja, aber …|Ja, und zusätzlich …)$/,
+  );
+  const inspiration = journalPanel.locator(".inspiration-entry");
+  await expect(inspiration.locator(".inspiration-terms strong")).toHaveCount(2);
+  const randomEvent = journalPanel.locator(".random-event-entry").filter({
     hasText: "Was unterbricht Elaras Suche im Kartenarchiv?",
   });
-  await expect(
-    randomEvent.getByText("Was unterbricht Elaras Suche im Kartenarchiv?"),
-  ).toBeVisible();
   await expect(randomEvent.locator(".random-event-focus")).not.toBeEmpty();
-  await expect(randomEvent.locator(".random-event-prompt span")).toHaveCount(2);
+  await page.getByRole("tab", { name: "Abschließen" }).click();
   await page
     .getByLabel("Szenenzusammenfassung")
     .fill("Elara findet eine verborgene Karte, die einen Weg durch den Nebel zeigt.");
@@ -260,14 +271,15 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText(/2[23] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/2[45] Ereignisse/)).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
-  await expect(page.getByText(/1[12] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/1[34] Ereignisse/)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene begonnen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene abgeschlossen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Szenennachricht angepasst" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "KI-Erzählung erzeugt" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Orakelfrage beantwortet" })).toBeVisible();

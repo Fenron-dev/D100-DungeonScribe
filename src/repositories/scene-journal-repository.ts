@@ -32,6 +32,18 @@ export interface SceneJournalRepository {
     sceneId: string,
     draft: SceneMessageDraft,
   ): Promise<SceneMessage | null>;
+  updateNote(
+    campaignId: string,
+    sceneId: string,
+    noteId: string,
+    content: string,
+  ): Promise<SceneNote | null>;
+  updateMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    content: string,
+  ): Promise<SceneMessage | null>;
   addRoll(
     campaignId: string,
     sceneId: string,

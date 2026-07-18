@@ -21,6 +21,10 @@ export function SceneCompletionForm({
     <form className="scene-completion" action={formAction} noValidate>
       <h2>{copy.completeTitle}</h2>
       <p>{copy.completeDescription}</p>
+      <details className="scene-completion-help">
+        <summary>{copy.completeHelpTitle}</summary>
+        <p>{copy.completeHelpDescription}</p>
+      </details>
       {state.message ? (
         <p className="form-message" role="alert">
           {state.message === "validation" ? copy.validationMessage : copy.saveError}

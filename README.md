@@ -14,7 +14,7 @@ Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, �
 
 Ohne Konfiguration arbeitet die KI-Erzählfunktion im lokalen Demo-Modus und überträgt keine Daten. Für OpenAI wird der Schlüssel ausschließlich serverseitig als `OPENAI_API_KEY` gesetzt; `OPENAI_MODEL` kann optional angepasst werden. Reale Schlüssel gehören weder in `.env.example` noch in Git, Screenshots oder GitHub-Buildvariablen. Die Build- und Testabläufe benötigen keinen API-Schlüssel und rufen keine externe KI auf.
 
-Bei einer bewusst ausgelösten Erzählanfrage werden nur Kampagnenrahmen, aktuelle Szene, Namen der Beteiligten und Titel aktiver Handlungsstränge übertragen. Wissenseinträge, Geheimnisse, Charakternotizen und das vollständige Protokoll werden nicht geladen. Die strukturierte Antwort wird lokal validiert, als reiner Text gerendert und verändert keine Weltfakten oder Regeln.
+Bei einer bewusst ausgelösten Erzählanfrage werden nur Kampagnenrahmen, aktuelle Szene, Namen der Beteiligten, Titel aktiver Handlungsstränge und höchstens die jüngsten 24.000 Zeichen des Szenendialogs übertragen. Wissenseinträge, Geheimnisse, Charakternotizen und das vollständige Protokoll werden nicht geladen. Die strukturierte Antwort wird lokal validiert, als reiner Text gerendert und verändert keine Weltfakten oder Regeln.
 
 Die Entwurfsgeneratoren arbeiten nach demselben Sicherheitsprinzip. Ein Story-Entwurf benötigt keinen bestehenden Kampagneninhalt. Charakter- und Weltentwürfe erhalten ausschließlich Name, Idee, Genre und Stimmung der aktuellen Kampagne. Entwürfe sind flüchtig und erzeugen weder Datenbankeinträge noch Chronikereignisse, bis der Benutzer das reguläre Formular absendet.
 
