@@ -338,6 +338,28 @@ export interface MessageCatalog {
     thresholdLabel: string;
     rulesetLabel: string;
   };
+  oracle: {
+    formTitle: string;
+    formDescription: string;
+    questionLabel: string;
+    likelihoodLabel: string;
+    likelihoods: Record<
+      "nearly_impossible" | "unlikely" | "even" | "likely" | "nearly_certain",
+      string
+    >;
+    askAction: string;
+    askingAction: string;
+    validationMessage: string;
+    saveError: string;
+    resultTitle: string;
+    answers: Record<
+      "no_and" | "no" | "no_but" | "uncertain" | "yes_but" | "yes" | "yes_and",
+      string
+    >;
+    diceLabel: string;
+    calculationLabel: string;
+    doubleBadge: string;
+  };
   chronicle: {
     sectionTitle: string;
     sectionDescription: string;
@@ -379,6 +401,7 @@ export interface MessageCatalog {
       | "SCENE_NOTE_ADDED"
       | "SCENE_MESSAGE_ADDED"
       | "DICE_ROLLED"
+      | "ORACLE_ANSWERED"
       | "SCENE_COMPLETED",
       string
     >;
@@ -792,6 +815,37 @@ const germanMessages = {
     thresholdLabel: "Erfolg ab",
     rulesetLabel: "Regelwerk",
   },
+  oracle: {
+    formTitle: "Ja-Nein-Orakel",
+    formDescription:
+      "Stelle eine eindeutige Frage und schätze ein, wie wahrscheinlich ein Ja ist.",
+    questionLabel: "Orakelfrage",
+    likelihoodLabel: "Wahrscheinlichkeit für Ja",
+    likelihoods: {
+      nearly_impossible: "Nahezu unmöglich (−4)",
+      unlikely: "Unwahrscheinlich (−2)",
+      even: "Ausgeglichen (±0)",
+      likely: "Wahrscheinlich (+2)",
+      nearly_certain: "Nahezu sicher (+4)",
+    },
+    askAction: "Orakel befragen",
+    askingAction: "Orakel wird befragt …",
+    validationMessage: "Bitte prüfe die Orakelfrage.",
+    saveError: "Das Orakelergebnis konnte nicht gespeichert werden.",
+    resultTitle: "Orakel",
+    answers: {
+      no_and: "Nein, und zusätzlich …",
+      no: "Nein",
+      no_but: "Nein, aber …",
+      uncertain: "Ungewiss oder situationsabhängig",
+      yes_but: "Ja, aber …",
+      yes: "Ja",
+      yes_and: "Ja, und zusätzlich …",
+    },
+    diceLabel: "2W6",
+    calculationLabel: "Auswertung",
+    doubleBadge: "Pasch",
+  },
   chronicle: {
     sectionTitle: "Chronik",
     sectionDescription:
@@ -834,6 +888,7 @@ const germanMessages = {
       SCENE_NOTE_ADDED: "Szeneneintrag festgehalten",
       SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
       DICE_ROLLED: "Probe ausgewertet",
+      ORACLE_ANSWERED: "Orakelfrage beantwortet",
       SCENE_COMPLETED: "Szene abgeschlossen",
     },
     sources: {
@@ -1248,6 +1303,37 @@ const englishMessages = {
     thresholdLabel: "Success on",
     rulesetLabel: "Ruleset",
   },
+  oracle: {
+    formTitle: "Yes-no oracle",
+    formDescription:
+      "Ask a clear question and estimate how likely a yes answer is.",
+    questionLabel: "Oracle question",
+    likelihoodLabel: "Likelihood of yes",
+    likelihoods: {
+      nearly_impossible: "Nearly impossible (−4)",
+      unlikely: "Unlikely (−2)",
+      even: "Even odds (±0)",
+      likely: "Likely (+2)",
+      nearly_certain: "Nearly certain (+4)",
+    },
+    askAction: "Ask oracle",
+    askingAction: "Asking oracle …",
+    validationMessage: "Please check the oracle question.",
+    saveError: "The oracle result could not be saved.",
+    resultTitle: "Oracle",
+    answers: {
+      no_and: "No, and furthermore …",
+      no: "No",
+      no_but: "No, but …",
+      uncertain: "Uncertain or context-dependent",
+      yes_but: "Yes, but …",
+      yes: "Yes",
+      yes_and: "Yes, and furthermore …",
+    },
+    diceLabel: "2d6",
+    calculationLabel: "Evaluation",
+    doubleBadge: "Double",
+  },
   chronicle: {
     sectionTitle: "Chronicle",
     sectionDescription:
@@ -1290,6 +1376,7 @@ const englishMessages = {
       SCENE_NOTE_ADDED: "Scene entry recorded",
       SCENE_MESSAGE_ADDED: "Scene message recorded",
       DICE_ROLLED: "Check resolved",
+      ORACLE_ANSWERED: "Oracle question answered",
       SCENE_COMPLETED: "Scene completed",
     },
     sources: {

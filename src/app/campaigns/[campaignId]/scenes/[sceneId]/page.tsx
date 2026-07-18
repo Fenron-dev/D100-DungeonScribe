@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { askOracleAction } from "@/features/oracle/actions";
+import { OracleForm } from "@/features/oracle/oracle-form";
 import {
   addSceneNoteAction,
   addSceneMessageAction,
@@ -56,6 +58,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const noteAction = addSceneNoteAction.bind(null, campaign.id, scene.id);
   const messageAction = addSceneMessageAction.bind(null, campaign.id, scene.id);
   const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
+  const oracleAction = askOracleAction.bind(null, campaign.id, scene.id);
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
   );
@@ -109,6 +112,35 @@ export default async function ScenePage({ params }: ScenePageProps) {
         {journal.length === 0 ? <p className="empty-copy">{copy.journalEmpty}</p> : (
           <ol className="scene-journal-list">
             {journal.map((entry) => {
+              if (entry.type === "oracle") {
+                const modifier = entry.value.modifier >= 0
+                  ? `+${entry.value.modifier}`
+                  : String(entry.value.modifier);
+                return (
+                  <li className="scene-journal-entry oracle-entry" key={entry.value.id}>
+                    <div className="scene-roll-heading">
+                      <span className="journal-entry-kind">{messages.oracle.resultTitle}</span>
+                      {entry.value.isDouble ? (
+                        <span className="oracle-double">{messages.oracle.doubleBadge}</span>
+                      ) : null}
+                    </div>
+                    <p className="oracle-question">{entry.value.question}</p>
+                    <strong className="oracle-answer">
+                      {messages.oracle.answers[entry.value.answer]}
+                    </strong>
+                    <dl className="roll-facts">
+                      <div>
+                        <dt>{messages.oracle.diceLabel}</dt>
+                        <dd>{entry.value.dice.join(" + ")}</dd>
+                      </div>
+                      <div>
+                        <dt>{messages.oracle.calculationLabel}</dt>
+                        <dd>{entry.value.rawTotal} {modifier} = {entry.value.adjustedTotal}</dd>
+                      </div>
+                    </dl>
+                  </li>
+                );
+              }
               if (entry.type === "message") {
                 return (
                   <li
@@ -159,6 +191,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
             <SceneMessageForm action={messageAction} messages={messages} />
             <SceneNoteForm action={noteAction} messages={messages} />
             <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} />
+            <OracleForm action={oracleAction} messages={messages} />
           </div>
           <SceneCompletionForm action={completionAction} messages={messages} />
         </>

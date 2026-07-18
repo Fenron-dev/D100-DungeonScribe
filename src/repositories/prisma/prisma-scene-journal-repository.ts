@@ -9,6 +9,7 @@ import type {
   SceneNoteDraft,
 } from "@/domain/scene-journal";
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
+import { mapOracleRecord } from "@/repositories/prisma/prisma-oracle-repository";
 import type {
   PersistedRollDraft,
   SceneJournalRepository,
@@ -199,14 +200,19 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
     campaignId: string,
     sceneId: string,
   ): Promise<SceneJournalEntry[]> {
-    const [notes, messages, rolls] = await Promise.all([
+    const [notes, messages, oracleRecords, rolls] = await Promise.all([
       this.client.sceneNote.findMany({ where: { campaignId, sceneId } }),
       this.client.sceneMessage.findMany({ where: { campaignId, sceneId } }),
+      this.client.oracleRecord.findMany({ where: { campaignId, sceneId } }),
       this.client.diceRoll.findMany({ where: { campaignId, sceneId } }),
     ]);
     return [
       ...notes.map((row) => ({ type: "note" as const, value: mapNote(row) })),
       ...messages.map((row) => ({ type: "message" as const, value: mapMessage(row) })),
+      ...oracleRecords.map((row) => ({
+        type: "oracle" as const,
+        value: mapOracleRecord(row),
+      })),
       ...rolls.map((row) => ({ type: "roll" as const, value: mapRoll(row) })),
     ].sort((left, right) => left.value.createdAt.getTime() - right.value.createdAt.getTime());
   }

@@ -18,4 +18,4 @@ Aktive Szenen besitzen ein zeitlich geordnetes Spielprotokoll. `SceneMessage` bi
 
 Proben werden ausschließlich von der W6-Pool-Regel-Engine ausgewertet: Charakter, Handlung, Schwierigkeit, passender Archetyp, passende Eigenschaft sowie je ein optionaler Vor- und Nachteil bilden die Eingabe. Gespeichert werden die vollständige Eingabe, Würfel, Schwelle, Erfolge, Erfolgsgrad, Modifikatoren, Erklärung sowie ID und Version des verwendeten Regelwerks. Eine passende Eigenschaft muss tatsächlich zum handelnden, an der Szene beteiligten Charakter gehören.
 
-Start, Nachricht, Protokolleintrag, Probe und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“. Orakel, Spielzeit und KI-erzeugte Erzählantworten folgen in späteren Arbeitspaketen.
+Start, Nachricht, Protokolleintrag, Probe, Orakelfrage und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `SCENE_NOTE_ADDED`, `DICE_ROLLED`, `ORACLE_ANSWERED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“. Spielzeit und KI-erzeugte Erzählantworten folgen in späteren Arbeitspaketen.

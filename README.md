@@ -6,9 +6,9 @@ Die Kampagne ist der zentrale Zustand. Ein Chat ist nur eine Ansicht innerhalb e
 
 ## Projektstatus
 
-Phase 0 bis Phase 5 sind abgeschlossen. Das Projekt befindet sich in **Phase 6 – Szenen ohne KI**; erste Bausteine aus Chronik und Wissen sind bereits vorgezogen. Gebaut und geprüft wird ausschließlich über GitHub Actions.
+Phase 0 bis Phase 6 sind abgeschlossen. Das Projekt befindet sich in **Phase 7 – Orakel**; das Ja-Nein-Orakel ist als erster vertikaler Baustein umgesetzt, während Chronik und Wissen bereits vorgezogen wurden. Gebaut und geprüft wird ausschließlich über GitHub Actions.
 
-Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren, deren Charaktere verwalten sowie ein durchsuchbares Weltregister für Personen, Orte, Fraktionen und Gegenstände. Weltobjekte besitzen typspezifische Details und können über gerichtete, typisierte Beziehungen verknüpft werden. Kampagnenwissen trennt Fakten, Charakterwissen, Gerüchte, Geheimnisse, Vermutungen und Erinnerungen samt Wahrheitsstatus, bekannten Charakteren, Weltbezügen und Fixierung. Handlungsstränge erfassen offene Entwicklungen mit Status, Dringlichkeit, Fortschritt, Weltbezügen und möglichen nächsten Wendungen. Szenen verbinden Ort, Beteiligte und Handlungsstränge zu einer konkreten Spielsituation, führen Spieler- und Erzählernachrichten, Handlungen, Beobachtungen und nachvollziehbar ausgewertete Würfelproben in einem dauerhaften Spielprotokoll und werden mit einer Zusammenfassung abgeschlossen. Eine filterbare Chronik macht alle verbindlichen Änderungen verständlich sichtbar, ohne technische Ereignisdaten offenzulegen. Jede Änderung wird atomar mit einem Kampagnenereignis gespeichert.
+Der aktuelle vertikale Funktionsumfang umfasst Kampagnen erstellen, auflisten, öffnen, bearbeiten und archivieren, deren Charaktere verwalten sowie ein durchsuchbares Weltregister für Personen, Orte, Fraktionen und Gegenstände. Weltobjekte besitzen typspezifische Details und können über gerichtete, typisierte Beziehungen verknüpft werden. Kampagnenwissen trennt Fakten, Charakterwissen, Gerüchte, Geheimnisse, Vermutungen und Erinnerungen samt Wahrheitsstatus, bekannten Charakteren, Weltbezügen und Fixierung. Handlungsstränge erfassen offene Entwicklungen mit Status, Dringlichkeit, Fortschritt, Weltbezügen und möglichen nächsten Wendungen. Szenen verbinden Ort, Beteiligte und Handlungsstränge zu einer konkreten Spielsituation, führen Spieler- und Erzählernachrichten, Handlungen, Beobachtungen, nachvollziehbar ausgewertete Würfelproben und gespeicherte Ja-Nein-Orakelfragen in einem dauerhaften Spielprotokoll und werden mit einer Zusammenfassung abgeschlossen. Eine filterbare Chronik macht alle verbindlichen Änderungen verständlich sichtbar, ohne technische Ereignisdaten offenzulegen. Jede Änderung wird atomar mit einem Kampagnenereignis gespeichert.
 
 Die reine Regel-Engine wertet konfigurierbare W6-Pool-Proben mit Archetyp, Eigenschaften, Vor- und Nachteilen, Schwierigkeiten, Erfolgsgraden und der freiwilligen Wahl „Erfolg mit Kosten“ aus. Feste Zufallssequenzen machen jede Regelentscheidung reproduzierbar testbar.
 
@@ -54,6 +54,7 @@ Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien au
 - [Kampagnenchronik](docs/chronicle.md)
 - [Handlungsstränge](docs/story-threads.md)
 - [Szenen ohne KI](docs/scenes.md)
+- [Solo-Orakel](docs/oracle.md)
 - [Entwicklungsprozess](docs/development-process.md)
 - [macOS-Testbuild](docs/macos-test-build.md)
 - [Verbindliche Regeln für Codex](AGENTS.md)

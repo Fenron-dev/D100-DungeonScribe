@@ -24,6 +24,8 @@ Ist die zentrale Spieleinheit. Sie besitzt Status, Ausgangslage, Ort, Beteiligte
 
 Der Szenenbaustein unterstützt aktive und abgeschlossene Szenen. Er speichert erwartete und tatsächliche Ausgangslage getrennt, ein optionales Ziel, Ort, Charaktere, Weltobjekte und relevante Handlungsstränge sowie die bearbeitbare Abschlusszusammenfassung. Alle Referenzen müssen zur selben Kampagne gehören; der Ort muss ein Weltobjekt des Typs `location` sein. Ein partieller eindeutiger Datenbankindex erzwingt höchstens eine aktive Szene. `SceneMessage` speichert den fortlaufenden Dialog mit fachlicher Rolle und Quelle, Handlungen und Beobachtungen werden ergänzend als `SceneNote` gespeichert. `DiceRoll` hält vollständige Regel-Eingabe und -Ausgabe sowie ID und Version des Regelwerks fest. Jede dieser Zustandsänderungen erzeugt atomar ein eigenes Kampagnenereignis.
 
+`OracleRecord` speichert eine Ja-Nein-Frage mit Wahrscheinlichkeit, beiden Rohwürfeln, Rohsumme, Modifikator, begrenztem Endwert, Antwort und Pasch-Markierung. Damit bleibt das Ergebnis erklärbar und kann später als geprüfter Auslöser für Zufallsereignisse dienen.
+
 ### World Entity
 
 Gemeinsame Basis für NPC, Ort, Region, Fraktion, Gegenstand, Quest und weitere definierte Typen. Kernfelder bleiben strukturiert; typspezifische Zusatzdaten werden separat validiert.

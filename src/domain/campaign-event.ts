@@ -16,6 +16,7 @@ export const campaignEventTypes = [
   "SCENE_NOTE_ADDED",
   "SCENE_MESSAGE_ADDED",
   "DICE_ROLLED",
+  "ORACLE_ANSWERED",
   "SCENE_COMPLETED",
 ] as const;
 

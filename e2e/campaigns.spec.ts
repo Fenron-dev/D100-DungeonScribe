@@ -175,6 +175,13 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Würfeln" }).click();
   await expect(page.getByText("Die verborgenen Runen der Karte lesen")).toBeVisible();
   await expect(page.getByText("core-adventure v1")).toBeVisible();
+  await page.getByLabel("Orakelfrage").fill("Ist die verborgene Karte noch vollständig?");
+  await page.getByLabel("Wahrscheinlichkeit für Ja").selectOption("likely");
+  await page.getByRole("button", { name: "Orakel befragen" }).click();
+  await expect(page.getByText("Ist die verborgene Karte noch vollständig?")).toBeVisible();
+  await expect(page.locator(".oracle-answer")).toHaveText(
+    /^(Nein|Nein, aber …|Nein, und zusätzlich …|Ungewiss oder situationsabhängig|Ja|Ja, aber …|Ja, und zusätzlich …)$/,
+  );
   await page
     .getByLabel("Szenenzusammenfassung")
     .fill("Elara findet eine verborgene Karte, die einen Weg durch den Nebel zeigt.");
@@ -188,15 +195,16 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText("17 Ereignisse")).toBeVisible();
+  await expect(page.getByText("18 Ereignisse")).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
-  await expect(page.getByText("6 Ereignisse")).toBeVisible();
+  await expect(page.getByText("7 Ereignisse")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene begonnen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szene abgeschlossen" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szeneneintrag festgehalten" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Szenennachricht festgehalten" }).first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Probe ausgewertet" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Orakelfrage beantwortet" })).toBeVisible();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
