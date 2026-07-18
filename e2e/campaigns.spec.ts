@@ -186,7 +186,11 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("tab", { name: "Szenendialog" }).click();
   await page.getByLabel("Nachricht").fill("Ich untersuche die Spuren am Kartenarchiv.");
   await page.getByRole("button", { name: "An Spielleiter senden" }).click();
-  await expect(page.getByText("Ich untersuche die Spuren am Kartenarchiv.")).toBeVisible();
+  await expect(
+    page.locator("#scene-dialogue-panel").getByRole("paragraph").filter({
+      hasText: /^Ich untersuche die Spuren am Kartenarchiv\.$/,
+    }),
+  ).toBeVisible();
   await page.getByLabel("Beitrag von").selectOption("narrator");
   await page
     .getByLabel("Nachricht")
