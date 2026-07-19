@@ -65,6 +65,7 @@ class InMemoryJournalRepository implements SceneJournalRepository {
       sceneId,
       ...draft,
       source: "manual",
+      versions: [],
       createdAt: new Date(),
     };
     this.entries.push({ type: "message", value: message });
@@ -97,6 +98,33 @@ class InMemoryJournalRepository implements SceneJournalRepository {
     if (!entry) return null;
     entry.value.content = content;
     return entry.value;
+  }
+  public async selectMessageVersion(
+    _campaignId: string,
+    _sceneId: string,
+    messageId: string,
+    versionId: string,
+  ): Promise<SceneMessage | null> {
+    const entry = this.entries.find(
+      (candidate): candidate is Extract<SceneJournalEntry, { type: "message" }> =>
+        candidate.type === "message" && candidate.value.id === messageId,
+    );
+    const version = entry?.value.versions.find(({ id }) => id === versionId);
+    if (!entry || !version) return null;
+    entry.value.content = version.content;
+    return entry.value;
+  }
+  public async deleteAiMessage(
+    _campaignId: string,
+    _sceneId: string,
+    messageId: string,
+  ): Promise<boolean> {
+    const index = this.entries.findIndex(
+      (candidate) => candidate.type === "message" && candidate.value.id === messageId,
+    );
+    if (index < 0) return false;
+    this.entries.splice(index, 1);
+    return true;
   }
   public async addRoll(
     campaignId: string,
@@ -169,6 +197,46 @@ describe("SceneJournalService", () => {
       { content: "Die Tür steht einen Spalt offen." },
     );
     expect(message.content).toBe("Die Tür steht einen Spalt offen.");
+  });
+
+  it("selects a stored narration version", async () => {
+    const repository = new InMemoryJournalRepository();
+    const service = new SceneJournalService(
+      repository,
+      new D6PoolRuleEngine(new FixedRandomSource([5])),
+      coreAdventureRuleset,
+    );
+    const message = await repository.addMessage("campaign-1", "scene-1", {
+      role: "narrator",
+      content: "Neue Fassung",
+    });
+    message.versions.push({
+      id: "version-1",
+      content: "Alte Fassung",
+      createdAt: new Date(),
+    });
+    const selected = await service.selectMessageVersion(
+      "campaign-1",
+      "scene-1",
+      message.id,
+      "version-1",
+    );
+    expect(selected.content).toBe("Alte Fassung");
+  });
+
+  it("deletes an AI message through the repository boundary", async () => {
+    const repository = new InMemoryJournalRepository();
+    const service = new SceneJournalService(
+      repository,
+      new D6PoolRuleEngine(new FixedRandomSource([5])),
+      coreAdventureRuleset,
+    );
+    const message = await repository.addMessage("campaign-1", "scene-1", {
+      role: "narrator",
+      content: "Entfernen",
+    });
+    await service.deleteAiMessage("campaign-1", "scene-1", message.id);
+    expect(repository.entries).toHaveLength(0);
   });
 
   it("evaluates and stores a fully explained deterministic check", async () => {

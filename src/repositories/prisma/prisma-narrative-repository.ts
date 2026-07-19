@@ -31,7 +31,21 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
     sceneId: string,
     direction: string,
     locale: "de" | "en",
+    excludedMessageId?: string,
   ): Promise<NarrationRequest | null> {
+    if (excludedMessageId) {
+      const replaceable = await this.client.sceneMessage.findFirst({
+        where: {
+          id: excludedMessageId,
+          campaignId,
+          sceneId,
+          role: "narrator",
+          source: "ai",
+        },
+        select: { id: true },
+      });
+      if (!replaceable) return null;
+    }
     const scene = await this.client.scene.findFirst({
       where: { id: sceneId, campaignId, status: "active" },
       include: { campaign: true },
@@ -54,7 +68,7 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
         select: { title: true },
       }),
       this.client.sceneMessage.findMany({
-        where: { campaignId, sceneId },
+        where: { campaignId, sceneId, id: excludedMessageId ? { not: excludedMessageId } : undefined },
         orderBy: { createdAt: "desc" },
         take: 16,
         select: { role: true, content: true },
@@ -109,7 +123,9 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
           role: "narrator",
           content: result.narration,
           source: "ai",
+          revisions: { create: { content: result.narration } },
         },
+        include: { revisions: true },
       });
       await transaction.campaignEvent.create({
         data: {
@@ -121,7 +137,58 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
           reversible: false,
         },
       });
-      return { ...message, role: "narrator", source: "ai" };
+      return {
+        ...message,
+        role: "narrator",
+        source: "ai",
+        versions: message.revisions.map(({ id, content, createdAt }) => ({ id, content, createdAt })),
+      };
+    });
+  }
+
+  public async replaceNarration(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    result: NarrationResult,
+  ): Promise<SceneMessage | null> {
+    const existing = await this.client.sceneMessage.findFirst({
+      where: { id: messageId, campaignId, sceneId, role: "narrator", source: "ai" },
+    });
+    if (!existing) return null;
+    return this.client.$transaction(async (transaction) => {
+      const existingRevision = await transaction.sceneMessageRevision.findFirst({
+        where: { messageId, content: existing.content },
+      });
+      if (!existingRevision) {
+        await transaction.sceneMessageRevision.create({
+          data: { messageId, content: existing.content },
+        });
+      }
+      const revision = await transaction.sceneMessageRevision.create({
+        data: { messageId, content: result.narration },
+      });
+      const message = await transaction.sceneMessage.update({
+        where: { id: messageId },
+        data: { content: result.narration },
+        include: { revisions: true },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "AI_NARRATION_REGENERATED",
+          summary: "KI-Erzählung neu erzeugt",
+          payload: { sceneId, messageId, versionId: revision.id },
+          source: "ai",
+          reversible: false,
+        },
+      });
+      return {
+        ...message,
+        role: "narrator",
+        source: "ai",
+        versions: message.revisions.map(({ id, content, createdAt }) => ({ id, content, createdAt })),
+      };
     });
   }
 }

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { aiProfileVaultSchema, validateProviderUrl } from "@/domain/ai-profile";
+import {
+  aiProfileVaultSchema,
+  resolveProviderApiKey,
+  validateProviderUrl,
+} from "@/domain/ai-profile";
 
 describe("AI profile security rules", () => {
   it("requires HTTPS for cloud providers", () => {
@@ -21,5 +25,19 @@ describe("AI profile security rules", () => {
       activeProfileId: "invalid",
       profiles: [],
     }).success).toBe(false);
+  });
+
+  it("reuses a provider key when another profile leaves it empty", () => {
+    const profiles = [{
+      id: "8f659b55-9d2b-4b62-a9e2-814d577ff8de",
+      name: "OpenRouter Free",
+      provider: "openrouter" as const,
+      baseUrl: "https://openrouter.ai/api/v1",
+      model: "openrouter/free",
+      apiKey: "saved",
+    }];
+    expect(resolveProviderApiKey(profiles, "openrouter", "")).toBe("saved");
+    expect(resolveProviderApiKey(profiles, "openrouter", "new")).toBe("new");
+    expect(resolveProviderApiKey(profiles, "groq", "")).toBeNull();
   });
 });

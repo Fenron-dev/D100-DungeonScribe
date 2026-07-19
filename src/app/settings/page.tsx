@@ -95,6 +95,9 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           copy={copy}
           openRouterCatalogAvailable={openRouterCatalog.available}
           openRouterModels={openRouterCatalog.models}
+          providersWithSavedKey={[
+            ...new Set(vault.profiles.filter(({ apiKey }) => apiKey).map(({ provider }) => provider)),
+          ]}
         />
       </section>
 

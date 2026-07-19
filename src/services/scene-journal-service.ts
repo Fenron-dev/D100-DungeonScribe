@@ -96,6 +96,35 @@ export class SceneJournalService {
     return message;
   }
 
+  public async selectMessageVersion(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    versionId: string,
+  ): Promise<SceneMessage> {
+    const message = await this.repository.selectMessageVersion(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      messageId,
+      versionId,
+    );
+    if (!message) throw new SceneJournalNotFoundError();
+    return message;
+  }
+
+  public async deleteAiMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+  ): Promise<void> {
+    const deleted = await this.repository.deleteAiMessage(
+      campaignIdSchema.parse(campaignId),
+      sceneIdSchema.parse(sceneId),
+      messageId,
+    );
+    if (!deleted) throw new SceneJournalNotFoundError();
+  }
+
   public async roll(
     campaignId: string,
     sceneId: string,

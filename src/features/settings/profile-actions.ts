@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   aiProfileSchema,
   aiProviderIds,
+  resolveProviderApiKey,
   validateProviderUrl,
 } from "@/domain/ai-profile";
 import {
@@ -38,14 +39,19 @@ export async function createAiProfileAction(formData: FormData): Promise<void> {
   if (!parsed.success || !validateProviderUrl(parsed.data.provider, parsed.data.baseUrl)) {
     redirect("/settings?error=profile");
   }
-  const local = parsed.data.provider === "ollama" || parsed.data.provider === "lmstudio";
-  if (!local && parsed.data.apiKey.length === 0) redirect("/settings?error=key");
   const vault = await loadAiProfileVault();
   if (!vault) redirect("/");
+  const local = parsed.data.provider === "ollama" || parsed.data.provider === "lmstudio";
+  const apiKey = resolveProviderApiKey(
+    vault.profiles,
+    parsed.data.provider,
+    parsed.data.apiKey,
+  );
+  if (!local && !apiKey) redirect("/settings?error=key");
   const profile = aiProfileSchema.parse({
     ...parsed.data,
     id: randomUUID(),
-    apiKey: parsed.data.apiKey || null,
+    apiKey,
   });
   await saveAiProfileVault({
     ...vault,

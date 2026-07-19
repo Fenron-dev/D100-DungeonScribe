@@ -13,23 +13,20 @@ import {
   RandomEventForm,
 } from "@/features/oracle/oracle-form";
 import {
-  addSceneMessageAction,
-  addSceneNoteAction,
   completeSceneAction,
   rollSceneCheckAction,
+  submitSceneComposerAction,
 } from "@/features/scenes/actions";
 import { SceneCompletionForm } from "@/features/scenes/scene-completion-form";
-import {
-  SceneMessageForm,
-  SceneNoteForm,
-  SceneRollForm,
-} from "@/features/scenes/scene-journal-forms";
+import { SceneRollForm } from "@/features/scenes/scene-journal-forms";
 import { SceneJournalView } from "@/features/scenes/scene-journal-view";
-import { SceneTabs } from "@/features/scenes/scene-tabs";
+import { SceneComposer } from "@/features/scenes/scene-composer";
+import { ScenePlayWorkspace } from "@/features/scenes/scene-play-workspace";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
 import { getNarrativeProviderMode } from "@/services/narrative-service-instance";
+import { loadAiProfileVault } from "@/services/ai-profile-vault-service";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
@@ -48,12 +45,13 @@ export default async function ScenePage({ params }: ScenePageProps) {
     sceneService.findById(campaignId, sceneId),
   ]);
   if (!campaign || !scene) notFound();
-  const [characters, entities, threads, journal, providerMode] = await Promise.all([
+  const [characters, entities, threads, journal, providerMode, profileVault] = await Promise.all([
     characterService.list(campaign.id),
     worldEntityService.list(campaign.id),
     storyThreadService.list(campaign.id),
     sceneJournalService.list(campaign.id, scene.id),
     getNarrativeProviderMode(),
+    loadAiProfileVault(),
   ]);
   const messages = getMessages();
   const copy = messages.scenes;
@@ -72,117 +70,88 @@ export default async function ScenePage({ params }: ScenePageProps) {
     scene.participantCharacterIds.includes(character.id),
   );
   const completionAction = completeSceneAction.bind(null, campaign.id, scene.id);
-  const noteAction = addSceneNoteAction.bind(null, campaign.id, scene.id);
-  const messageAction = addSceneMessageAction.bind(null, campaign.id, scene.id);
+  const composerAction = submitSceneComposerAction.bind(null, campaign.id, scene.id);
   const rollAction = rollSceneCheckAction.bind(null, campaign.id, scene.id);
   const oracleAction = askOracleAction.bind(null, campaign.id, scene.id);
   const inspirationAction = drawInspirationAction.bind(null, campaign.id, scene.id);
   const randomEventAction = generateRandomEventAction.bind(null, campaign.id, scene.id);
   const narrationAction = generateNarrationAction.bind(null, campaign.id, scene.id);
+  const profileOptions = (profileVault?.profiles ?? []).map((profile) => ({
+    id: profile.id,
+    label: `${profile.name} · ${profile.model}`,
+  }));
+  const activeProfileId = profileVault?.activeProfileId ?? profileOptions[0]?.id ?? "";
+  const sceneOverview = (
+    <div className="scene-detail-grid scene-overview-grid">
+      <section><h2>{copy.expectedSetupTitle}</h2><p>{scene.expectedSetup}</p></section>
+      <section><h2>{copy.actualSetupTitle}</h2><p>{scene.actualSetup}</p></section>
+      {scene.objective ? <section><h2>{copy.objectiveTitle}</h2><p>{scene.objective}</p></section> : null}
+      {locationName || participantNames.length > 0 ? (
+        <section><h2>{copy.participantsTitle}</h2><p>{[locationName, ...participantNames].filter(Boolean).join(", ")}</p></section>
+      ) : null}
+      {relevantThreads.length > 0 ? (
+        <section><h2>{copy.relatedThreadsTitle}</h2><p>{relevantThreads.join(", ")}</p></section>
+      ) : null}
+    </div>
+  );
 
   return (
     <article className="scene-detail">
-      <Link className="back-link" href={`/campaigns/${campaign.id}/scenes`}>
-        <span aria-hidden="true">←</span> {copy.backToScenes}
-      </Link>
+      <div className="scene-topline">
+        <Link className="back-link" href={`/campaigns/${campaign.id}/scenes`}>
+          <span aria-hidden="true">←</span> {copy.backToScenes}
+        </Link>
+      </div>
+      <div className="scene-status-strip" aria-label={copy.sceneStatusLabel}>
+        <span className={`status-badge status-${scene.status}`}>
+          {scene.status === "active" ? copy.activeStatus : copy.completedStatus}
+        </span>
+        <span className="tension-badge">
+          {messages.campaigns.tensionLabel}: {campaign.tension} / 6
+        </span>
+      </div>
       <header className="campaign-detail-header scene-heading">
         <div>
-          <span className={`status-badge status-${scene.status}`}>
-            {scene.status === "active" ? copy.activeStatus : copy.completedStatus}
-          </span>
-          <span className="tension-badge">
-            {messages.campaigns.tensionLabel}: {campaign.tension} / 6
-          </span>
           <h1>{scene.title}</h1>
         </div>
       </header>
-
-      <details className="scene-context">
-        <summary>{copy.sceneOverviewLabel}</summary>
-        <div className="scene-detail-grid">
-          <section><h2>{copy.expectedSetupTitle}</h2><p>{scene.expectedSetup}</p></section>
-          <section><h2>{copy.actualSetupTitle}</h2><p>{scene.actualSetup}</p></section>
-          {scene.objective ? <section><h2>{copy.objectiveTitle}</h2><p>{scene.objective}</p></section> : null}
-          {locationName || participantNames.length > 0 ? (
-            <section><h2>{copy.participantsTitle}</h2><p>{[locationName, ...participantNames].filter(Boolean).join(", ")}</p></section>
-          ) : null}
-          {relevantThreads.length > 0 ? (
-            <section><h2>{copy.relatedThreadsTitle}</h2><p>{relevantThreads.join(", ")}</p></section>
-          ) : null}
-        </div>
-      </details>
-
-      <SceneTabs
-        ariaLabel={copy.playTabsLabel}
-        defaultTabId="scene-dialogue"
-        tabs={[
-          {
-            id: "game-master",
-            label: copy.gameMasterTab,
-            content: (
-              <div className="scene-workspace-panel">
-                {scene.status === "active" ? (
-                  <NarrativeForm action={narrationAction} messages={messages} mode={providerMode} />
-                ) : null}
-                <SceneJournalView
-                  campaignId={campaign.id}
-                  sceneId={scene.id}
-                  journal={journal}
-                  characterNames={characterNames}
-                  messages={messages}
-                  mode="narrator"
-                />
-              </div>
-            ),
-          },
-          {
-            id: "scene-dialogue",
-            label: copy.dialogueTab,
-            content: (
-              <div className="scene-workspace-panel">
-                {scene.status === "active" ? <SceneMessageForm action={messageAction} messages={messages} /> : null}
-                <SceneJournalView
-                  campaignId={campaign.id}
-                  sceneId={scene.id}
-                  journal={journal}
-                  characterNames={characterNames}
-                  messages={messages}
-                  mode="messages"
-                />
-              </div>
-            ),
-          },
-          {
-            id: "journal",
-            label: copy.journalTab,
-            content: (
-              <div className="scene-workspace-panel">
-                <p>{copy.journalDescription}</p>
-                <SceneJournalView
-                  campaignId={campaign.id}
-                  sceneId={scene.id}
-                  journal={journal}
-                  characterNames={characterNames}
-                  messages={messages}
-                  mode="all"
-                />
-              </div>
-            ),
-          },
+      <ScenePlayWorkspace
+        closeLabel={copy.closeToolLabel}
+        composer={scene.status === "active" ? (
+          <SceneComposer
+            action={composerAction}
+            activeProfileId={activeProfileId}
+            messages={messages}
+            profiles={profileOptions}
+          />
+        ) : null}
+        journal={(
+          <SceneJournalView
+            activeProfileId={activeProfileId}
+            campaignId={campaign.id}
+            characterNames={characterNames}
+            journal={journal}
+            messages={messages}
+            mode="all"
+            profiles={profileOptions}
+            sceneId={scene.id}
+          />
+        )}
+        toolLabel={copy.toolButtonsLabel}
+        tools={[
+          { id: "overview", label: copy.sceneOverviewLabel, content: sceneOverview },
           ...(scene.status === "active" ? [
-            { id: "note", label: copy.noteTab, content: <SceneNoteForm action={noteAction} messages={messages} /> },
+            { id: "game-master", label: copy.gameMasterTab, content: <NarrativeForm action={narrationAction} messages={messages} mode={providerMode} /> },
             { id: "roll", label: copy.rollTab, content: <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} /> },
             { id: "oracle", label: copy.oracleTab, content: <OracleForm action={oracleAction} messages={messages} /> },
-            { id: "inspiration", label: copy.inspirationTab, content: <InspirationForm action={inspirationAction} messages={messages} /> },
+            { id: "inspiration", label: copy.museTab, content: <InspirationForm action={inspirationAction} messages={messages} /> },
             { id: "random-event", label: copy.randomEventTab, content: <RandomEventForm action={randomEventAction} messages={messages} /> },
-            { id: "complete", label: copy.completeTab, content: <SceneCompletionForm action={completionAction} messages={messages} /> },
+            { id: "complete", label: copy.completeTab, content: <SceneCompletionForm action={completionAction} messages={messages} />, danger: true },
+          ] : scene.summary ? [
+            { id: "summary", label: copy.summaryTitle, content: <section className="scene-summary"><p>{scene.summary}</p></section> },
           ] : []),
         ]}
       />
-
-      {scene.status !== "active" && scene.summary ? (
-        <section className="scene-summary"><h2>{copy.summaryTitle}</h2><p>{scene.summary}</p></section>
-      ) : null}
     </article>
   );
 }

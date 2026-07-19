@@ -46,6 +46,7 @@ export interface MessageCatalog {
     apiKeyLabel: string;
     optional: string;
     apiKeyHint: string;
+    apiKeyReuseHint: string;
     saveProfileAction: string;
     switchModelLabel: string;
     saveModelAction: string;
@@ -393,6 +394,9 @@ export interface MessageCatalog {
     activeStatus: string;
     completedStatus: string;
     sceneOverviewLabel: string;
+    sceneStatusLabel: string;
+    toolButtonsLabel: string;
+    closeToolLabel: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -424,6 +428,7 @@ export interface MessageCatalog {
     rollTab: string;
     oracleTab: string;
     inspirationTab: string;
+    museTab: string;
     randomEventTab: string;
     completeTab: string;
     messageTitle: string;
@@ -436,6 +441,25 @@ export interface MessageCatalog {
     sendingMessageAction: string;
     askGameMasterAction: string;
     askingGameMasterAction: string;
+    composerModeLabel: string;
+    composerContentLabel: string;
+    composerPlaceholder: string;
+    composerModelLabel: string;
+    composerSendAction: string;
+    composerSendingAction: string;
+    composerError: string;
+    composerModes: Record<"player_ask" | "player_log" | "narrator" | "action" | "observation" | "event", string>;
+    aiMessageOptions: string;
+    aiMessageActionError: string;
+    aiVersionLabel: string;
+    aiVersionName: string;
+    aiVersionSelectAction: string;
+    aiRegenerateDirectionLabel: string;
+    aiRegenerateDirectionPlaceholder: string;
+    aiRegenerateAction: string;
+    aiRegeneratingAction: string;
+    aiDeleteAction: string;
+    aiDeleteConfirm: string;
     aiNarrationTitle: string;
     aiNarrationDescription: string;
     aiDirectionLabel: string;
@@ -579,7 +603,10 @@ export interface MessageCatalog {
       | "SCENE_NOTE_UPDATED"
       | "SCENE_MESSAGE_ADDED"
       | "SCENE_MESSAGE_UPDATED"
+      | "SCENE_MESSAGE_VERSION_SELECTED"
+      | "SCENE_MESSAGE_DELETED"
       | "AI_NARRATION_GENERATED"
+      | "AI_NARRATION_REGENERATED"
       | "DICE_ROLLED"
       | "ORACLE_ANSWERED"
       | "ORACLE_INSPIRATION_DRAWN"
@@ -637,6 +664,7 @@ const germanMessages = {
     apiKeyLabel: "API-Schlüssel",
     optional: "optional",
     apiKeyHint: "Der Schlüssel wird vor dem Speichern mit deinem App-Kennwort verschlüsselt.",
+    apiKeyReuseHint: "Optional: Für diesen Anbieter ist bereits ein verschlüsselter Schlüssel gespeichert und wird automatisch wiederverwendet.",
     saveProfileAction: "Profil speichern",
     switchModelLabel: "OpenRouter-Modell wechseln",
     saveModelAction: "Modell speichern",
@@ -1048,6 +1076,9 @@ const germanMessages = {
     activeStatus: "Aktiv",
     completedStatus: "Abgeschlossen",
     sceneOverviewLabel: "Szenenüberblick",
+    sceneStatusLabel: "Szenenstatus",
+    toolButtonsLabel: "Szenenwerkzeuge",
+    closeToolLabel: "Fenster schließen",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1086,6 +1117,7 @@ const germanMessages = {
     rollTab: "Probe",
     oracleTab: "Orakel",
     inspirationTab: "Inspiration",
+    museTab: "Muse",
     randomEventTab: "Ereignis",
     completeTab: "Abschließen",
     messageTitle: "Szenendialog",
@@ -1099,6 +1131,32 @@ const germanMessages = {
     sendingMessageAction: "Nachricht wird gespeichert …",
     askGameMasterAction: "An Spielleiter senden",
     askingGameMasterAction: "Spielleiter antwortet …",
+    composerModeLabel: "Art des Beitrags",
+    composerContentLabel: "Dein Beitrag",
+    composerPlaceholder: "Was tust du, sagst du oder möchtest du festhalten?",
+    composerModelLabel: "KI-Profil",
+    composerSendAction: "Senden",
+    composerSendingAction: "Wird verarbeitet …",
+    composerError: "Der Beitrag konnte nicht vollständig verarbeitet werden. Bereits gespeicherte Texte bleiben erhalten.",
+    composerModes: {
+      player_ask: "Spieler → Spielleiter",
+      player_log: "Spieler · nur notieren",
+      narrator: "Erzähler · manuell",
+      action: "Eintrag · Handlung",
+      observation: "Eintrag · Beobachtung",
+      event: "Ereignis erzeugen",
+    },
+    aiMessageOptions: "Varianten und Aktionen",
+    aiMessageActionError: "Die Aktion für diesen Erzähltext ist fehlgeschlagen.",
+    aiVersionLabel: "Erzählvariante",
+    aiVersionName: "Variante {number}",
+    aiVersionSelectAction: "Anzeigen",
+    aiRegenerateDirectionLabel: "Optionaler Änderungswunsch",
+    aiRegenerateDirectionPlaceholder: "Zum Beispiel: bedrohlicher, kürzer oder mit einer überraschenden Entdeckung",
+    aiRegenerateAction: "Neu anfragen",
+    aiRegeneratingAction: "Neue Variante entsteht …",
+    aiDeleteAction: "Erzähltext löschen",
+    aiDeleteConfirm: "Diesen KI-Erzähltext mit allen Varianten wirklich löschen?",
     aiNarrationTitle: "KI-Spielleiter",
     aiNarrationDescription:
       "Gib eine gewünschte Richtung vor. Die Antwort erzählt weiter, entscheidet aber nicht für deinen Charakter und verändert keine Weltfakten.",
@@ -1322,7 +1380,10 @@ const germanMessages = {
       SCENE_NOTE_UPDATED: "Szeneneintrag angepasst",
       SCENE_MESSAGE_ADDED: "Szenennachricht festgehalten",
       SCENE_MESSAGE_UPDATED: "Szenennachricht angepasst",
+      SCENE_MESSAGE_VERSION_SELECTED: "Erzählvariante ausgewählt",
+      SCENE_MESSAGE_DELETED: "KI-Erzähltext gelöscht",
       AI_NARRATION_GENERATED: "KI-Erzählung erzeugt",
+      AI_NARRATION_REGENERATED: "KI-Erzählung neu erzeugt",
       DICE_ROLLED: "Probe ausgewertet",
       ORACLE_ANSWERED: "Orakelfrage beantwortet",
       ORACLE_INSPIRATION_DRAWN: "Orakelinspiration gezogen",
@@ -1385,6 +1446,7 @@ const englishMessages = {
     apiKeyLabel: "API key",
     optional: "optional",
     apiKeyHint: "The key is encrypted with your app password before it is stored.",
+    apiKeyReuseHint: "Optional: An encrypted key is already stored for this provider and will be reused automatically.",
     saveProfileAction: "Save profile",
     switchModelLabel: "Switch OpenRouter model",
     saveModelAction: "Save model",
@@ -1792,6 +1854,9 @@ const englishMessages = {
     activeStatus: "Active",
     completedStatus: "Completed",
     sceneOverviewLabel: "Scene overview",
+    sceneStatusLabel: "Scene status",
+    toolButtonsLabel: "Scene tools",
+    closeToolLabel: "Close dialog",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",
@@ -1830,6 +1895,7 @@ const englishMessages = {
     rollTab: "Check",
     oracleTab: "Oracle",
     inspirationTab: "Inspiration",
+    museTab: "Muse",
     randomEventTab: "Event",
     completeTab: "Complete",
     messageTitle: "Scene dialogue",
@@ -1843,6 +1909,32 @@ const englishMessages = {
     sendingMessageAction: "Saving message …",
     askGameMasterAction: "Send to game master",
     askingGameMasterAction: "Game master is responding …",
+    composerModeLabel: "Contribution type",
+    composerContentLabel: "Your contribution",
+    composerPlaceholder: "What do you do, say, or want to record?",
+    composerModelLabel: "AI profile",
+    composerSendAction: "Send",
+    composerSendingAction: "Processing …",
+    composerError: "The contribution could not be processed completely. Text already saved remains available.",
+    composerModes: {
+      player_ask: "Player → game master",
+      player_log: "Player · log only",
+      narrator: "Narrator · manual",
+      action: "Entry · action",
+      observation: "Entry · observation",
+      event: "Generate event",
+    },
+    aiMessageOptions: "Versions and actions",
+    aiMessageActionError: "The action for this narration failed.",
+    aiVersionLabel: "Narration version",
+    aiVersionName: "Version {number}",
+    aiVersionSelectAction: "Show",
+    aiRegenerateDirectionLabel: "Optional revision request",
+    aiRegenerateDirectionPlaceholder: "For example: more threatening, shorter, or with a surprising discovery",
+    aiRegenerateAction: "Regenerate",
+    aiRegeneratingAction: "Creating a new version …",
+    aiDeleteAction: "Delete narration",
+    aiDeleteConfirm: "Really delete this AI narration and all of its versions?",
     aiNarrationTitle: "AI game master",
     aiNarrationDescription:
       "Provide a direction. The response continues the story but does not decide for your character or change world facts.",
@@ -2066,7 +2158,10 @@ const englishMessages = {
       SCENE_NOTE_UPDATED: "Scene entry revised",
       SCENE_MESSAGE_ADDED: "Scene message recorded",
       SCENE_MESSAGE_UPDATED: "Scene message revised",
+      SCENE_MESSAGE_VERSION_SELECTED: "Narration version selected",
+      SCENE_MESSAGE_DELETED: "AI narration deleted",
       AI_NARRATION_GENERATED: "AI narration generated",
+      AI_NARRATION_REGENERATED: "AI narration regenerated",
       DICE_ROLLED: "Check resolved",
       ORACLE_ANSWERED: "Oracle question answered",
       ORACLE_INSPIRATION_DRAWN: "Oracle inspiration drawn",

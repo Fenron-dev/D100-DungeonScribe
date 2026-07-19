@@ -4,13 +4,19 @@ import { MockNarrativeProvider } from "@/ai/mock-narrative-provider";
 import { OpenAiNarrativeProvider } from "@/ai/openai-narrative-provider";
 import { prisma } from "@/db/prisma";
 import { PrismaNarrativeRepository } from "@/repositories/prisma/prisma-narrative-repository";
-import { loadActiveAiProfile } from "@/services/ai-profile-vault-service";
+import {
+  loadActiveAiProfile,
+  loadAiProfileVault,
+} from "@/services/ai-profile-vault-service";
 import { NarrativeService } from "@/services/narrative-service";
 
 const modelSchema = z.string().trim().min(1).max(160);
 
-export async function getNarrativeService(): Promise<NarrativeService> {
-  const profile = await loadActiveAiProfile();
+export async function getNarrativeService(profileId?: string): Promise<NarrativeService> {
+  const activeProfile = await loadActiveAiProfile();
+  const profile = profileId
+    ? (await loadAiProfileVault())?.profiles.find(({ id }) => id === profileId) ?? activeProfile
+    : activeProfile;
   let provider: NarrativeProvider;
   if (profile) {
     provider = new OpenAiNarrativeProvider(

@@ -45,6 +45,16 @@ export const emptyAiProfileVault: AiProfileVault = {
   profiles: [],
 };
 
+export function resolveProviderApiKey(
+  profiles: AiProfile[],
+  provider: AiProviderId,
+  enteredApiKey: string,
+): string | null {
+  const entered = enteredApiKey.trim();
+  if (entered) return entered;
+  return profiles.find((profile) => profile.provider === provider && profile.apiKey)?.apiKey ?? null;
+}
+
 export function validateProviderUrl(provider: AiProviderId, baseUrl: string): boolean {
   let url: URL;
   try {

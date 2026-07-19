@@ -11,13 +11,16 @@ import { defaultCampaignStyle } from "@/domain/campaign-style";
 
 class MemoryNarrativeRepository implements NarrativeRepository {
   public saved: NarrationResult | null = null;
+  public excludedMessageId: string | undefined;
 
   public async loadContext(
     _campaignId: string,
     _sceneId: string,
     direction: string,
     locale: "de" | "en",
+    excludedMessageId?: string,
   ): Promise<NarrationRequest> {
+    this.excludedMessageId = excludedMessageId;
     return {
       locale,
       direction,
@@ -56,8 +59,17 @@ class MemoryNarrativeRepository implements NarrativeRepository {
       role: "narrator",
       content: result.narration,
       source: "ai",
+      versions: [],
       createdAt: new Date("2026-07-18T10:00:00.000Z"),
     };
+  }
+  public async replaceNarration(
+    campaignId: string,
+    sceneId: string,
+    _messageId: string,
+    result: NarrationResult,
+  ): Promise<SceneMessage> {
+    return this.saveNarration(campaignId, sceneId, result);
   }
 }
 
@@ -71,5 +83,20 @@ describe("NarrativeService", () => {
     const message = await service.narrate("campaign-1", "scene-1", "Eine Spur", "de");
     expect(message?.source).toBe("ai");
     expect(repository.saved).toEqual({ narration: "Der Nebel bewegt sich." });
+  });
+
+  it("regenerates a narration without feeding the replaced message back into context", async () => {
+    const repository = new MemoryNarrativeRepository();
+    const service = new NarrativeService(repository, {
+      generateNarration: async () => ({ narration: "Eine andere Tür erscheint." }),
+    });
+    const message = await service.regenerate(
+      "campaign-1",
+      "scene-1",
+      "message-1",
+      "Deutlich anders",
+    );
+    expect(message?.content).toBe("Eine andere Tür erscheint.");
+    expect(repository.excludedMessageId).toBe("message-1");
   });
 });

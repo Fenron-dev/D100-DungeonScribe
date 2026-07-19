@@ -23,13 +23,18 @@ export function AiProfileForm({
   copy,
   openRouterCatalogAvailable,
   openRouterModels,
+  providersWithSavedKey,
 }: {
   copy: MessageCatalog["aiSettings"];
   openRouterCatalogAvailable: boolean;
   openRouterModels: AiModelOption[];
+  providersWithSavedKey: AiProviderId[];
 }) {
   const [provider, setProvider] = useState<AiProviderId>("openai");
   const defaults = aiProviderDefaults[provider];
+  const apiKeyOptional = provider === "ollama"
+    || provider === "lmstudio"
+    || providersWithSavedKey.includes(provider);
   return (
     <form className="campaign-form" action={createAiProfileAction} key={provider}>
       <div className="form-columns">
@@ -70,10 +75,12 @@ export function AiProfileForm({
       </div>
       <div className="form-field">
         <label htmlFor="profile-api-key">
-          {copy.apiKeyLabel} {provider === "ollama" || provider === "lmstudio" ? `(${copy.optional})` : ""}
+          {copy.apiKeyLabel} {apiKeyOptional ? `(${copy.optional})` : ""}
         </label>
         <input id="profile-api-key" name="apiKey" type="password" autoComplete="off" />
-        <p className="field-hint">{copy.apiKeyHint}</p>
+        <p className="field-hint">
+          {providersWithSavedKey.includes(provider) ? copy.apiKeyReuseHint : copy.apiKeyHint}
+        </p>
       </div>
       <button className="button button-primary" type="submit">{copy.saveProfileAction}</button>
     </form>

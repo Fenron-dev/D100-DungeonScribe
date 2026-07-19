@@ -28,6 +28,7 @@ import { difficultySchema } from "@/schemas/rules";
 
 type NoteRow = Awaited<ReturnType<PrismaClient["sceneNote"]["findUnique"]>>;
 type MessageRow = Awaited<ReturnType<PrismaClient["sceneMessage"]["findUnique"]>>;
+type MessageWithRevisions = Prisma.SceneMessageGetPayload<{ include: { revisions: true } }>;
 type RollRow = Awaited<ReturnType<PrismaClient["diceRoll"]["findUnique"]>>;
 
 const participantIdsSchema = z.array(z.string());
@@ -46,13 +47,17 @@ function mapNote(row: NonNullable<NoteRow>): SceneNote {
   };
 }
 
-function mapMessage(row: NonNullable<MessageRow>): SceneMessage {
+function mapMessage(row: NonNullable<MessageRow> | MessageWithRevisions): SceneMessage {
+  const revisions = "revisions" in row ? row.revisions : [];
   return {
     id: row.id,
     campaignId: row.campaignId,
     sceneId: row.sceneId,
     ...sceneMessageDraftSchema.parse({ role: row.role, content: row.content }),
     source: sceneMessageSourceSchema.parse(row.source),
+    versions: revisions
+      .toSorted((left, right) => left.createdAt.getTime() - right.createdAt.getTime())
+      .map(({ id, content, createdAt }) => ({ id, content, createdAt })),
     createdAt: row.createdAt,
   };
 }
@@ -137,7 +142,14 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
     if (!scene) return null;
     return this.client.$transaction(async (transaction) => {
       const message = await transaction.sceneMessage.create({
-        data: { campaignId, sceneId, ...draft, source: "manual" },
+        data: {
+          campaignId,
+          sceneId,
+          ...draft,
+          source: "manual",
+          revisions: { create: { content: draft.content } },
+        },
+        include: { revisions: true },
       });
       await transaction.campaignEvent.create({
         data: {
@@ -194,13 +206,26 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
   ): Promise<SceneMessage | null> {
     const existing = await this.client.sceneMessage.findFirst({
       where: { id: messageId, campaignId, sceneId },
-      select: { id: true, role: true },
+      select: { id: true, role: true, content: true },
     });
     if (!existing) return null;
     return this.client.$transaction(async (transaction) => {
+      const revisionContents = new Set(
+        (await transaction.sceneMessageRevision.findMany({
+          where: { messageId },
+          select: { content: true },
+        })).map(({ content: value }) => value),
+      );
+      for (const value of [existing.content, content]) {
+        if (!revisionContents.has(value)) {
+          await transaction.sceneMessageRevision.create({ data: { messageId, content: value } });
+          revisionContents.add(value);
+        }
+      }
       const message = await transaction.sceneMessage.update({
         where: { id: messageId },
         data: { content },
+        include: { revisions: true },
       });
       await transaction.campaignEvent.create({
         data: {
@@ -216,6 +241,65 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
       });
       return mapMessage(message);
     });
+  }
+
+  public async selectMessageVersion(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    versionId: string,
+  ): Promise<SceneMessage | null> {
+    const version = await this.client.sceneMessageRevision.findFirst({
+      where: {
+        id: versionId,
+        message: { id: messageId, campaignId, sceneId, source: "ai" },
+      },
+    });
+    if (!version) return null;
+    return this.client.$transaction(async (transaction) => {
+      const message = await transaction.sceneMessage.update({
+        where: { id: messageId },
+        data: { content: version.content },
+        include: { revisions: true },
+      });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "SCENE_MESSAGE_VERSION_SELECTED",
+          summary: "Erzählvariante ausgewählt",
+          payload: { sceneId, messageId, versionId },
+          source: "player",
+          reversible: false,
+        },
+      });
+      return mapMessage(message);
+    });
+  }
+
+  public async deleteAiMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+  ): Promise<boolean> {
+    const existing = await this.client.sceneMessage.findFirst({
+      where: { id: messageId, campaignId, sceneId, source: "ai" },
+      select: { id: true },
+    });
+    if (!existing) return false;
+    await this.client.$transaction(async (transaction) => {
+      await transaction.sceneMessage.delete({ where: { id: messageId } });
+      await transaction.campaignEvent.create({
+        data: {
+          campaignId,
+          eventType: "SCENE_MESSAGE_DELETED",
+          summary: "KI-Erzähltext gelöscht",
+          payload: { sceneId, messageId },
+          source: "player",
+          reversible: false,
+        },
+      });
+    });
+    return true;
   }
 
   public async addRoll(
@@ -268,7 +352,10 @@ export class PrismaSceneJournalRepository implements SceneJournalRepository {
   ): Promise<SceneJournalEntry[]> {
     const [notes, messages, oracleRecords, inspirations, randomEvents, rolls] = await Promise.all([
       this.client.sceneNote.findMany({ where: { campaignId, sceneId } }),
-      this.client.sceneMessage.findMany({ where: { campaignId, sceneId } }),
+      this.client.sceneMessage.findMany({
+        where: { campaignId, sceneId },
+        include: { revisions: true },
+      }),
       this.client.oracleRecord.findMany({ where: { campaignId, sceneId } }),
       this.client.oracleInspiration.findMany({ where: { campaignId, sceneId } }),
       this.client.oracleRandomEvent.findMany({ where: { campaignId, sceneId } }),

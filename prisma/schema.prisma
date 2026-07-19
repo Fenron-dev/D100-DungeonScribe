@@ -101,9 +101,21 @@ model SceneMessage {
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  revisions SceneMessageRevision[]
 
   @@index([sceneId, createdAt])
   @@index([campaignId, createdAt])
+}
+
+model SceneMessageRevision {
+  id        String   @id @default(cuid())
+  messageId String
+  content   String
+  createdAt DateTime @default(now())
+
+  message SceneMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId, createdAt])
 }
 
 model OracleRecord {

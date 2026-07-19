@@ -1,9 +1,14 @@
 import type { SceneJournalEntry } from "@/domain/scene-journal";
 import {
+  deleteSceneMessageAction,
+  regenerateSceneMessageAction,
+  selectSceneMessageVersionAction,
   updateSceneMessageAction,
   updateSceneNoteAction,
 } from "@/features/scenes/actions";
 import { SceneEntryEditForm } from "@/features/scenes/scene-journal-forms";
+import { AiMessageControls } from "@/features/scenes/ai-message-controls";
+import type { SceneAiProfileOption } from "@/features/scenes/scene-composer";
 import type { getMessages } from "@/i18n/messages";
 
 interface SceneJournalViewProps {
@@ -13,6 +18,8 @@ interface SceneJournalViewProps {
   characterNames: Map<string, string>;
   messages: ReturnType<typeof getMessages>;
   mode: "all" | "messages" | "narrator";
+  profiles?: SceneAiProfileOption[];
+  activeProfileId?: string;
 }
 
 export function SceneJournalView({
@@ -22,13 +29,16 @@ export function SceneJournalView({
   characterNames,
   messages,
   mode,
+  profiles = [],
+  activeProfileId = "",
 }: SceneJournalViewProps) {
   const copy = messages.scenes;
-  const entries = mode === "all"
+  const entriesAscending = mode === "all"
     ? journal
     : journal.filter((entry) => entry.type === "message" && (
       mode === "messages" || entry.value.role === "narrator"
     ));
+  const entries = entriesAscending.toReversed();
   if (entries.length === 0) return <p className="empty-copy">{copy.journalEmpty}</p>;
   return (
     <ol className="scene-journal-list">
@@ -94,6 +104,24 @@ export function SceneJournalView({
         }
         if (entry.type === "message") {
           const action = updateSceneMessageAction.bind(null, campaignId, sceneId, entry.value.id);
+          const regenerateAction = regenerateSceneMessageAction.bind(
+            null,
+            campaignId,
+            sceneId,
+            entry.value.id,
+          );
+          const selectVersionAction = selectSceneMessageVersionAction.bind(
+            null,
+            campaignId,
+            sceneId,
+            entry.value.id,
+          );
+          const deleteAction = deleteSceneMessageAction.bind(
+            null,
+            campaignId,
+            sceneId,
+            entry.value.id,
+          );
           return (
             <li
               className={`scene-journal-entry scene-message-entry message-${entry.value.role} source-${entry.value.source}`}
@@ -111,6 +139,18 @@ export function SceneJournalView({
                 maxLength={8_000}
                 messages={messages}
               />
+              {entry.value.source === "ai" ? (
+                <AiMessageControls
+                  activeProfileId={activeProfileId}
+                  content={entry.value.content}
+                  deleteAction={deleteAction}
+                  messages={messages}
+                  profiles={profiles}
+                  regenerateAction={regenerateAction}
+                  selectVersionAction={selectVersionAction}
+                  versions={entry.value.versions}
+                />
+              ) : null}
             </li>
           );
         }

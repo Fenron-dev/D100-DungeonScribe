@@ -33,6 +33,13 @@ export interface SceneMessage extends SceneMessageDraft {
   campaignId: string;
   sceneId: string;
   source: "manual" | "ai";
+  versions: SceneMessageVersion[];
+  createdAt: Date;
+}
+
+export interface SceneMessageVersion {
+  id: string;
+  content: string;
   createdAt: Date;
 }
 

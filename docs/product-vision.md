@@ -127,6 +127,8 @@ Unterstützte Profilarten sind OpenAI, OpenRouter, Groq, Ollama und LM Studio.
 Mehrere Profile desselben Anbieters sind erlaubt. Lokale HTTP-Adressen sind nur
 für Loopback-Ziele zulässig; entfernte Anbieter benötigen HTTPS. Das aktive
 Profil wird für kreative Entwürfe und die KI-Erzählung verwendet.
+Ein bereits gespeicherter Anbieterschlüssel wird beim Anlegen weiterer Profile
+desselben Anbieters wiederverwendet, solange kein neuer Schlüssel eingegeben wird.
 
 ChatGPT- und Codex-Abonnements sind keine Zugangsdaten für die separat
 abgerechnete OpenAI API und werden nicht über inoffizielle Sitzungstokens
@@ -139,17 +141,14 @@ Katalog wird ausdrücklich angezeigt.
 ## Mobile Oberfläche
 
 Die Spieloberfläche wird responsiv und mit berührungsfreundlichen Bedienelementen
-entwickelt. Der aktuelle Next.js-Client kann deshalb bereits im mobilen Browser
-verwendet werden, sobald der lokale App-Server für das Gerät erreichbar ist.
-Für eine installierbare, vollständig lokale Mobile-App müssen die derzeitigen
-Server-Annahmen und der lokale Speicher zunächst hinter stabilen Ports gekapselt
-werden. Danach kann dieselbe Web-Oberfläche als PWA oder in einer dünnen nativen
-Hülle weiterverwendet werden. So bleiben Spielfluss und Übersetzungen gemeinsam.
+entwickelt. Ziel ist eine vollständig lokale Tauri-2-App für iOS und Android,
+die keinen heimischen Server benötigt. UI-Anwendungsfälle und Speicherung werden
+dazu hinter stabilen Ports von Next.js, Prisma und dem lokalen Node-Prozess
+entkoppelt. Die vollständige Entscheidung und Reihenfolge steht in
+[`mobile-client.md`](mobile-client.md).
 
 Ein eigenständiger Flutter-Client bleibt möglich, ist aber erst sinnvoll, wenn
-native Funktionen den Aufwand einer zweiten Benutzeroberfläche rechtfertigen.
-Er würde dieselben Anwendungsfälle über eine eigene lokale API beziehungsweise
-einen stabilen Client-Port verwenden und nicht direkt auf die Datenbank zugreifen.
+native Anforderungen den Aufwand einer zweiten Oberfläche rechtfertigen.
 
 ## Umsetzungsreihenfolge
 

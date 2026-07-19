@@ -19,4 +19,23 @@ export class NarrativeService {
     const result = narrationResultSchema.parse(await this.provider.generateNarration(request));
     return this.repository.saveNarration(campaignId, sceneId, result);
   }
+
+  public async regenerate(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    direction: string,
+    locale: "de" | "en" = "de",
+  ): Promise<SceneMessage | null> {
+    const request = await this.repository.loadContext(
+      campaignId,
+      sceneId,
+      direction,
+      locale,
+      messageId,
+    );
+    if (!request) return null;
+    const result = narrationResultSchema.parse(await this.provider.generateNarration(request));
+    return this.repository.replaceNarration(campaignId, sceneId, messageId, result);
+  }
 }

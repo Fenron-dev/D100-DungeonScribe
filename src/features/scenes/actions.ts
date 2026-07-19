@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { NarrativeProviderError } from "@/ai/narrative-provider";
 import type {
   SceneCompletionState,
@@ -20,8 +21,15 @@ import {
 import { SceneTraitMismatchError } from "@/services/scene-journal-service";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { getNarrativeService } from "@/services/narrative-service-instance";
+import { oracleService } from "@/services/oracle-service-instance";
 import { ActiveSceneExistsError } from "@/services/scene-service";
 import { sceneService } from "@/services/scene-service-instance";
+
+const composerInputSchema = z.object({
+  mode: z.enum(["player_ask", "player_log", "narrator", "action", "observation", "event"]),
+  content: z.string().trim().min(1).max(8_000),
+  profileId: z.string().uuid().or(z.literal("")),
+});
 
 function readText(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -101,6 +109,57 @@ export async function addSceneMessageAction(
   return { message: null, errors: [] };
 }
 
+export async function submitSceneComposerAction(
+  campaignId: string,
+  sceneId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const result = composerInputSchema.safeParse({
+    mode: readText(formData, "mode"),
+    content: readText(formData, "content"),
+    profileId: readText(formData, "profileId"),
+  });
+  if (!result.success) {
+    return { message: "validation", errors: result.error.issues.map(({ message }) => message) };
+  }
+  const { mode, content, profileId } = result.data;
+  if ((mode === "action" || mode === "observation") && content.length > 4_000) {
+    return { message: "validation", errors: [] };
+  }
+  if (mode === "event" && content.length > 500) {
+    return { message: "validation", errors: [] };
+  }
+  try {
+    if (mode === "action" || mode === "observation") {
+      await sceneJournalService.addNote(campaignId, sceneId, { kind: mode, content });
+    } else if (mode === "event") {
+      await oracleService.generateRandomEvent(campaignId, sceneId, {
+        context: content,
+        trigger: "manual",
+      });
+    } else {
+      const role = mode === "narrator" ? "narrator" : "player";
+      await sceneJournalService.addMessage(campaignId, sceneId, { role, content });
+      if (mode === "player_ask") {
+        const narration = await (await getNarrativeService(profileId || undefined)).narrate(
+          campaignId,
+          sceneId,
+          content,
+        );
+        if (!narration) return { message: "save_error", errors: [] };
+      }
+    }
+  } catch (error) {
+    revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+    if (error instanceof NarrativeProviderError) return { message: error.reason, errors: [] };
+    reportPersistenceError("create", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
 export async function updateSceneNoteAction(
   campaignId: string,
   sceneId: string,
@@ -135,6 +194,74 @@ export async function updateSceneMessageAction(
   }
   try {
     await sceneJournalService.updateMessage(campaignId, sceneId, messageId, result.data);
+  } catch (error) {
+    reportPersistenceError("update", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function selectSceneMessageVersionAction(
+  campaignId: string,
+  sceneId: string,
+  messageId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const versionId = z.string().min(1).safeParse(readText(formData, "versionId"));
+  if (!versionId.success) return { message: "validation", errors: [] };
+  try {
+    await sceneJournalService.selectMessageVersion(campaignId, sceneId, messageId, versionId.data);
+  } catch (error) {
+    reportPersistenceError("update", error);
+    return { message: "save_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function regenerateSceneMessageAction(
+  campaignId: string,
+  sceneId: string,
+  messageId: string,
+  _state: SceneJournalFormState,
+  formData: FormData,
+): Promise<SceneJournalFormState> {
+  const input = z.object({
+    direction: z.string().trim().max(2_000),
+    profileId: z.string().uuid().or(z.literal("")),
+  }).safeParse({
+    direction: readText(formData, "direction"),
+    profileId: readText(formData, "profileId"),
+  });
+  if (!input.success) return { message: "validation", errors: [] };
+  try {
+    const narration = await (await getNarrativeService(input.data.profileId || undefined)).regenerate(
+      campaignId,
+      sceneId,
+      messageId,
+      input.data.direction || "Erzeuge eine deutlich andere, passende Fortsetzung dieser Situation.",
+    );
+    if (!narration) return { message: "save_error", errors: [] };
+  } catch (error) {
+    if (error instanceof NarrativeProviderError) return { message: error.reason, errors: [] };
+    reportPersistenceError("update", error);
+    return { message: "provider_error", errors: [] };
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  return { message: null, errors: [] };
+}
+
+export async function deleteSceneMessageAction(
+  campaignId: string,
+  sceneId: string,
+  messageId: string,
+  _state: SceneJournalFormState,
+  _formData: FormData,
+): Promise<SceneJournalFormState> {
+  try {
+    await sceneJournalService.deleteAiMessage(campaignId, sceneId, messageId);
   } catch (error) {
     reportPersistenceError("update", error);
     return { message: "save_error", errors: [] };

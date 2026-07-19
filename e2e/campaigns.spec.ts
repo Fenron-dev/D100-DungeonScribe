@@ -184,48 +184,47 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Die Straße im Nebel" })).toBeVisible();
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole("tab", { name: "Szenendialog" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Dein Beitrag" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.getByRole("tab", { name: "Szenendialog" }).click();
-  await page.getByLabel("Nachricht").fill("Ich untersuche die Spuren am Kartenarchiv.");
-  await page.getByRole("button", { name: "An Spielleiter senden" }).click();
+  await page.getByLabel("Dein Beitrag").fill("Ich untersuche die Spuren am Kartenarchiv.");
+  await page.getByRole("button", { name: "Senden" }).click();
+  const journalPanel = page.locator(".scene-journal-frame");
   await expect(
-    page.locator("#scene-dialogue-panel").getByRole("paragraph").filter({
+    journalPanel.getByRole("paragraph").filter({
       hasText: /^Ich untersuche die Spuren am Kartenarchiv\.$/,
     }),
   ).toBeVisible();
-  await page.getByLabel("Beitrag von").selectOption("narrator");
+  await page.getByLabel("Art des Beitrags").selectOption("narrator");
   await page
-    .getByLabel("Nachricht")
+    .getByLabel("Dein Beitrag")
     .fill("Hinter der Tür raschelt Pergament, obwohl kein Wind weht.");
-  const saveMessageButton = page.getByRole("button", { name: "Nachricht speichern" });
+  const saveMessageButton = page.getByRole("button", { name: "Senden" });
   await saveMessageButton.click();
   await expect(
-    page.locator("#scene-dialogue-panel").getByRole("paragraph").filter({
+    journalPanel.getByRole("paragraph").filter({
       hasText: /^Hinter der Tür raschelt Pergament, obwohl kein Wind weht\.$/,
     }),
   ).toBeVisible();
+  await expect(journalPanel.locator(".scene-journal-entry").first()).toContainText(
+    "Hinter der Tür raschelt Pergament",
+  );
   await expect(saveMessageButton).toBeEnabled();
-  const gameMasterTab = page.getByRole("tab", { name: "Spielleiter" });
-  await expect(async () => {
-    await gameMasterTab.click();
-    await expect(gameMasterTab).toHaveAttribute("aria-selected", "true");
-  }).toPass({ timeout: 15_000 });
-  await expect(
-    page.locator("#game-master-panel").getByText("Demo-Modus", { exact: true }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Spielleiter" }).click();
+  const gameMasterDialog = page.getByRole("dialog", { name: "Spielleiter" });
+  await expect(gameMasterDialog.getByText("Demo-Modus", { exact: true })).toBeVisible();
   await page
     .getByLabel("Was soll als Nächstes erzählt werden?")
     .fill("Lass ein leises Klopfen hinter dem Kartenregal hörbar werden.");
-  const generateNarrationButton = page.getByRole("button", { name: "Erzählung erzeugen" });
+  const generateNarrationButton = gameMasterDialog.getByRole("button", { name: "Erzählung erzeugen" });
   await generateNarrationButton.click();
-  const aiMessage = page.locator(".scene-tab-panel:not([hidden]) .scene-message-entry.source-ai").filter({
+  await expect(generateNarrationButton).toBeEnabled();
+  await gameMasterDialog.getByRole("button", { name: "Fenster schließen" }).click();
+  const aiMessage = journalPanel.locator(".scene-message-entry.source-ai").filter({
     hasText: "Die Szene nimmt die Richtung",
   }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
-  await expect(generateNarrationButton).toBeEnabled();
   const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");
   await expect(async () => {
     await aiMessageEdit.locator("summary").click();
@@ -236,39 +235,39 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   );
   await aiMessageEdit.getByRole("button", { name: "Änderung speichern" }).click();
   await expect(
-    page.locator("#game-master-panel").getByRole("paragraph").filter({
+    journalPanel.getByRole("paragraph").filter({
       hasText: /^Hinter dem Kartenregal antwortet ein einzelnes, deutliches Klopfen\.$/,
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "Eintrag" }).click();
-  await page
-    .getByRole("textbox", { name: "Eintrag", exact: true })
-    .fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
-  await page.getByRole("button", { name: "Eintrag speichern" }).click();
-  await page.getByRole("tab", { name: "Probe" }).click();
+  await page.getByLabel("Art des Beitrags").selectOption("action");
+  await page.getByLabel("Dein Beitrag").fill("Elara folgt den frischen Spuren in das Kartenarchiv.");
+  await page.getByRole("button", { name: "Senden" }).click();
+  await page.getByRole("button", { name: "Probe" }).click();
   await page.getByLabel("Handelnder Charakter").selectOption({ label: "Elara aus dem Nebel" });
   await page.getByLabel("Beabsichtigte Handlung").fill("Die verborgenen Runen der Karte lesen");
   await page.getByLabel("Passende Eigenschaft (optional)").fill("Arkane Wahrnehmung");
   await page.getByLabel("Archetyp passt zur Handlung").check();
   await page.getByRole("button", { name: "Würfeln" }).click();
-  await page.getByRole("tab", { name: "Orakel" }).click();
+  await page.getByRole("button", { name: "Fenster schließen" }).click();
+  await page.getByRole("button", { name: "Orakel" }).click();
   await page.getByLabel("Orakelfrage").fill("Ist die verborgene Karte noch vollständig?");
   await page.getByLabel("Wahrscheinlichkeit für Ja").selectOption("likely");
   await page.getByRole("button", { name: "Orakel befragen" }).click();
-  await page.getByRole("tab", { name: "Inspiration" }).click();
+  await page.getByRole("button", { name: "Fenster schließen" }).click();
+  await page.getByRole("button", { name: "Muse" }).click();
   await page
     .getByLabel("Detailfrage (optional)")
     .fill("Was macht das Kartenarchiv gefährlich?");
   await page.getByLabel("Erster Begriff").selectOption("discovery");
   await page.getByLabel("Zweiter Begriff").selectOption("danger");
   await page.getByRole("button", { name: "Inspiration ziehen" }).click();
-  await page.getByRole("tab", { name: "Ereignis" }).click();
+  await page.getByRole("button", { name: "Fenster schließen" }).click();
+  await page.getByRole("button", { name: "Ereignis" }).click();
   await page
     .getByLabel("Ereigniskontext (optional)")
     .fill("Was unterbricht Elaras Suche im Kartenarchiv?");
   await page.getByRole("button", { name: "Ereignis erzeugen" }).click();
-  await page.getByRole("tab", { name: "Journal" }).click();
-  const journalPanel = page.locator("#journal-panel");
+  await page.getByRole("button", { name: "Fenster schließen" }).click();
   await expect(journalPanel.getByRole("paragraph").filter({
     hasText: /^Elara folgt den frischen Spuren in das Kartenarchiv\.$/,
   })).toBeVisible();
@@ -284,14 +283,16 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     hasText: "Was unterbricht Elaras Suche im Kartenarchiv?",
   });
   await expect(randomEvent.locator(".random-event-focus")).not.toBeEmpty();
-  await page.getByRole("tab", { name: "Abschließen" }).click();
+  await page.getByRole("button", { name: "Abschließen" }).click();
   await page
     .getByLabel("Szenenzusammenfassung")
     .fill("Elara findet eine verborgene Karte, die einen Weg durch den Nebel zeigt.");
   await page.getByLabel("Spannung nach der Szene").selectOption("increase");
   await page.getByRole("button", { name: "Szene abschließen" }).click();
   await expect(page.getByText("Abgeschlossen", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Zusammenfassung" }).click();
   await expect(page.getByText("Elara findet eine verborgene Karte, die einen Weg durch den Nebel zeigt.")).toBeVisible();
+  await page.getByRole("button", { name: "Fenster schließen" }).click();
   await page.getByRole("link", { name: "Zu den Szenen" }).click();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
   await expect(

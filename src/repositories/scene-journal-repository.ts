@@ -44,6 +44,17 @@ export interface SceneJournalRepository {
     messageId: string,
     content: string,
   ): Promise<SceneMessage | null>;
+  selectMessageVersion(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+    versionId: string,
+  ): Promise<SceneMessage | null>;
+  deleteAiMessage(
+    campaignId: string,
+    sceneId: string,
+    messageId: string,
+  ): Promise<boolean>;
   addRoll(
     campaignId: string,
     sceneId: string,
