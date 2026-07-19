@@ -68,7 +68,11 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
         select: { title: true },
       }),
       this.client.sceneMessage.findMany({
-        where: { campaignId, sceneId, id: excludedMessageId ? { not: excludedMessageId } : undefined },
+        where: {
+          campaignId,
+          sceneId,
+          ...(excludedMessageId ? { id: { not: excludedMessageId } } : {}),
+        },
         orderBy: { createdAt: "desc" },
         take: 16,
         select: { role: true, content: true },
