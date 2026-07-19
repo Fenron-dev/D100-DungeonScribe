@@ -11,6 +11,24 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     await page.getByLabel("Kennwort", { exact: true }).fill("test-password-123");
     await page.getByRole("button", { name: "Entsperren" }).click();
   }
+  await page.goto("/");
+  const homeTitle = page.getByRole("heading", {
+    level: 1,
+    name: "Willkommen bei D100 DungeonScribe",
+  });
+  await expect(homeTitle).toBeVisible();
+  const homeTitleBox = await homeTitle.boundingBox();
+  const continueCardBox = await page.locator(".continue-card").boundingBox();
+  expect(homeTitleBox).not.toBeNull();
+  expect(continueCardBox).not.toBeNull();
+  expect((homeTitleBox?.x ?? 0) + (homeTitleBox?.width ?? 0)).toBeLessThanOrEqual(
+    continueCardBox?.x ?? 0,
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
   await page.getByRole("link", { name: "Neue Kampagne" }).first().click();
 
   await page.getByRole("button", { name: "Entwurf erzeugen" }).click();
@@ -206,6 +224,11 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
       hasText: /^Hinter der Tür raschelt Pergament, obwohl kein Wind weht\.$/,
     }),
   ).toBeVisible();
+  const journalBox = await journalPanel.boundingBox();
+  const newestEntryBox = await journalPanel.locator(".scene-journal-entry").first().boundingBox();
+  expect(journalBox).not.toBeNull();
+  expect(newestEntryBox).not.toBeNull();
+  expect((newestEntryBox?.width ?? 0) / (journalBox?.width ?? 1)).toBeGreaterThan(0.94);
   await expect(journalPanel.locator(".scene-journal-entry").first()).toContainText(
     "Hinter der Tür raschelt Pergament",
   );
