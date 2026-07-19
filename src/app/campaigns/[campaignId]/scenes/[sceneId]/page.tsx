@@ -58,7 +58,6 @@ export default async function ScenePage({ params }: ScenePageProps) {
   const copy = messages.scenes;
   const characterNames = new Map(characters.map((character) => [character.id, character.name]));
   const entityNames = new Map(entities.map((entity) => [entity.id, entity.name]));
-  const threadNames = new Map(threads.map((thread) => [thread.id, thread.title]));
   const participantNames = [
     ...scene.participantCharacterIds.map((id) => characterNames.get(id)),
     ...scene.participantEntityIds.map((id) => entityNames.get(id)),

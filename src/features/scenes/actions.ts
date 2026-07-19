@@ -260,6 +260,8 @@ export async function deleteSceneMessageAction(
   _state: SceneJournalFormState,
   _formData: FormData,
 ): Promise<SceneJournalFormState> {
+  void _state;
+  void _formData;
   try {
     await sceneJournalService.deleteAiMessage(campaignId, sceneId, messageId);
   } catch (error) {
