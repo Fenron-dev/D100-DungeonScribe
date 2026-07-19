@@ -26,7 +26,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const vault = await loadAiProfileVault();
   if (!vault) return null;
   const copy = getMessages().aiSettings;
-  const [status, openRouterModels] = await Promise.all([
+  const [status, openRouterCatalog] = await Promise.all([
     searchParams,
     listOpenRouterModels(
       vault.profiles.find(({ provider, apiKey }) => provider === "openrouter" && apiKey)?.apiKey ?? null,
@@ -61,9 +61,10 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                       <label htmlFor={`profile-model-${profile.id}`}>{copy.switchModelLabel}</label>
                       <OpenRouterModelField
                         defaultValue={profile.model}
+                        catalogAvailable={openRouterCatalog.available}
                         copy={copy}
                         id={`profile-model-${profile.id}`}
-                        models={openRouterModels}
+                        models={openRouterCatalog.models}
                       />
                       <button className="button button-secondary" type="submit">{copy.saveModelAction}</button>
                     </form>
@@ -90,7 +91,11 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
 
       <section className="settings-section" aria-labelledby="new-profile-title">
         <h2 id="new-profile-title">{copy.newProfileTitle}</h2>
-        <AiProfileForm copy={copy} openRouterModels={openRouterModels} />
+        <AiProfileForm
+          copy={copy}
+          openRouterCatalogAvailable={openRouterCatalog.available}
+          openRouterModels={openRouterCatalog.models}
+        />
       </section>
 
       <section className="settings-section danger-zone" aria-labelledby="security-title">

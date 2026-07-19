@@ -51,6 +51,7 @@ export interface MessageCatalog {
     saveModelAction: string;
     freeOnlyLabel: string;
     catalogCountLabel: string;
+    catalogUnavailable: string;
     freeRouterHint: string;
     lockEyebrow: string;
     unlockTitle: string;
@@ -391,6 +392,7 @@ export interface MessageCatalog {
     openAction: string;
     activeStatus: string;
     completedStatus: string;
+    sceneOverviewLabel: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -640,6 +642,7 @@ const germanMessages = {
     saveModelAction: "Modell speichern",
     freeOnlyLabel: "Nur kostenlose, kompatible Modelle",
     catalogCountLabel: "Modelle im aktuellen Katalog",
+    catalogUnavailable: "Der OpenRouter-Katalog ist gerade nicht erreichbar. Du kannst weiterhin den kostenlosen Automatik-Router verwenden.",
     freeRouterHint: "„openrouter/free“ wählt automatisch ein verfügbares Gratis-Modell mit den benötigten Funktionen.",
     lockEyebrow: "Privater Bereich",
     unlockTitle: "D100 DungeonScribe entsperren",
@@ -1044,6 +1047,7 @@ const germanMessages = {
     openAction: "Szene öffnen",
     activeStatus: "Aktiv",
     completedStatus: "Abgeschlossen",
+    sceneOverviewLabel: "Szenenüberblick",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1386,6 +1390,7 @@ const englishMessages = {
     saveModelAction: "Save model",
     freeOnlyLabel: "Free compatible models only",
     catalogCountLabel: "models in the current catalog",
+    catalogUnavailable: "The OpenRouter catalog is currently unavailable. You can still use the automatic free router.",
     freeRouterHint: "openrouter/free automatically selects an available free model with the required capabilities.",
     lockEyebrow: "Private area",
     unlockTitle: "Unlock D100 DungeonScribe",
@@ -1786,6 +1791,7 @@ const englishMessages = {
     openAction: "Open scene",
     activeStatus: "Active",
     completedStatus: "Completed",
+    sceneOverviewLabel: "Scene overview",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",

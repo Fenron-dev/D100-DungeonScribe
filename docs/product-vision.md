@@ -132,7 +132,24 @@ ChatGPT- und Codex-Abonnements sind keine Zugangsdaten für die separat
 abgerechnete OpenAI API und werden nicht über inoffizielle Sitzungstokens
 eingebunden. OpenRouter-Profile können ihren validierten Modellkatalog laden.
 Die Oberfläche filtert auf Wunsch kostenlose Modelle mit strukturierten
-Ausgaben und bietet `openrouter/free` als robusten Test-Router an.
+Ausgaben und bietet `openrouter/free` als robusten Test-Router an. Geladene
+Modelle werden in einer sichtbaren Auswahl angeboten; ein nicht erreichbarer
+Katalog wird ausdrücklich angezeigt.
+
+## Mobile Oberfläche
+
+Die Spieloberfläche wird responsiv und mit berührungsfreundlichen Bedienelementen
+entwickelt. Der aktuelle Next.js-Client kann deshalb bereits im mobilen Browser
+verwendet werden, sobald der lokale App-Server für das Gerät erreichbar ist.
+Für eine installierbare, vollständig lokale Mobile-App müssen die derzeitigen
+Server-Annahmen und der lokale Speicher zunächst hinter stabilen Ports gekapselt
+werden. Danach kann dieselbe Web-Oberfläche als PWA oder in einer dünnen nativen
+Hülle weiterverwendet werden. So bleiben Spielfluss und Übersetzungen gemeinsam.
+
+Ein eigenständiger Flutter-Client bleibt möglich, ist aber erst sinnvoll, wenn
+native Funktionen den Aufwand einer zweiten Benutzeroberfläche rechtfertigen.
+Er würde dieselben Anwendungsfälle über eine eigene lokale API beziehungsweise
+einen stabilen Client-Port verwenden und nicht direkt auf die Datenbank zugreifen.
 
 ## Umsetzungsreihenfolge
 

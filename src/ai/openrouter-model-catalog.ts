@@ -26,7 +26,7 @@ export class OpenRouterModelCatalog implements AiModelCatalog {
     const headers = new Headers({ Accept: "application/json" });
     if (apiKey) headers.set("Authorization", `Bearer ${apiKey}`);
     const response = await this.httpClient(
-      "https://openrouter.ai/api/v1/models?supported_parameters=structured_outputs&output_modalities=text&sort=pricing-low-to-high",
+      "https://openrouter.ai/api/v1/models?output_modalities=text&sort=pricing-low-to-high",
       { headers, cache: "no-store", signal: AbortSignal.timeout(5_000) },
     );
     if (!response.ok) throw new Error(`OpenRouter model catalog failed (${response.status})`);

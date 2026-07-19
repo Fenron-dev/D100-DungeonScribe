@@ -21,9 +21,11 @@ const providerLabels: Record<AiProviderId, string> = {
 
 export function AiProfileForm({
   copy,
+  openRouterCatalogAvailable,
   openRouterModels,
 }: {
   copy: MessageCatalog["aiSettings"];
+  openRouterCatalogAvailable: boolean;
   openRouterModels: AiModelOption[];
 }) {
   const [provider, setProvider] = useState<AiProviderId>("openai");
@@ -59,6 +61,7 @@ export function AiProfileForm({
         {provider === "openrouter" ? (
           <OpenRouterModelField
             defaultValue="openrouter/free"
+            catalogAvailable={openRouterCatalogAvailable}
             copy={copy}
             id="profile-model"
             models={openRouterModels}

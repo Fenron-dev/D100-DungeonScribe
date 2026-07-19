@@ -5,10 +5,18 @@ const fallback: AiModelOption[] = [
   { id: "openrouter/free", name: "Free Models Router", free: true },
 ];
 
-export async function listOpenRouterModels(apiKey: string | null): Promise<AiModelOption[]> {
+export interface OpenRouterModelCatalogResult {
+  models: AiModelOption[];
+  available: boolean;
+}
+
+export async function listOpenRouterModels(apiKey: string | null): Promise<OpenRouterModelCatalogResult> {
   try {
-    return await new OpenRouterModelCatalog().list(apiKey);
+    return {
+      models: await new OpenRouterModelCatalog().list(apiKey),
+      available: true,
+    };
   } catch {
-    return fallback;
+    return { models: fallback, available: false };
   }
 }

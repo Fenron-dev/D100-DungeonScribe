@@ -85,7 +85,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
       <Link className="back-link" href={`/campaigns/${campaign.id}/scenes`}>
         <span aria-hidden="true">←</span> {copy.backToScenes}
       </Link>
-      <header className="campaign-detail-header">
+      <header className="campaign-detail-header scene-heading">
         <div>
           <span className={`status-badge status-${scene.status}`}>
             {scene.status === "active" ? copy.activeStatus : copy.completedStatus}
@@ -97,17 +97,20 @@ export default async function ScenePage({ params }: ScenePageProps) {
         </div>
       </header>
 
-      <div className="scene-detail-grid">
-        <section><h2>{copy.expectedSetupTitle}</h2><p>{scene.expectedSetup}</p></section>
-        <section><h2>{copy.actualSetupTitle}</h2><p>{scene.actualSetup}</p></section>
-        {scene.objective ? <section><h2>{copy.objectiveTitle}</h2><p>{scene.objective}</p></section> : null}
-        {locationName || participantNames.length > 0 ? (
-          <section><h2>{copy.participantsTitle}</h2><p>{[locationName, ...participantNames].filter(Boolean).join(", ")}</p></section>
-        ) : null}
-        {relevantThreads.length > 0 ? (
-          <section><h2>{copy.relatedThreadsTitle}</h2><p>{relevantThreads.join(", ")}</p></section>
-        ) : null}
-      </div>
+      <details className="scene-context">
+        <summary>{copy.sceneOverviewLabel}</summary>
+        <div className="scene-detail-grid">
+          <section><h2>{copy.expectedSetupTitle}</h2><p>{scene.expectedSetup}</p></section>
+          <section><h2>{copy.actualSetupTitle}</h2><p>{scene.actualSetup}</p></section>
+          {scene.objective ? <section><h2>{copy.objectiveTitle}</h2><p>{scene.objective}</p></section> : null}
+          {locationName || participantNames.length > 0 ? (
+            <section><h2>{copy.participantsTitle}</h2><p>{[locationName, ...participantNames].filter(Boolean).join(", ")}</p></section>
+          ) : null}
+          {relevantThreads.length > 0 ? (
+            <section><h2>{copy.relatedThreadsTitle}</h2><p>{relevantThreads.join(", ")}</p></section>
+          ) : null}
+        </div>
+      </details>
 
       <SceneTabs
         ariaLabel={copy.playTabsLabel}
@@ -166,22 +169,18 @@ export default async function ScenePage({ params }: ScenePageProps) {
               </div>
             ),
           },
-        ]}
-      />
-
-      {scene.status === "active" ? (
-        <SceneTabs
-          ariaLabel={copy.toolTabsLabel}
-          tabs={[
+          ...(scene.status === "active" ? [
             { id: "note", label: copy.noteTab, content: <SceneNoteForm action={noteAction} messages={messages} /> },
             { id: "roll", label: copy.rollTab, content: <SceneRollForm action={rollAction} characters={participantCharacters} messages={messages} /> },
             { id: "oracle", label: copy.oracleTab, content: <OracleForm action={oracleAction} messages={messages} /> },
             { id: "inspiration", label: copy.inspirationTab, content: <InspirationForm action={inspirationAction} messages={messages} /> },
             { id: "random-event", label: copy.randomEventTab, content: <RandomEventForm action={randomEventAction} messages={messages} /> },
             { id: "complete", label: copy.completeTab, content: <SceneCompletionForm action={completionAction} messages={messages} /> },
-          ]}
-        />
-      ) : scene.summary ? (
+          ] : []),
+        ]}
+      />
+
+      {scene.status !== "active" && scene.summary ? (
         <section className="scene-summary"><h2>{copy.summaryTitle}</h2><p>{scene.summary}</p></section>
       ) : null}
     </article>

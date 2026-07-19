@@ -183,6 +183,10 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Szene beginnen" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Die Straße im Nebel" })).toBeVisible();
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("tab", { name: "Szenendialog" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole("tab", { name: "Szenendialog" }).click();
   await page.getByLabel("Nachricht").fill("Ich untersuche die Spuren am Kartenarchiv.");
   await page.getByRole("button", { name: "An Spielleiter senden" }).click();
