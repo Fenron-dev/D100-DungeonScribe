@@ -11,6 +11,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     await page.getByLabel("Kennwort", { exact: true }).fill("test-password-123");
     await page.getByRole("button", { name: "Entsperren" }).click();
   }
+  await expect(page.getByRole("link", { name: "Neue Kampagne" }).first()).toBeVisible();
   await page.goto("/");
   const homeTitle = page.getByRole("heading", {
     level: 1,
