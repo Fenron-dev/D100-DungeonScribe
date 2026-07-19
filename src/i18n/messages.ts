@@ -397,6 +397,12 @@ export interface MessageCatalog {
     sceneStatusLabel: string;
     toolButtonsLabel: string;
     closeToolLabel: string;
+    referencePanelLabel: string;
+    resizeWorkspaceLabel: string;
+    referenceCharactersTitle: string;
+    referenceWorldTitle: string;
+    referenceThreadsTitle: string;
+    referenceEmpty: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -1079,6 +1085,12 @@ const germanMessages = {
     sceneStatusLabel: "Szenenstatus",
     toolButtonsLabel: "Szenenwerkzeuge",
     closeToolLabel: "Fenster schließen",
+    referencePanelLabel: "Szenenbegleiter",
+    resizeWorkspaceLabel: "Breite von Journal und Szenenbegleiter ändern",
+    referenceCharactersTitle: "Beteiligte Charaktere",
+    referenceWorldTitle: "Ort und Weltobjekte",
+    referenceThreadsTitle: "Relevante Handlungsstränge",
+    referenceEmpty: "Für diese Szene sind noch keine Begleiterinformationen verknüpft.",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1857,6 +1869,12 @@ const englishMessages = {
     sceneStatusLabel: "Scene status",
     toolButtonsLabel: "Scene tools",
     closeToolLabel: "Close dialog",
+    referencePanelLabel: "Scene companion",
+    resizeWorkspaceLabel: "Resize journal and scene companion",
+    referenceCharactersTitle: "Participating characters",
+    referenceWorldTitle: "Location and world entities",
+    referenceThreadsTitle: "Relevant story threads",
+    referenceEmpty: "No companion information is linked to this scene yet.",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",

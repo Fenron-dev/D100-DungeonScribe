@@ -22,6 +22,7 @@ import { SceneRollForm } from "@/features/scenes/scene-journal-forms";
 import { SceneJournalView } from "@/features/scenes/scene-journal-view";
 import { SceneComposer } from "@/features/scenes/scene-composer";
 import { ScenePlayWorkspace } from "@/features/scenes/scene-play-workspace";
+import { SceneReferencePanel } from "@/features/scenes/scene-reference-panel";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
@@ -62,10 +63,14 @@ export default async function ScenePage({ params }: ScenePageProps) {
     ...scene.participantCharacterIds.map((id) => characterNames.get(id)),
     ...scene.participantEntityIds.map((id) => entityNames.get(id)),
   ].filter((name): name is string => Boolean(name));
-  const relevantThreads = scene.relevantThreadIds
-    .map((id) => threadNames.get(id))
-    .filter((name): name is string => Boolean(name));
+  const sceneThreads = threads.filter((thread) => scene.relevantThreadIds.includes(thread.id));
+  const relevantThreads = sceneThreads.map(({ title }) => title);
   const locationName = scene.locationId ? entityNames.get(scene.locationId) : null;
+  const referencedEntityIds = new Set([
+    ...scene.participantEntityIds,
+    ...(scene.locationId ? [scene.locationId] : []),
+  ]);
+  const sceneEntities = entities.filter((entity) => referencedEntityIds.has(entity.id));
   const participantCharacters = characters.filter((character) =>
     scene.participantCharacterIds.includes(character.id),
   );
@@ -137,6 +142,17 @@ export default async function ScenePage({ params }: ScenePageProps) {
             sceneId={scene.id}
           />
         )}
+        journalPanelLabel={copy.journalTab}
+        referencePanel={(
+          <SceneReferencePanel
+            characters={participantCharacters}
+            entities={sceneEntities}
+            messages={messages}
+            threads={sceneThreads}
+          />
+        )}
+        referencePanelLabel={copy.referencePanelLabel}
+        resizeLabel={copy.resizeWorkspaceLabel}
         toolLabel={copy.toolButtonsLabel}
         tools={[
           { id: "overview", label: copy.sceneOverviewLabel, content: sceneOverview },

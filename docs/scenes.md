@@ -24,6 +24,13 @@ Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakte
 
 Das vollständige Journal ist der zentrale Spielbereich und zeigt die neuesten Beiträge zuerst. Darunter liegt eine kompakte Eingabe für Spielerfrage, reinen Spielertext, manuellen Erzählertext, Handlung, Beobachtung oder Ereignis. Probe, Orakel, Muse, Ereignis, Szenenrahmen, freie Spielleiteranweisung und Abschluss öffnen platzsparende Dialoge. Das KI-Profil kann direkt an der Eingabe gewählt werden. Spieler-, Erzähler- und freie Journaltexte können nachträglich bearbeitet werden. KI-Erzähltexte können zusätzlich neu erzeugt, gelöscht und zwischen gespeicherten Varianten umgeschaltet werden. Jede verbindliche Auswahl, Bearbeitung und Löschung erzeugt atomar ein Kampagnenereignis; Würfel- und Orakelergebnisse bleiben unveränderlich.
 
+Das Journal verwendet standardmäßig die vollständige Arbeitsbreite. Der optionale
+Szenenbegleiter öffnet auf großen Bildschirmen eine zweite, frei skalierbare
+Fläche mit beteiligten Charakteren, verknüpften Weltobjekten und relevanten
+Handlungssträngen. Der Trenner unterstützt Zeiger, Touch und Tastatur. Auf
+schmalen Bildschirmen wird zwischen Journal und Szenenbegleiter umgeschaltet,
+damit beide Ansichten lesbar bleiben.
+
 Proben werden ausschließlich von der W6-Pool-Regel-Engine ausgewertet: Charakter, Handlung, Schwierigkeit, passender Archetyp, passende Eigenschaft sowie je ein optionaler Vor- und Nachteil bilden die Eingabe. Gespeichert werden die vollständige Eingabe, Würfel, Schwelle, Erfolge, Erfolgsgrad, Modifikatoren, Erklärung sowie ID und Version des verwendeten Regelwerks. Eine passende Eigenschaft muss tatsächlich zum handelnden, an der Szene beteiligten Charakter gehören.
 
 Start, manuelle Nachricht, KI-Erzählung, Protokolleintrag, Textbearbeitung, Probe, Orakelfrage, Inspiration, unerwartetes Ereignis, Spannungsänderung und Abschluss erzeugen `SCENE_STARTED`, `SCENE_MESSAGE_ADDED`, `AI_NARRATION_GENERATED`, `SCENE_NOTE_ADDED`, `SCENE_MESSAGE_UPDATED`, `SCENE_NOTE_UPDATED`, `DICE_ROLLED`, `ORACLE_ANSWERED`, `ORACLE_INSPIRATION_DRAWN`, `ORACLE_RANDOM_EVENT_GENERATED`, `TENSION_CHANGED` und `SCENE_COMPLETED`. Die Chronik zeigt sie in der Kategorie „Szenen“.

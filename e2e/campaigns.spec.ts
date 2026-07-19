@@ -204,8 +204,22 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(page.getByText("Aktiv", { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole("textbox", { name: "Dein Beitrag" })).toBeVisible();
+  const referencePanel = page.getByRole("complementary", { name: "Szenenbegleiter" });
+  await expect(referencePanel).toBeHidden();
+  await page.getByRole("button", { name: "Szenenbegleiter", exact: true }).click();
+  await expect(referencePanel).toBeVisible();
+  await expect(referencePanel.getByText("Elara aus dem Nebel")).toBeVisible();
+  await page.getByRole("button", { name: "Journal", exact: true }).click();
+  await expect(referencePanel).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByRole("button", { name: "Szenenbegleiter", exact: true }).click();
+  const paneResizer = page.getByRole("separator", {
+    name: "Breite von Journal und Szenenbegleiter ändern",
+  });
+  await expect(paneResizer).toHaveAttribute("aria-valuenow", "72");
+  await paneResizer.press("ArrowLeft");
+  await expect(paneResizer).toHaveAttribute("aria-valuenow", "70");
   await page.getByLabel("Dein Beitrag").fill("Ich untersuche die Spuren am Kartenarchiv.");
   await page.getByRole("button", { name: "Senden" }).click();
   const journalPanel = page.locator(".scene-journal-frame");
