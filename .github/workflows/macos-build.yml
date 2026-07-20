@@ -132,7 +132,7 @@ jobs:
           SCENE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Scene;')"
           NOTE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM SceneNote;')"
           MESSAGE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM SceneMessage;')"
-          ACCEPTED_SUGGESTION_COUNT="$(sqlite3 "$TEST_DATABASE" \"SELECT COUNT(*) FROM SceneWorldSuggestion WHERE status = 'accepted';\")"
+          ACCEPTED_SUGGESTION_COUNT="$(sqlite3 "$TEST_DATABASE" "SELECT COUNT(*) FROM SceneWorldSuggestion WHERE status = 'accepted';")"
           ROLL_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM DiceRoll;')"
           ORACLE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM OracleRecord;')"
           INSPIRATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM OracleInspiration;')"
