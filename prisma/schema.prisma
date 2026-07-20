@@ -38,6 +38,7 @@ model Campaign {
   scenes Scene[]
   sceneNotes SceneNote[]
   sceneMessages SceneMessage[]
+  sceneWorldSuggestions SceneWorldSuggestion[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
   oracleRandomEvents OracleRandomEvent[]
@@ -67,6 +68,7 @@ model Scene {
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   notes SceneNote[]
   messages SceneMessage[]
+  worldSuggestions SceneWorldSuggestion[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
   oracleRandomEvents OracleRandomEvent[]
@@ -102,9 +104,32 @@ model SceneMessage {
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
   revisions SceneMessageRevision[]
+  worldSuggestions SceneWorldSuggestion[]
 
   @@index([sceneId, createdAt])
   @@index([campaignId, createdAt])
+}
+
+model SceneWorldSuggestion {
+  id              String    @id @default(cuid())
+  campaignId      String
+  sceneId         String
+  messageId       String
+  type            String
+  name            String
+  summary         String
+  status          String    @default("pending")
+  createdEntityId String?
+  createdAt       DateTime  @default(now())
+  resolvedAt      DateTime?
+
+  campaign Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene    Scene        @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  message  SceneMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, status, createdAt])
+  @@index([campaignId, status])
+  @@index([messageId])
 }
 
 model SceneMessageRevision {

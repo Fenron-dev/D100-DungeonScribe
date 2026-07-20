@@ -403,6 +403,12 @@ export interface MessageCatalog {
     referenceWorldTitle: string;
     referenceThreadsTitle: string;
     referenceEmpty: string;
+    suggestionEyebrow: string;
+    suggestionTitle: string;
+    suggestionDescription: string;
+    suggestionTypes: Record<"npc" | "location" | "faction" | "item", string>;
+    acceptSuggestionAction: string;
+    dismissSuggestionAction: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -1091,6 +1097,18 @@ const germanMessages = {
     referenceWorldTitle: "Ort und Weltobjekte",
     referenceThreadsTitle: "Relevante Handlungsstränge",
     referenceEmpty: "Für diese Szene sind noch keine Begleiterinformationen verknüpft.",
+    suggestionEyebrow: "Unverbindlicher KI-Vorschlag",
+    suggestionTitle: "Möchtest du etwas davon merken?",
+    suggestionDescription:
+      "Diese Einträge stammen aus der letzten Erzählung. Erst deine Bestätigung übernimmt sie ins Weltregister.",
+    suggestionTypes: {
+      npc: "Person",
+      location: "Ort",
+      faction: "Fraktion",
+      item: "Gegenstand",
+    },
+    acceptSuggestionAction: "Übernehmen",
+    dismissSuggestionAction: "Verwerfen",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1875,6 +1893,18 @@ const englishMessages = {
     referenceWorldTitle: "Location and world entities",
     referenceThreadsTitle: "Relevant story threads",
     referenceEmpty: "No companion information is linked to this scene yet.",
+    suggestionEyebrow: "Optional AI suggestion",
+    suggestionTitle: "Would you like to remember any of these?",
+    suggestionDescription:
+      "These entries come from the latest narration. They enter the world registry only after you confirm them.",
+    suggestionTypes: {
+      npc: "Person",
+      location: "Location",
+      faction: "Faction",
+      item: "Item",
+    },
+    acceptSuggestionAction: "Accept",
+    dismissSuggestionAction: "Dismiss",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",

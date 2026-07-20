@@ -44,7 +44,10 @@ describe("OpenAiNarrativeProvider", () => {
           { type: "reasoning" },
           {
             type: "message",
-            content: [{ type: "output_text", text: '{"narration":"Etwas kratzt an der Tür."}' }],
+            content: [{
+              type: "output_text",
+              text: '{"narration":"Etwas kratzt an der Tür.","worldSuggestions":[{"type":"location","name":"Hinterzimmer","summary":"Ein Raum hinter der verriegelten Tür."}]}',
+            }],
           },
         ],
       }),
@@ -52,6 +55,11 @@ describe("OpenAiNarrativeProvider", () => {
     const provider = new OpenAiNarrativeProvider("test-api-key", "test-model", httpClient);
     await expect(provider.generateNarration(request)).resolves.toEqual({
       narration: "Etwas kratzt an der Tür.",
+      worldSuggestions: [{
+        type: "location",
+        name: "Hinterzimmer",
+        summary: "Ein Raum hinter der verriegelten Tür.",
+      }],
     });
     expect(httpClient).toHaveBeenCalledOnce();
     const [, init] = httpClient.mock.calls[0] ?? [];
@@ -87,7 +95,11 @@ describe("OpenAiNarrativeProvider", () => {
       ok: true,
       status: 200,
       json: async () => ({
-        choices: [{ message: { content: '{"narration":"Der Nebel teilt sich."}' } }],
+        choices: [{
+          message: {
+            content: '{"narration":"Der Nebel teilt sich.","worldSuggestions":[]}',
+          },
+        }],
       }),
     });
     const provider = new OpenAiNarrativeProvider(
@@ -99,6 +111,7 @@ describe("OpenAiNarrativeProvider", () => {
     );
     await expect(provider.generateNarration(request)).resolves.toEqual({
       narration: "Der Nebel teilt sich.",
+      worldSuggestions: [],
     });
     expect(httpClient.mock.calls[0]?.[0]).toBe("http://127.0.0.1:1234/v1/chat/completions");
     const [, init] = httpClient.mock.calls[0] ?? [];

@@ -20,7 +20,16 @@ Aktive Szenen besitzen ein zeitlich geordnetes Spielprotokoll. `SceneMessage` bi
 
 Die KI-Erzählung wird nur durch eine bewusste Benutzeraktion ausgelöst. Eine Spielereingabe kann entweder nur gespeichert oder zugleich als Frage beziehungsweise Handlung an den Spielleiter gesendet werden. Im zweiten Fall bleibt der Spielertext auch dann erhalten, wenn der Anbieter keine Antwort liefert.
 
-Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen sowie höchstens die 16 jüngsten Dialogbeiträge bis insgesamt 24.000 Zeichen. Dadurch kann sie an den tatsächlichen Verlauf anschließen, ohne das gesamte Protokoll oder verborgenes Wissen zu sehen. Der Prompt verlangt erkennbaren Fortschritt und verbietet das bloße Wiederholen bereits etablierter Details. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert; daraus folgen keine Weltänderungen.
+Eine validierte KI-Erzählantwort darf zusätzlich bis zu drei knappe Vorschläge
+für neu eingeführte Personen, Orte, Fraktionen oder Gegenstände enthalten. Diese
+Vorschläge sind kein Kampagnenwissen und zunächst ausdrücklich unverbindlich.
+Sie erscheinen oberhalb des Journals als prüfbare Karten. **Übernehmen** legt das
+Weltobjekt atomar mit einem nachvollziehbaren `ENTITY_CREATED`-Ereignis an;
+**Verwerfen** entfernt nur die offene Karte. Eine neue Erzählvariante ersetzt
+noch offene Vorschläge der vorherigen Variante. Bereits bestätigte Einträge
+bleiben davon unberührt.
+
+Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen sowie höchstens die 16 jüngsten Dialogbeiträge bis insgesamt 24.000 Zeichen. Dadurch kann sie an den tatsächlichen Verlauf anschließen, ohne das gesamte Protokoll oder verborgenes Wissen zu sehen. Der Prompt verlangt erkennbaren Fortschritt und verbietet das bloße Wiederholen bereits etablierter Details. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert. Enthaltene Weltvorschläge werden getrennt als offene Entwürfe gespeichert; ohne ausdrückliche Bestätigung folgt daraus keine Weltänderung.
 
 Das vollständige Journal ist der zentrale Spielbereich und zeigt die neuesten Beiträge zuerst. Darunter liegt eine kompakte Eingabe für Spielerfrage, reinen Spielertext, manuellen Erzählertext, Handlung, Beobachtung oder Ereignis. Probe, Orakel, Muse, Ereignis, Szenenrahmen, freie Spielleiteranweisung und Abschluss öffnen platzsparende Dialoge. Das KI-Profil kann direkt an der Eingabe gewählt werden. Spieler-, Erzähler- und freie Journaltexte können nachträglich bearbeitet werden. KI-Erzähltexte können zusätzlich neu erzeugt, gelöscht und zwischen gespeicherten Varianten umgeschaltet werden. Jede verbindliche Auswahl, Bearbeitung und Löschung erzeugt atomar ein Kampagnenereignis; Würfel- und Orakelergebnisse bleiben unveränderlich.
 

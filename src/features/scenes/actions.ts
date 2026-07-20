@@ -24,6 +24,7 @@ import { getNarrativeService } from "@/services/narrative-service-instance";
 import { oracleService } from "@/services/oracle-service-instance";
 import { ActiveSceneExistsError } from "@/services/scene-service";
 import { sceneService } from "@/services/scene-service-instance";
+import { sceneWorldSuggestionService } from "@/services/scene-world-suggestion-service-instance";
 
 const composerInputSchema = z.object({
   mode: z.enum(["player_ask", "player_log", "narrator", "action", "observation", "event"]),
@@ -270,6 +271,37 @@ export async function deleteSceneMessageAction(
   }
   revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
   return { message: null, errors: [] };
+}
+
+export async function acceptSceneWorldSuggestionAction(
+  campaignId: string,
+  sceneId: string,
+  suggestionId: string,
+  _formData: FormData,
+): Promise<void> {
+  void _formData;
+  try {
+    await sceneWorldSuggestionService.accept(campaignId, sceneId, suggestionId);
+  } catch (error) {
+    reportPersistenceError("update", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  revalidatePath(`/campaigns/${campaignId}/world`);
+}
+
+export async function dismissSceneWorldSuggestionAction(
+  campaignId: string,
+  sceneId: string,
+  suggestionId: string,
+  _formData: FormData,
+): Promise<void> {
+  void _formData;
+  try {
+    await sceneWorldSuggestionService.dismiss(campaignId, sceneId, suggestionId);
+  } catch (error) {
+    reportPersistenceError("update", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
 }
 
 export async function rollSceneCheckAction(

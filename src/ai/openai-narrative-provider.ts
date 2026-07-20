@@ -44,6 +44,7 @@ function systemInstructions(locale: "de" | "en"): string {
     "Advance the situation with at least one concrete new consequence, discovery, interaction, or changed choice in every response unless the player explicitly asks to pause or reflect.",
     "Answer observable parts of player questions directly. Leave genuinely unknown information unresolved instead of repeating the question.",
     "Follow the campaign style profile. Treat future ideas as optional seeds to foreshadow only when they fit; never reveal or force them.",
+    "If the narration introduces a distinct new person, location, faction, or item worth remembering, include it as a concise world suggestion. Suggest only information observable in the narration, never hidden facts, existing participants, or more than three entries. Otherwise return an empty list.",
     "End at a natural decision point without offering a numbered menu.",
   ].join(" ");
 }
@@ -65,8 +66,24 @@ export class OpenAiNarrativeProvider implements NarrativeProvider {
       strict: true,
       schema: {
         type: "object",
-        properties: { narration: { type: "string" } },
-        required: ["narration"],
+        properties: {
+          narration: { type: "string" },
+          worldSuggestions: {
+            type: "array",
+            maxItems: 3,
+            items: {
+              type: "object",
+              properties: {
+                type: { type: "string", enum: ["npc", "location", "faction", "item"] },
+                name: { type: "string" },
+                summary: { type: "string" },
+              },
+              required: ["type", "name", "summary"],
+              additionalProperties: false,
+            },
+          },
+        },
+        required: ["narration", "worldSuggestions"],
         additionalProperties: false,
       },
     };

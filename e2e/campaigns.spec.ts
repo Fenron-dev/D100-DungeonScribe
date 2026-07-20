@@ -263,6 +263,12 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
+  const suggestionCard = journalPanel.getByRole("article").filter({
+    hasText: "Der verborgene Durchgang",
+  });
+  await expect(suggestionCard).toBeVisible();
+  await suggestionCard.getByRole("button", { name: "Übernehmen" }).click();
+  await expect(suggestionCard).toBeHidden();
   const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");
   await expect(async () => {
     await aiMessageEdit.locator("summary").click();

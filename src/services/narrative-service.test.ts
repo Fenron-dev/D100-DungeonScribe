@@ -77,18 +77,27 @@ describe("NarrativeService", () => {
   it("stores only a validated provider result", async () => {
     const repository = new MemoryNarrativeRepository();
     const provider: NarrativeProvider = {
-      generateNarration: async () => ({ narration: "Der Nebel bewegt sich." }),
+      generateNarration: async () => ({
+        narration: "Der Nebel bewegt sich.",
+        worldSuggestions: [],
+      }),
     };
     const service = new NarrativeService(repository, provider);
     const message = await service.narrate("campaign-1", "scene-1", "Eine Spur", "de");
     expect(message?.source).toBe("ai");
-    expect(repository.saved).toEqual({ narration: "Der Nebel bewegt sich." });
+    expect(repository.saved).toEqual({
+      narration: "Der Nebel bewegt sich.",
+      worldSuggestions: [],
+    });
   });
 
   it("regenerates a narration without feeding the replaced message back into context", async () => {
     const repository = new MemoryNarrativeRepository();
     const service = new NarrativeService(repository, {
-      generateNarration: async () => ({ narration: "Eine andere Tür erscheint." }),
+      generateNarration: async () => ({
+        narration: "Eine andere Tür erscheint.",
+        worldSuggestions: [],
+      }),
     });
     const message = await service.regenerate(
       "campaign-1",

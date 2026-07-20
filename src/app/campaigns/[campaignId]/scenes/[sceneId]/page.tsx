@@ -23,6 +23,7 @@ import { SceneJournalView } from "@/features/scenes/scene-journal-view";
 import { SceneComposer } from "@/features/scenes/scene-composer";
 import { ScenePlayWorkspace } from "@/features/scenes/scene-play-workspace";
 import { SceneReferencePanel } from "@/features/scenes/scene-reference-panel";
+import { SceneWorldSuggestions } from "@/features/scenes/scene-world-suggestions";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
@@ -32,6 +33,7 @@ import { sceneJournalService } from "@/services/scene-journal-service-instance";
 import { sceneService } from "@/services/scene-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
+import { sceneWorldSuggestionService } from "@/services/scene-world-suggestion-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -46,11 +48,12 @@ export default async function ScenePage({ params }: ScenePageProps) {
     sceneService.findById(campaignId, sceneId),
   ]);
   if (!campaign || !scene) notFound();
-  const [characters, entities, threads, journal, providerMode, profileVault] = await Promise.all([
+  const [characters, entities, threads, journal, suggestions, providerMode, profileVault] = await Promise.all([
     characterService.list(campaign.id),
     worldEntityService.list(campaign.id),
     storyThreadService.list(campaign.id),
     sceneJournalService.list(campaign.id, scene.id),
+    sceneWorldSuggestionService.listPending(campaign.id, scene.id),
     getNarrativeProviderMode(),
     loadAiProfileVault(),
   ]);
@@ -130,16 +133,24 @@ export default async function ScenePage({ params }: ScenePageProps) {
           />
         ) : null}
         journal={(
-          <SceneJournalView
-            activeProfileId={activeProfileId}
-            campaignId={campaign.id}
-            characterNames={characterNames}
-            journal={journal}
-            messages={messages}
-            mode="all"
-            profiles={profileOptions}
-            sceneId={scene.id}
-          />
+          <>
+            <SceneWorldSuggestions
+              campaignId={campaign.id}
+              messages={messages}
+              sceneId={scene.id}
+              suggestions={suggestions}
+            />
+            <SceneJournalView
+              activeProfileId={activeProfileId}
+              campaignId={campaign.id}
+              characterNames={characterNames}
+              journal={journal}
+              messages={messages}
+              mode="all"
+              profiles={profileOptions}
+              sceneId={scene.id}
+            />
+          </>
         )}
         journalPanelLabel={copy.journalTab}
         referencePanel={(
