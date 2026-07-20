@@ -56,6 +56,44 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
     });
   }
 
+  private async eligibleStateSuggestions(
+    campaignId: string,
+    suggestions: NarrationResult["stateSuggestions"],
+    excludedMessageId?: string,
+  ): Promise<NarrationResult["stateSuggestions"]> {
+    const [knowledgeEntries, storyThreads, pendingSuggestions] = await Promise.all([
+      this.client.knowledgeEntry.findMany({
+        where: { campaignId },
+        select: { title: true },
+      }),
+      this.client.storyThread.findMany({
+        where: { campaignId },
+        select: { title: true },
+      }),
+      this.client.sceneStateSuggestion.findMany({
+        where: {
+          campaignId,
+          status: "pending",
+          ...(excludedMessageId ? { messageId: { not: excludedMessageId } } : {}),
+        },
+        select: { kind: true, title: true },
+      }),
+    ]);
+    const knownKeys = new Set([
+      ...knowledgeEntries.map(({ title }) => `knowledge:${title.trim().toLocaleLowerCase()}`),
+      ...storyThreads.map(({ title }) => `thread:${title.trim().toLocaleLowerCase()}`),
+      ...pendingSuggestions.map(
+        ({ kind, title }) => `${kind}:${title.trim().toLocaleLowerCase()}`,
+      ),
+    ]);
+    return suggestions.filter(({ kind, title }) => {
+      const key = `${kind}:${title.trim().toLocaleLowerCase()}`;
+      if (knownKeys.has(key)) return false;
+      knownKeys.add(key);
+      return true;
+    });
+  }
+
   public async loadContext(
     campaignId: string,
     sceneId: string,
@@ -153,6 +191,10 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
       campaignId,
       result.worldSuggestions,
     );
+    const stateSuggestions = await this.eligibleStateSuggestions(
+      campaignId,
+      result.stateSuggestions,
+    );
     return this.client.$transaction(async (transaction) => {
       const message = await transaction.sceneMessage.create({
         data: {
@@ -168,6 +210,16 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
       if (worldSuggestions.length > 0) {
         await transaction.sceneWorldSuggestion.createMany({
           data: worldSuggestions.map((suggestion) => ({
+            campaignId,
+            sceneId,
+            messageId: message.id,
+            ...suggestion,
+          })),
+        });
+      }
+      if (stateSuggestions.length > 0) {
+        await transaction.sceneStateSuggestion.createMany({
+          data: stateSuggestions.map((suggestion) => ({
             campaignId,
             sceneId,
             messageId: message.id,
@@ -209,6 +261,11 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
       result.worldSuggestions,
       messageId,
     );
+    const stateSuggestions = await this.eligibleStateSuggestions(
+      campaignId,
+      result.stateSuggestions,
+      messageId,
+    );
     return this.client.$transaction(async (transaction) => {
       const existingRevision = await transaction.sceneMessageRevision.findFirst({
         where: { messageId, content: existing.content },
@@ -229,9 +286,22 @@ export class PrismaNarrativeRepository implements NarrativeRepository {
       await transaction.sceneWorldSuggestion.deleteMany({
         where: { messageId, status: "pending" },
       });
+      await transaction.sceneStateSuggestion.deleteMany({
+        where: { messageId, status: "pending" },
+      });
       if (worldSuggestions.length > 0) {
         await transaction.sceneWorldSuggestion.createMany({
           data: worldSuggestions.map((suggestion) => ({
+            campaignId,
+            sceneId,
+            messageId,
+            ...suggestion,
+          })),
+        });
+      }
+      if (stateSuggestions.length > 0) {
+        await transaction.sceneStateSuggestion.createMany({
+          data: stateSuggestions.map((suggestion) => ({
             campaignId,
             sceneId,
             messageId,

@@ -23,6 +23,22 @@ export class MockNarrativeProvider implements NarrativeProvider {
           ? "Ein neu entdeckter Weg, dessen Ziel noch unbekannt ist."
           : "A newly discovered route whose destination remains unknown.",
       }],
+      stateSuggestions: [
+        {
+          kind: "knowledge",
+          title: request.locale === "de" ? "Der verborgene Durchgang" : "The hidden passage",
+          content: request.locale === "de"
+            ? "Ein bislang unbekannter Durchgang ist an diesem Ort sichtbar geworden."
+            : "A previously unknown passage has become visible at this location.",
+        },
+        {
+          kind: "thread",
+          title: request.locale === "de" ? "Wohin führt der Durchgang?" : "Where does the passage lead?",
+          content: request.locale === "de"
+            ? "Das unbekannte Ziel des neu entdeckten Weges bleibt offen."
+            : "The destination of the newly discovered route remains unresolved.",
+        },
+      ],
     };
   }
 }

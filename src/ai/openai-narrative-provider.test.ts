@@ -46,7 +46,7 @@ describe("OpenAiNarrativeProvider", () => {
             type: "message",
             content: [{
               type: "output_text",
-              text: '{"narration":"Etwas kratzt an der Tür.","worldSuggestions":[{"type":"location","name":"Hinterzimmer","summary":"Ein Raum hinter der verriegelten Tür."}]}',
+              text: '{"narration":"Etwas kratzt an der Tür.","worldSuggestions":[{"type":"location","name":"Hinterzimmer","summary":"Ein Raum hinter der verriegelten Tür."}],"stateSuggestions":[{"kind":"thread","title":"Das Kratzen","content":"Die Ursache des Kratzens ist ungeklärt."}]}',
             }],
           },
         ],
@@ -59,6 +59,11 @@ describe("OpenAiNarrativeProvider", () => {
         type: "location",
         name: "Hinterzimmer",
         summary: "Ein Raum hinter der verriegelten Tür.",
+      }],
+      stateSuggestions: [{
+        kind: "thread",
+        title: "Das Kratzen",
+        content: "Die Ursache des Kratzens ist ungeklärt.",
       }],
     });
     expect(httpClient).toHaveBeenCalledOnce();
@@ -97,7 +102,7 @@ describe("OpenAiNarrativeProvider", () => {
       json: async () => ({
         choices: [{
           message: {
-            content: '{"narration":"Der Nebel teilt sich.","worldSuggestions":[]}',
+            content: '{"narration":"Der Nebel teilt sich.","worldSuggestions":[],"stateSuggestions":[]}',
           },
         }],
       }),
@@ -112,6 +117,7 @@ describe("OpenAiNarrativeProvider", () => {
     await expect(provider.generateNarration(request)).resolves.toEqual({
       narration: "Der Nebel teilt sich.",
       worldSuggestions: [],
+      stateSuggestions: [],
     });
     expect(httpClient.mock.calls[0]?.[0]).toBe("http://127.0.0.1:1234/v1/chat/completions");
     const [, init] = httpClient.mock.calls[0] ?? [];

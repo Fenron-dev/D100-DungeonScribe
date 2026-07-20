@@ -12,6 +12,7 @@ import type {
 } from "@/features/scenes/form-state";
 import { sceneCompletionInputSchema, sceneDraftSchema } from "@/schemas/scene";
 import { sceneWorldSuggestionDraftSchema } from "@/schemas/scene-world-suggestion";
+import { sceneStateSuggestionResolutionSchema } from "@/schemas/scene-state-suggestion";
 import {
   diceRollDraftSchema,
   sceneMessageContentSchema,
@@ -26,6 +27,7 @@ import { oracleService } from "@/services/oracle-service-instance";
 import { ActiveSceneExistsError } from "@/services/scene-service";
 import { sceneService } from "@/services/scene-service-instance";
 import { sceneWorldSuggestionService } from "@/services/scene-world-suggestion-service-instance";
+import { sceneStateSuggestionService } from "@/services/scene-state-suggestion-service-instance";
 
 const composerInputSchema = z.object({
   mode: z.enum(["player_ask", "player_log", "narrator", "action", "observation", "event"]),
@@ -308,6 +310,74 @@ export async function dismissSceneWorldSuggestionAction(
   void _formData;
   try {
     await sceneWorldSuggestionService.dismiss(campaignId, sceneId, suggestionId);
+  } catch (error) {
+    reportPersistenceError("update", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+}
+
+export async function acceptSceneStateSuggestionAction(
+  campaignId: string,
+  sceneId: string,
+  suggestionId: string,
+  formData: FormData,
+): Promise<void> {
+  try {
+    const kind = readText(formData, "kind");
+    const input = kind === "knowledge"
+      ? {
+          kind,
+          draft: {
+            title: readText(formData, "title"),
+            content: readText(formData, "content"),
+            type: readText(formData, "type"),
+            truthStatus: readText(formData, "truthStatus"),
+            knownByCharacterIds: readTextList(formData, "knownByCharacterIds"),
+            relatedEntityIds: readTextList(formData, "relatedEntityIds"),
+            locked: readText(formData, "locked") === "on",
+          },
+        }
+      : {
+          kind,
+          draft: {
+            title: readText(formData, "title"),
+            premise: readText(formData, "content"),
+            description: null,
+            status: "open",
+            urgency: readText(formData, "urgency"),
+            progressCurrent: 0,
+            progressTarget: readText(formData, "progressTarget"),
+            relatedEntityIds: readTextList(formData, "relatedEntityIds"),
+            nextPossibleDevelopments: readTextList(
+              formData,
+              "nextPossibleDevelopments",
+            ),
+          },
+        };
+    await sceneStateSuggestionService.accept(
+      campaignId,
+      sceneId,
+      suggestionId,
+      sceneStateSuggestionResolutionSchema.parse(input),
+    );
+  } catch (error) {
+    reportPersistenceError("update", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}/scenes/${sceneId}`);
+  revalidatePath(`/campaigns/${campaignId}/knowledge`);
+  revalidatePath(`/campaigns/${campaignId}/threads`);
+  revalidatePath(`/campaigns/${campaignId}/chronicle`);
+}
+
+export async function dismissSceneStateSuggestionAction(
+  campaignId: string,
+  sceneId: string,
+  suggestionId: string,
+  _formData: FormData,
+): Promise<void> {
+  void _formData;
+  try {
+    await sceneStateSuggestionService.dismiss(campaignId, sceneId, suggestionId);
   } catch (error) {
     reportPersistenceError("update", error);
   }

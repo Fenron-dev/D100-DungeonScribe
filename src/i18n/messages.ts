@@ -413,6 +413,13 @@ export interface MessageCatalog {
     suggestionTypeLabel: string;
     suggestionNameLabel: string;
     suggestionSummaryLabel: string;
+    stateSuggestionEyebrow: string;
+    stateSuggestionTitle: string;
+    stateSuggestionDescription: string;
+    stateSuggestionKinds: Record<"knowledge" | "thread", string>;
+    knowledgeSafetyHint: string;
+    truthStatusPlaceholder: string;
+    nextDevelopmentLabel: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -1117,6 +1124,18 @@ const germanMessages = {
     suggestionTypeLabel: "Art",
     suggestionNameLabel: "Name",
     suggestionSummaryLabel: "Kurzbeschreibung",
+    stateSuggestionEyebrow: "Unverbindliche Kampagnennotiz",
+    stateSuggestionTitle: "Ist daraus etwas Wichtiges entstanden?",
+    stateSuggestionDescription:
+      "Die KI schlägt Erkenntnisse und offene Handlungsfäden vor. Erst deine geprüfte Auswahl verändert die Kampagne.",
+    stateSuggestionKinds: {
+      knowledge: "Erkenntnis",
+      thread: "Handlungsfaden",
+    },
+    knowledgeSafetyHint:
+      "Lege Wissensart und Wahrheitsstatus selbst fest. Die KI darf diese Einordnung nicht für dich entscheiden.",
+    truthStatusPlaceholder: "Wahrheitsstatus auswählen",
+    nextDevelopmentLabel: "Mögliche nächste Entwicklung (optional)",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1917,6 +1936,18 @@ const englishMessages = {
     suggestionTypeLabel: "Type",
     suggestionNameLabel: "Name",
     suggestionSummaryLabel: "Short description",
+    stateSuggestionEyebrow: "Optional campaign note",
+    stateSuggestionTitle: "Did something important emerge?",
+    stateSuggestionDescription:
+      "AI suggests discoveries and open story threads. The campaign changes only after your reviewed confirmation.",
+    stateSuggestionKinds: {
+      knowledge: "Discovery",
+      thread: "Story thread",
+    },
+    knowledgeSafetyHint:
+      "Choose the knowledge type and truth status yourself. AI must not make that classification for you.",
+    truthStatusPlaceholder: "Choose a truth status",
+    nextDevelopmentLabel: "Possible next development (optional)",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",

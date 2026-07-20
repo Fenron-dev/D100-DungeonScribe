@@ -39,6 +39,7 @@ model Campaign {
   sceneNotes SceneNote[]
   sceneMessages SceneMessage[]
   sceneWorldSuggestions SceneWorldSuggestion[]
+  sceneStateSuggestions SceneStateSuggestion[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
   oracleRandomEvents OracleRandomEvent[]
@@ -69,6 +70,7 @@ model Scene {
   notes SceneNote[]
   messages SceneMessage[]
   worldSuggestions SceneWorldSuggestion[]
+  stateSuggestions SceneStateSuggestion[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
   oracleRandomEvents OracleRandomEvent[]
@@ -105,6 +107,7 @@ model SceneMessage {
   scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
   revisions SceneMessageRevision[]
   worldSuggestions SceneWorldSuggestion[]
+  stateSuggestions SceneStateSuggestion[]
 
   @@index([sceneId, createdAt])
   @@index([campaignId, createdAt])
@@ -120,6 +123,28 @@ model SceneWorldSuggestion {
   summary         String
   status          String    @default("pending")
   createdEntityId String?
+  createdAt       DateTime  @default(now())
+  resolvedAt      DateTime?
+
+  campaign Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  scene    Scene        @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  message  SceneMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, status, createdAt])
+  @@index([campaignId, status])
+  @@index([messageId])
+}
+
+model SceneStateSuggestion {
+  id              String    @id @default(cuid())
+  campaignId      String
+  sceneId         String
+  messageId       String
+  kind            String
+  title           String
+  content         String
+  status          String    @default("pending")
+  createdRecordId String?
   createdAt       DateTime  @default(now())
   resolvedAt      DateTime?
 

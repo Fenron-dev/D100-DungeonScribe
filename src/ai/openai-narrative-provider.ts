@@ -45,6 +45,7 @@ function systemInstructions(locale: "de" | "en"): string {
     "Answer observable parts of player questions directly. Leave genuinely unknown information unresolved instead of repeating the question.",
     "Follow the campaign style profile. Treat future ideas as optional seeds to foreshadow only when they fit; never reveal or force them.",
     "If the narration introduces a distinct new person, location, faction, or item worth remembering, include it as a concise world suggestion. Suggest only information observable in the narration, never hidden facts, existing participants, or more than three entries. Otherwise return an empty list.",
+    "If the narration establishes an observable discovery worth recording or opens a concrete unresolved story question, include it as a state suggestion of kind knowledge or thread. Do not suggest secrets, hidden truth, interpretations as fact, or more than three entries. The user will decide knowledge type and truth status. Otherwise return an empty list.",
     "End at a natural decision point without offering a numbered menu.",
   ].join(" ");
 }
@@ -82,8 +83,22 @@ export class OpenAiNarrativeProvider implements NarrativeProvider {
               additionalProperties: false,
             },
           },
+          stateSuggestions: {
+            type: "array",
+            maxItems: 3,
+            items: {
+              type: "object",
+              properties: {
+                kind: { type: "string", enum: ["knowledge", "thread"] },
+                title: { type: "string" },
+                content: { type: "string" },
+              },
+              required: ["kind", "title", "content"],
+              additionalProperties: false,
+            },
+          },
         },
-        required: ["narration", "worldSuggestions"],
+        required: ["narration", "worldSuggestions", "stateSuggestions"],
         additionalProperties: false,
       },
     };

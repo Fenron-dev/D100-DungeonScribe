@@ -30,7 +30,17 @@ Weltobjekt atomar mit einem nachvollziehbaren `ENTITY_CREATED`-Ereignis an;
 noch offene Vorschläge der vorherigen Variante. Bereits bestätigte Einträge
 bleiben davon unberührt.
 
-Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen sowie höchstens die 16 jüngsten Dialogbeiträge bis insgesamt 24.000 Zeichen. Dadurch kann sie an den tatsächlichen Verlauf anschließen, ohne das gesamte Protokoll oder verborgenes Wissen zu sehen. Der Prompt verlangt erkennbaren Fortschritt und verbietet das bloße Wiederholen bereits etablierter Details. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert. Enthaltene Weltvorschläge werden getrennt als offene Entwürfe gespeichert; ohne ausdrückliche Bestätigung folgt daraus keine Weltänderung.
+Eine Erzählantwort kann außerdem bis zu drei unverbindliche Vorschläge für
+beobachtbare Erkenntnisse oder neue offene Handlungsfäden liefern. Vor der
+Übernahme bleiben sie außerhalb des Kampagnenzustands. Erkenntnisse verlangen
+vom Spieler ausdrücklich Wissensart und Wahrheitsstatus; die KI darf eine
+Beobachtung nicht selbst als objektive Wahrheit einstufen. Bekannte Charaktere,
+Weltbezüge und Fixierung beziehungsweise Dringlichkeit und Fortschrittsziel sind
+vorher bearbeitbar. Die Bestätigung legt Eintrag und Chronikereignis atomar an.
+Verwerfen erzeugt keine Zustandsänderung. Bei einer neuen Erzählvariante werden
+nur die noch offenen Vorschläge dieser Antwort ersetzt.
+
+Die KI erhält einen minimalen Szenenkontext ohne Wissenseinträge oder Charakternotizen sowie höchstens die 16 jüngsten Dialogbeiträge bis insgesamt 24.000 Zeichen. Dadurch kann sie an den tatsächlichen Verlauf anschließen, ohne das gesamte Protokoll oder verborgenes Wissen zu sehen. Der Prompt verlangt erkennbaren Fortschritt und verbietet das bloße Wiederholen bereits etablierter Details. Nach strukturierter Validierung wird die Antwort als reiner Erzählertext mit Quelle `ai` gespeichert. Enthaltene Welt- und Zustandsvorschläge werden getrennt als offene Entwürfe gespeichert; ohne ausdrückliche Bestätigung folgt daraus keine Weltänderung.
 
 Das vollständige Journal ist der zentrale Spielbereich und zeigt die neuesten Beiträge zuerst. Darunter liegt eine kompakte Eingabe für Spielerfrage, reinen Spielertext, manuellen Erzählertext, Handlung, Beobachtung oder Ereignis. Probe, Orakel, Muse, Ereignis, Szenenrahmen, freie Spielleiteranweisung und Abschluss öffnen platzsparende Dialoge. Das KI-Profil kann direkt an der Eingabe gewählt werden. Spieler-, Erzähler- und freie Journaltexte können nachträglich bearbeitet werden. KI-Erzähltexte können zusätzlich neu erzeugt, gelöscht und zwischen gespeicherten Varianten umgeschaltet werden. Jede verbindliche Auswahl, Bearbeitung und Löschung erzeugt atomar ein Kampagnenereignis; Würfel- und Orakelergebnisse bleiben unveränderlich.
 

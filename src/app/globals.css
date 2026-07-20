@@ -2330,6 +2330,40 @@ h2 {
   font-weight: 700;
 }
 
+.scene-suggestion-safety {
+  padding: 0.45rem;
+  border-left: 3px solid var(--color-accent-strong);
+  color: var(--color-text) !important;
+  background: rgb(212 168 95 / 9%);
+}
+
+.scene-suggestion-checks {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.25rem 0;
+  padding: 0.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.35rem;
+}
+
+.scene-suggestion-checks legend {
+  padding-inline: 0.25rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.scene-suggestion-checks label,
+.scene-suggestion-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scene-suggestion-checks input,
+.scene-suggestion-checkbox input {
+  min-height: auto;
+}
+
 .scene-suggestion-review input,
 .scene-suggestion-review select,
 .scene-suggestion-review textarea {

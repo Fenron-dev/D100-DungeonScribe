@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { campaignStyleSchema } from "@/schemas/campaign";
 import { sceneWorldSuggestionDraftSchema } from "@/schemas/scene-world-suggestion";
+import { sceneStateSuggestionDraftSchema } from "@/schemas/scene-state-suggestion";
 
 export const narrationRequestSchema = z.object({
   locale: z.enum(["de", "en"]),
@@ -32,6 +33,7 @@ export const narrationRequestSchema = z.object({
 export const narrationResultSchema = z.object({
   narration: z.string().trim().min(1).max(8_000),
   worldSuggestions: z.array(sceneWorldSuggestionDraftSchema).max(3),
+  stateSuggestions: z.array(sceneStateSuggestionDraftSchema).max(3),
 });
 
 export type NarrationRequest = z.infer<typeof narrationRequestSchema>;

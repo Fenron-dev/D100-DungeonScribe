@@ -23,6 +23,7 @@ import { SceneJournalView } from "@/features/scenes/scene-journal-view";
 import { SceneComposer } from "@/features/scenes/scene-composer";
 import { ScenePlayWorkspace } from "@/features/scenes/scene-play-workspace";
 import { SceneReferencePanel } from "@/features/scenes/scene-reference-panel";
+import { SceneStateSuggestions } from "@/features/scenes/scene-state-suggestions";
 import { SceneWorldSuggestions } from "@/features/scenes/scene-world-suggestions";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
@@ -34,6 +35,7 @@ import { sceneService } from "@/services/scene-service-instance";
 import { storyThreadService } from "@/services/story-thread-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
 import { sceneWorldSuggestionService } from "@/services/scene-world-suggestion-service-instance";
+import { sceneStateSuggestionService } from "@/services/scene-state-suggestion-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -48,12 +50,13 @@ export default async function ScenePage({ params }: ScenePageProps) {
     sceneService.findById(campaignId, sceneId),
   ]);
   if (!campaign || !scene) notFound();
-  const [characters, entities, threads, journal, suggestions, providerMode, profileVault] = await Promise.all([
+  const [characters, entities, threads, journal, worldSuggestions, stateSuggestions, providerMode, profileVault] = await Promise.all([
     characterService.list(campaign.id),
     worldEntityService.list(campaign.id),
     storyThreadService.list(campaign.id),
     sceneJournalService.list(campaign.id, scene.id),
     sceneWorldSuggestionService.listPending(campaign.id, scene.id),
+    sceneStateSuggestionService.listPending(campaign.id, scene.id),
     getNarrativeProviderMode(),
     loadAiProfileVault(),
   ]);
@@ -138,7 +141,15 @@ export default async function ScenePage({ params }: ScenePageProps) {
               campaignId={campaign.id}
               messages={messages}
               sceneId={scene.id}
-              suggestions={suggestions}
+              suggestions={worldSuggestions}
+            />
+            <SceneStateSuggestions
+              campaignId={campaign.id}
+              characters={participantCharacters}
+              entities={sceneEntities}
+              messages={messages}
+              sceneId={scene.id}
+              suggestions={stateSuggestions}
             />
             <SceneJournalView
               activeProfileId={activeProfileId}

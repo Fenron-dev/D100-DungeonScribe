@@ -263,7 +263,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   }).last();
   await expect(aiMessage).toBeVisible();
   await expect(aiMessage.getByText("KI-erzeugt", { exact: true })).toBeVisible();
-  const suggestionCard = journalPanel.getByRole("article").filter({
+  const suggestionCard = journalPanel.locator(".scene-suggestion-card").filter({
+    has: page.getByText("Ort", { exact: true }),
     hasText: "Der verborgene Durchgang",
   });
   await expect(suggestionCard).toBeVisible();
@@ -271,6 +272,24 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await suggestionCard.getByLabel("Name").fill("Der Durchgang hinter dem Archiv");
   await suggestionCard.getByRole("button", { name: "Übernehmen" }).click();
   await expect(suggestionCard).toBeHidden();
+  const knowledgeSuggestion = journalPanel.locator(".scene-suggestion-card").filter({
+    has: page.getByText("Erkenntnis", { exact: true }),
+    hasText: "Der verborgene Durchgang",
+  });
+  await expect(knowledgeSuggestion).toBeVisible();
+  await knowledgeSuggestion.getByText("Vorschlag anpassen", { exact: true }).click();
+  await knowledgeSuggestion.getByLabel("Wissensart").selectOption("fact");
+  await knowledgeSuggestion.getByLabel("Wahrheitsstatus").selectOption("true");
+  await knowledgeSuggestion.getByRole("button", { name: "Übernehmen" }).click();
+  await expect(knowledgeSuggestion).toBeHidden();
+  const threadSuggestion = journalPanel.locator(".scene-suggestion-card").filter({
+    has: page.getByText("Handlungsfaden", { exact: true }),
+    hasText: "Wohin führt der Durchgang?",
+  });
+  await expect(threadSuggestion).toBeVisible();
+  await threadSuggestion.getByText("Vorschlag anpassen", { exact: true }).click();
+  await threadSuggestion.getByRole("button", { name: "Übernehmen" }).click();
+  await expect(threadSuggestion).toBeHidden();
   const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");
   await expect(async () => {
     await aiMessageEdit.locator("summary").click();

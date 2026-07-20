@@ -80,6 +80,7 @@ describe("NarrativeService", () => {
       generateNarration: async () => ({
         narration: "Der Nebel bewegt sich.",
         worldSuggestions: [],
+        stateSuggestions: [],
       }),
     };
     const service = new NarrativeService(repository, provider);
@@ -88,6 +89,7 @@ describe("NarrativeService", () => {
     expect(repository.saved).toEqual({
       narration: "Der Nebel bewegt sich.",
       worldSuggestions: [],
+      stateSuggestions: [],
     });
   });
 
@@ -97,6 +99,7 @@ describe("NarrativeService", () => {
       generateNarration: async () => ({
         narration: "Eine andere Tür erscheint.",
         worldSuggestions: [],
+        stateSuggestions: [],
       }),
     });
     const message = await service.regenerate(
