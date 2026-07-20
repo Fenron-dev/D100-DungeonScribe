@@ -1157,17 +1157,6 @@ h2 {
   border-radius: var(--radius-medium);
 }
 
-.entity-details-fields {
-  display: none;
-}
-
-.campaign-form:has(#world-entity-type option[value="npc"]:checked) .entity-details-npc,
-.campaign-form:has(#world-entity-type option[value="location"]:checked) .entity-details-location,
-.campaign-form:has(#world-entity-type option[value="faction"]:checked) .entity-details-faction,
-.campaign-form:has(#world-entity-type option[value="item"]:checked) .entity-details-item {
-  display: block;
-}
-
 .entity-details-fields legend {
   padding: 0 0.4rem;
   font-weight: 800;

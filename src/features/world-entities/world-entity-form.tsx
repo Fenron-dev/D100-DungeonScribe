@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import type { WorldEntityDraft, WorldEntityType } from "@/domain/world-entity";
 import type { WorldEntityFormAction } from "@/features/world-entities/form-state";
 import { initialWorldEntityFormState } from "@/features/world-entities/form-state";
@@ -37,6 +37,9 @@ export function WorldEntityForm({
   );
   const copy = messages.worldEntities;
   const isEdit = mode === "edit";
+  const [selectedType, setSelectedType] = useState<WorldEntityType | "">(
+    entity?.type ?? "",
+  );
 
   return (
     <form className="campaign-form" action={formAction} noValidate>
@@ -54,7 +57,10 @@ export function WorldEntityForm({
           <select
             id="world-entity-type"
             name="type"
-            defaultValue={entity?.type ?? ""}
+            value={selectedType}
+            onChange={(event) =>
+              setSelectedType(parseWorldEntityType(event.target.value))
+            }
             aria-invalid={state.errors.type.length > 0}
             required
           >
@@ -84,43 +90,47 @@ export function WorldEntityForm({
         </div>
       </div>
 
-      {(["npc", "location", "faction", "item"] as const).map((type) => {
-        const values = getDetailValues(entity, type);
-        const names = detailFieldNames[type];
-        return (
-        <fieldset className={`entity-details-fields entity-details-${type}`} key={type}>
-          <legend>{copy.detailsTitle}</legend>
-          <p className="field-hint">{copy.detailsHint}</p>
-          <div className="form-columns">
-            <div className="form-field">
-              <label htmlFor={`world-entity-${names.primary}`}>
-                {copy.detailFields[type].primary} <span>({copy.optionalHint})</span>
-              </label>
-              <input
-                id={`world-entity-${names.primary}`}
-                name={names.primary}
-                type="text"
-                defaultValue={values.primary}
-                maxLength={200}
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor={`world-entity-${names.secondary}`}>
-                {copy.detailFields[type].secondary} <span>({copy.optionalHint})</span>
-              </label>
-              <input
-                id={`world-entity-${names.secondary}`}
-                name={names.secondary}
-                type="text"
-                defaultValue={values.secondary}
-                maxLength={200}
-              />
-            </div>
-          </div>
-          <ErrorList errors={state.errors.details} />
-        </fieldset>
-        );
-      })}
+      {(["npc", "location", "faction", "item"] as const)
+        .filter((type) => type === selectedType)
+        .map((type) => {
+          const values = getDetailValues(entity, type);
+          const names = detailFieldNames[type];
+          return (
+            <fieldset className="entity-details-fields" key={type}>
+              <legend>{copy.detailsTitle}</legend>
+              <p className="field-hint">{copy.detailsHint}</p>
+              <div className="form-columns">
+                <div className="form-field">
+                  <label htmlFor={`world-entity-${names.primary}`}>
+                    {copy.detailFields[type].primary}{" "}
+                    <span>({copy.optionalHint})</span>
+                  </label>
+                  <input
+                    id={`world-entity-${names.primary}`}
+                    name={names.primary}
+                    type="text"
+                    defaultValue={values.primary}
+                    maxLength={200}
+                  />
+                </div>
+                <div className="form-field">
+                  <label htmlFor={`world-entity-${names.secondary}`}>
+                    {copy.detailFields[type].secondary}{" "}
+                    <span>({copy.optionalHint})</span>
+                  </label>
+                  <input
+                    id={`world-entity-${names.secondary}`}
+                    name={names.secondary}
+                    type="text"
+                    defaultValue={values.secondary}
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+              <ErrorList errors={state.errors.details} />
+            </fieldset>
+          );
+        })}
 
       <div className="form-field">
         <label htmlFor="world-entity-name">{copy.nameLabel}</label>
@@ -200,6 +210,18 @@ const detailFieldNames = {
   faction: { primary: "factionGoal", secondary: "factionInfluence" },
   item: { primary: "itemPurpose", secondary: "itemRarity" },
 } as const;
+
+function parseWorldEntityType(value: string): WorldEntityType | "" {
+  switch (value) {
+    case "npc":
+    case "location":
+    case "faction":
+    case "item":
+      return value;
+    default:
+      return "";
+  }
+}
 
 function getDetailValues(entity: WorldEntityDraft | undefined, type: WorldEntityType): {
   primary: string;
