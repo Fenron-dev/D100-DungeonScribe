@@ -202,6 +202,20 @@ export interface MessageCatalog {
     backToCampaign: string;
     validationMessage: string;
     saveError: string;
+    inventoryTitle: string;
+    inventoryDescription: string;
+    inventoryEmpty: string;
+    inventoryItemLabel: string;
+    inventoryItemPlaceholder: string;
+    inventoryQuantityLabel: string;
+    inventoryEquippedLabel: string;
+    inventoryEquippedBadge: string;
+    inventoryNotesLabel: string;
+    inventoryAddAction: string;
+    inventoryUpdateAction: string;
+    inventoryRemoveAction: string;
+    inventoryNoItems: string;
+    inventoryCreateItemAction: string;
   };
   worldEntities: {
     sectionTitle: string;
@@ -613,6 +627,9 @@ export interface MessageCatalog {
       | "CAMPAIGN_ARCHIVED"
       | "CHARACTER_CREATED"
       | "CHARACTER_UPDATED"
+      | "INVENTORY_ITEM_ADDED"
+      | "INVENTORY_ITEM_UPDATED"
+      | "INVENTORY_ITEM_REMOVED"
       | "ENTITY_CREATED"
       | "ENTITY_UPDATED"
       | "ENTITY_RELATION_CREATED"
@@ -865,6 +882,21 @@ const germanMessages = {
     backToCampaign: "Zur Kampagne",
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Der Charakter konnte nicht gespeichert werden.",
+    inventoryTitle: "Inventar",
+    inventoryDescription:
+      "Ordne Gegenstände aus dem Weltregister zu und halte Anzahl, Ausrüstung und persönliche Notizen fest.",
+    inventoryEmpty: "Dieser Charakter trägt noch keine Gegenstände.",
+    inventoryItemLabel: "Gegenstand",
+    inventoryItemPlaceholder: "Gegenstand auswählen",
+    inventoryQuantityLabel: "Anzahl",
+    inventoryEquippedLabel: "Ausgerüstet",
+    inventoryEquippedBadge: "Ausgerüstet",
+    inventoryNotesLabel: "Inventarnotiz",
+    inventoryAddAction: "Zum Inventar hinzufügen",
+    inventoryUpdateAction: "Inventar aktualisieren",
+    inventoryRemoveAction: "Aus Inventar entfernen",
+    inventoryNoItems: "Es gibt keinen weiteren Gegenstand im Weltregister.",
+    inventoryCreateItemAction: "Gegenstand erstellen",
   },
   worldEntities: {
     sectionTitle: "Weltregister",
@@ -1424,6 +1456,9 @@ const germanMessages = {
       CAMPAIGN_ARCHIVED: "Kampagne archiviert",
       CHARACTER_CREATED: "Charakter erschaffen",
       CHARACTER_UPDATED: "Charakter geändert",
+      INVENTORY_ITEM_ADDED: "Gegenstand aufgenommen",
+      INVENTORY_ITEM_UPDATED: "Inventargegenstand geändert",
+      INVENTORY_ITEM_REMOVED: "Gegenstand abgelegt",
       ENTITY_CREATED: "Weltobjekt angelegt",
       ENTITY_UPDATED: "Weltobjekt geändert",
       ENTITY_RELATION_CREATED: "Beziehung angelegt",
@@ -1680,6 +1715,21 @@ const englishMessages = {
     backToCampaign: "Back to campaign",
     validationMessage: "Please check the highlighted fields.",
     saveError: "The character could not be saved.",
+    inventoryTitle: "Inventory",
+    inventoryDescription:
+      "Assign items from the world registry and track quantity, equipment, and personal notes.",
+    inventoryEmpty: "This character carries no items yet.",
+    inventoryItemLabel: "Item",
+    inventoryItemPlaceholder: "Choose an item",
+    inventoryQuantityLabel: "Quantity",
+    inventoryEquippedLabel: "Equipped",
+    inventoryEquippedBadge: "Equipped",
+    inventoryNotesLabel: "Inventory note",
+    inventoryAddAction: "Add to inventory",
+    inventoryUpdateAction: "Update inventory",
+    inventoryRemoveAction: "Remove from inventory",
+    inventoryNoItems: "There are no additional items in the world registry.",
+    inventoryCreateItemAction: "Create item",
   },
   worldEntities: {
     sectionTitle: "World registry",
@@ -2236,6 +2286,9 @@ const englishMessages = {
       CAMPAIGN_ARCHIVED: "Campaign archived",
       CHARACTER_CREATED: "Character created",
       CHARACTER_UPDATED: "Character changed",
+      INVENTORY_ITEM_ADDED: "Item acquired",
+      INVENTORY_ITEM_UPDATED: "Inventory item changed",
+      INVENTORY_ITEM_REMOVED: "Item removed",
       ENTITY_CREATED: "World entity created",
       ENTITY_UPDATED: "World entity changed",
       ENTITY_RELATION_CREATED: "Relation created",

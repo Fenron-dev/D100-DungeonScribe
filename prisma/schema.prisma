@@ -40,6 +40,7 @@ model Campaign {
   sceneMessages SceneMessage[]
   sceneWorldSuggestions SceneWorldSuggestion[]
   sceneStateSuggestions SceneStateSuggestion[]
+  characterInventoryEntries CharacterInventoryEntry[]
   oracleRecords OracleRecord[]
   oracleInspirations OracleInspiration[]
   oracleRandomEvents OracleRandomEvent[]
@@ -302,6 +303,7 @@ model Character {
   updatedAt  DateTime @updatedAt
 
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  inventoryEntries CharacterInventoryEntry[]
 
   @@index([campaignId, updatedAt])
 }
@@ -322,9 +324,30 @@ model WorldEntity {
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   outgoingRelations WorldEntityRelation[] @relation("WorldEntityRelationSource")
   incomingRelations WorldEntityRelation[] @relation("WorldEntityRelationTarget")
+  inventoryEntries CharacterInventoryEntry[]
 
   @@index([campaignId, type, status])
   @@index([campaignId, updatedAt])
+}
+
+model CharacterInventoryEntry {
+  id          String   @id @default(cuid())
+  campaignId  String
+  characterId String
+  itemId      String
+  quantity    Int      @default(1)
+  equipped    Boolean  @default(false)
+  notes       String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campaign  Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  character Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  item      WorldEntity @relation(fields: [itemId], references: [id], onDelete: Restrict)
+
+  @@unique([characterId, itemId])
+  @@index([campaignId, characterId, updatedAt])
+  @@index([campaignId, itemId])
 }
 
 model WorldEntityRelation {

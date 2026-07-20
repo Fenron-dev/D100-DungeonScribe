@@ -16,7 +16,7 @@ Eine versionierte, validierte Konfiguration bekannter Regelbausteine. Eine laufe
 
 Enthält Konzept, Archetyp, Eigenschaften, optionale Schwäche, Ressourcen, Zustände, Inventar und Notizen. Ressourcenwerte müssen innerhalb ihrer Definition liegen.
 
-Der erste vertikale Charakterbaustein speichert Name, Konzept, einen der stabilen Archetypschlüssel `powerful`, `agile` oder `insightful`, eine bis drei eindeutige Eigenschaften, eine optionale Schwäche und Notizen. Ressourcen, Zustände und Inventar werden in nachfolgenden Arbeitspaketen ergänzt. Erstellen und Bearbeiten erzeugen jeweils atomar ein `CampaignEvent`.
+Der erste vertikale Charakterbaustein speichert Name, Konzept, einen der stabilen Archetypschlüssel `powerful`, `agile` oder `insightful`, eine bis drei eindeutige Eigenschaften, eine optionale Schwäche und Notizen. Inventareinträge verknüpfen einen Charakter eindeutig mit einem Gegenstand des Weltregisters derselben Kampagne und speichern Menge, Ausrüstungsstatus und Notiz. Inventaränderungen werden atomar protokolliert. Ressourcen und Zustände werden in nachfolgenden Arbeitspaketen ergänzt. Erstellen und Bearbeiten erzeugen jeweils atomar ein `CampaignEvent`.
 
 ### Scene
 

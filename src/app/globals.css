@@ -843,6 +843,91 @@ h2 {
   margin-top: 3rem;
 }
 
+.character-inventory {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: rgb(14 22 18 / 76%);
+}
+
+.inventory-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.inventory-card {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 2fr) auto;
+  align-items: end;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.inventory-card-copy h3,
+.inventory-card-copy p {
+  margin: 0;
+}
+
+.inventory-card-copy > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inventory-card-copy p {
+  margin-top: 0.3rem;
+  color: var(--color-muted);
+  font-size: 0.84rem;
+}
+
+.inventory-edit-form,
+.inventory-add-form {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.45fr) minmax(8rem, 0.7fr) minmax(12rem, 1.4fr) auto;
+  align-items: end;
+  gap: 0.65rem;
+}
+
+.inventory-edit-form label,
+.inventory-add-form label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.inventory-edit-form .checkbox-label,
+.inventory-add-form .checkbox-label {
+  display: flex;
+  align-items: center;
+  min-height: 2.65rem;
+}
+
+.inventory-edit-form input,
+.inventory-add-form input,
+.inventory-add-form select {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.55rem;
+}
+
+.inventory-no-items {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+@media (max-width: 900px) {
+  .inventory-card,
+  .inventory-edit-form,
+  .inventory-add-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 .section-heading {
   display: flex;
   align-items: flex-end;
@@ -2487,6 +2572,33 @@ h2 {
 
 .reference-character {
   border-left: 3px solid rgb(212 168 95 / 72%);
+}
+
+.reference-inventory {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.reference-inventory ul {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reference-inventory li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.reference-inventory em {
+  color: var(--color-success);
+  font-size: 0.7rem;
+  font-style: normal;
 }
 
 .reference-entity {

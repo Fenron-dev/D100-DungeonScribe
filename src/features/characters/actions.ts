@@ -7,6 +7,11 @@ import type {
   CharacterFormState,
 } from "@/features/characters/form-state";
 import { characterDraftSchema } from "@/schemas/character";
+import {
+  characterInventoryDraftSchema,
+  characterInventoryUpdateSchema,
+} from "@/schemas/character-inventory";
+import { characterInventoryService } from "@/services/character-inventory-service-instance";
 import { characterService } from "@/services/character-service-instance";
 
 function readText(formData: FormData, key: string): string {
@@ -43,7 +48,7 @@ function normalizeErrors(
 }
 
 function reportPersistenceError(
-  operation: "create" | "update",
+  operation: "create" | "update" | "inventory",
   error: unknown,
 ): void {
   const technicalError = error as { code?: unknown; name?: unknown };
@@ -52,6 +57,69 @@ function reportPersistenceError(
   const code =
     typeof technicalError?.code === "string" ? technicalError.code : "no-code";
   console.error(`[characters] ${operation} failed (${name}, ${code})`);
+}
+
+export async function addCharacterInventoryAction(
+  campaignId: string,
+  characterId: string,
+  formData: FormData,
+): Promise<void> {
+  try {
+    await characterInventoryService.add(
+      campaignId,
+      characterId,
+      characterInventoryDraftSchema.parse({
+        itemId: readText(formData, "itemId"),
+        quantity: readText(formData, "quantity"),
+        equipped: readText(formData, "equipped") === "on",
+        notes: readText(formData, "notes"),
+      }),
+    );
+  } catch (error) {
+    reportPersistenceError("inventory", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}`);
+  revalidatePath(`/campaigns/${campaignId}/characters/${characterId}/edit`);
+}
+
+export async function updateCharacterInventoryAction(
+  campaignId: string,
+  characterId: string,
+  entryId: string,
+  formData: FormData,
+): Promise<void> {
+  try {
+    await characterInventoryService.update(
+      campaignId,
+      characterId,
+      entryId,
+      characterInventoryUpdateSchema.parse({
+        quantity: readText(formData, "quantity"),
+        equipped: readText(formData, "equipped") === "on",
+        notes: readText(formData, "notes"),
+      }),
+    );
+  } catch (error) {
+    reportPersistenceError("inventory", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}`);
+  revalidatePath(`/campaigns/${campaignId}/characters/${characterId}/edit`);
+}
+
+export async function removeCharacterInventoryAction(
+  campaignId: string,
+  characterId: string,
+  entryId: string,
+  _formData: FormData,
+): Promise<void> {
+  void _formData;
+  try {
+    await characterInventoryService.remove(campaignId, characterId, entryId);
+  } catch (error) {
+    reportPersistenceError("inventory", error);
+  }
+  revalidatePath(`/campaigns/${campaignId}`);
+  revalidatePath(`/campaigns/${campaignId}/characters/${characterId}/edit`);
 }
 
 export async function createCharacterAction(

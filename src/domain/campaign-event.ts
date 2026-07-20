@@ -4,6 +4,9 @@ export const campaignEventTypes = [
   "CAMPAIGN_ARCHIVED",
   "CHARACTER_CREATED",
   "CHARACTER_UPDATED",
+  "INVENTORY_ITEM_ADDED",
+  "INVENTORY_ITEM_UPDATED",
+  "INVENTORY_ITEM_REMOVED",
   "ENTITY_CREATED",
   "ENTITY_UPDATED",
   "ENTITY_RELATION_CREATED",
@@ -68,6 +71,7 @@ export function getCampaignEventCategory(
 ): Exclude<CampaignEventCategory, "all"> {
   if (eventType.startsWith("CAMPAIGN_")) return "campaign";
   if (eventType.startsWith("CHARACTER_")) return "characters";
+  if (eventType.startsWith("INVENTORY_")) return "characters";
   if (eventType.startsWith("ENTITY_")) return "world";
   if (eventType.startsWith("KNOWLEDGE_")) return "knowledge";
   if (eventType.startsWith("THREAD_")) return "threads";

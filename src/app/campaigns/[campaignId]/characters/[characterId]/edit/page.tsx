@@ -2,9 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updateCharacterAction } from "@/features/characters/actions";
 import { CharacterForm } from "@/features/characters/character-form";
+import { CharacterInventory } from "@/features/characters/character-inventory";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
+import { characterInventoryService } from "@/services/character-inventory-service-instance";
+import { worldEntityService } from "@/services/world-entity-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +19,11 @@ export default async function EditCharacterPage({
   params,
 }: EditCharacterPageProps) {
   const { campaignId, characterId } = await params;
-  const [campaign, character] = await Promise.all([
+  const [campaign, character, inventory, entities] = await Promise.all([
     campaignService.findById(campaignId),
     characterService.findById(campaignId, characterId),
+    characterInventoryService.list(campaignId, characterId),
+    worldEntityService.list(campaignId),
   ]);
   if (!campaign || !character) {
     notFound();
@@ -43,6 +48,13 @@ export default async function EditCharacterPage({
         character={character}
         messages={messages}
         mode="edit"
+      />
+      <CharacterInventory
+        campaignId={campaign.id}
+        characterId={character.id}
+        entries={inventory}
+        items={entities.filter(({ type }) => type === "item")}
+        messages={messages}
       />
     </div>
   );

@@ -135,6 +135,28 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "Die Straßen im Nebel" }),
   ).toBeVisible();
 
+  await page.getByRole("link", { name: "Weltregister öffnen" }).click();
+  await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
+  await page.getByLabel("Typ").selectOption("item");
+  await page.getByLabel("Name").fill("Messingkompass");
+  await page.getByLabel("Zweck").fill("Zeigt auf verborgene Wege");
+  await page.getByLabel("Seltenheit").fill("Ungewöhnlich");
+  await page.getByLabel("Kurzfassung").fill("Ein Kompass, dessen Nadel dem Nebel widerspricht.");
+  await page.getByRole("button", { name: "Weltobjekt speichern" }).click();
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+  await page.getByRole("link", { name: "Charakter bearbeiten" }).click();
+  await page.getByLabel("Gegenstand").selectOption({ label: "Messingkompass" });
+  await page.getByLabel("Anzahl").fill("2");
+  await page.getByLabel("Ausgerüstet").check();
+  await page.getByLabel("Inventarnotiz").fill("Am Gürtel befestigt");
+  await page.getByRole("button", { name: "Zum Inventar hinzufügen" }).click();
+  const inventoryCard = page.getByRole("article").filter({ hasText: "Messingkompass" });
+  await expect(inventoryCard.getByText("Ausgerüstet", { exact: true })).toBeVisible();
+  await inventoryCard.getByLabel("Anzahl").fill("3");
+  await inventoryCard.getByRole("button", { name: "Inventar aktualisieren" }).click();
+  await expect(inventoryCard.getByLabel("Anzahl")).toHaveValue("3");
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+
   await page.getByRole("link", { name: "Wissen öffnen" }).click();
   await page.getByRole("link", { name: "Wissenseintrag erstellen" }).click();
   await page.getByLabel("Wissensart").selectOption("secret");
@@ -209,6 +231,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("button", { name: "Szenenbegleiter", exact: true }).click();
   await expect(referencePanel).toBeVisible();
   await expect(referencePanel.getByText("Elara aus dem Nebel")).toBeVisible();
+  await expect(referencePanel.getByText("Messingkompass × 3")).toBeVisible();
   await page.getByRole("button", { name: "Journal", exact: true }).click();
   await expect(referencePanel).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
@@ -365,7 +388,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText(/2[67] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/(?:29|30) Ereignisse/)).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
   await expect(page.getByText(/1[34] Ereignisse/)).toBeVisible();

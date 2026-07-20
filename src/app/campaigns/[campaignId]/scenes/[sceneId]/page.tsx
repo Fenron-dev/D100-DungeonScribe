@@ -28,6 +28,7 @@ import { SceneWorldSuggestions } from "@/features/scenes/scene-world-suggestions
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
 import { characterService } from "@/services/character-service-instance";
+import { characterInventoryService } from "@/services/character-inventory-service-instance";
 import { getNarrativeProviderMode } from "@/services/narrative-service-instance";
 import { loadAiProfileVault } from "@/services/ai-profile-vault-service";
 import { sceneJournalService } from "@/services/scene-journal-service-instance";
@@ -50,8 +51,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
     sceneService.findById(campaignId, sceneId),
   ]);
   if (!campaign || !scene) notFound();
-  const [characters, entities, threads, journal, worldSuggestions, stateSuggestions, providerMode, profileVault] = await Promise.all([
+  const [characters, inventory, entities, threads, journal, worldSuggestions, stateSuggestions, providerMode, profileVault] = await Promise.all([
     characterService.list(campaign.id),
+    characterInventoryService.listCampaign(campaign.id),
     worldEntityService.list(campaign.id),
     storyThreadService.list(campaign.id),
     sceneJournalService.list(campaign.id, scene.id),
@@ -168,6 +170,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
           <SceneReferencePanel
             characters={participantCharacters}
             entities={sceneEntities}
+            inventory={inventory.filter(({ characterId }) =>
+              scene.participantCharacterIds.includes(characterId),
+            )}
             messages={messages}
             threads={sceneThreads}
           />

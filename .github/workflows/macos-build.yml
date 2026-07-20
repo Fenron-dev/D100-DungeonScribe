@@ -125,6 +125,7 @@ jobs:
           TEST_DATABASE="$TEST_HOME/Library/Application Support/D100 DungeonScribe/dungeonscribe.db"
           CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
           CHARACTER_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Character;')"
+          INVENTORY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CharacterInventoryEntry;')"
           ENTITY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntity;')"
           RELATION_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntityRelation;')"
           KNOWLEDGE_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM KnowledgeEntry;')"
@@ -141,7 +142,8 @@ jobs:
           EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
           test "$CAMPAIGN_COUNT" = "1"
           test "$CHARACTER_COUNT" = "1"
-          test "$ENTITY_COUNT" = "3"
+          test "$INVENTORY_COUNT" = "1"
+          test "$ENTITY_COUNT" = "4"
           test "$RELATION_COUNT" = "1"
           test "$KNOWLEDGE_COUNT" = "2"
           test "$THREAD_COUNT" = "2"
@@ -155,7 +157,7 @@ jobs:
           test "$INSPIRATION_COUNT" = "1"
           test "$RANDOM_EVENT_COUNT" -ge "1"
           test "$RANDOM_EVENT_COUNT" -le "2"
-          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 28))"
+          test "$EVENT_COUNT" = "$((RANDOM_EVENT_COUNT + 31))"
 
       - name: Create archive and checksum
         run: |

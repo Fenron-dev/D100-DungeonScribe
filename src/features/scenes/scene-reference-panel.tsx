@@ -1,4 +1,5 @@
 import type { Character } from "@/domain/character";
+import type { CharacterInventoryEntry } from "@/domain/character-inventory";
 import type { StoryThread } from "@/domain/story-thread";
 import type { WorldEntity } from "@/domain/world-entity";
 import type { getMessages } from "@/i18n/messages";
@@ -6,11 +7,13 @@ import type { getMessages } from "@/i18n/messages";
 export function SceneReferencePanel({
   characters,
   entities,
+  inventory,
   threads,
   messages,
 }: {
   characters: Character[];
   entities: WorldEntity[];
+  inventory: CharacterInventoryEntry[];
   threads: StoryThread[];
   messages: ReturnType<typeof getMessages>;
 }) {
@@ -34,6 +37,21 @@ export function SceneReferencePanel({
                 <ul className="tag-list">
                   {character.traits.map((trait) => <li key={trait}>{trait}</li>)}
                 </ul>
+                {inventory.some(({ characterId }) => characterId === character.id) ? (
+                  <div className="reference-inventory">
+                    <small>{messages.characters.inventoryTitle}</small>
+                    <ul>
+                      {inventory
+                        .filter(({ characterId }) => characterId === character.id)
+                        .map((entry) => (
+                          <li key={entry.id}>
+                            <span>{entry.itemName} × {entry.quantity}</span>
+                            {entry.equipped ? <em>{messages.characters.inventoryEquippedBadge}</em> : null}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                ) : null}
               </article>
             ))}
           </div>

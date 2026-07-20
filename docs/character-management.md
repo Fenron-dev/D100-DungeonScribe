@@ -1,6 +1,6 @@
 # Charakterverwaltung
 
-## Umfang Phase 4
+## Kernprofil und Inventar
 
 Der erste Charakterbaustein liefert ein vollständiges, aber bewusst kleines Kernprofil innerhalb einer Kampagne:
 
@@ -22,6 +22,15 @@ Erstellen und Bearbeiten werden serverseitig validiert. Zustandsänderung und Ka
 - `CHARACTER_CREATED`
 - `CHARACTER_UPDATED`
 
+Die Bearbeitungsansicht enthält außerdem das Inventar. Ein Inventareintrag
+verweist auf einen echten Gegenstand des Weltregisters derselben Kampagne und
+speichert Anzahl, Ausrüstungsstatus und eine optionale persönliche Notiz.
+Nicht-Gegenstände, fremde Kampagnenobjekte und doppelte Zuordnungen werden
+abgewiesen. Hinzufügen, Bearbeiten und Entfernen erzeugen atomar
+`INVENTORY_ITEM_ADDED`, `INVENTORY_ITEM_UPDATED` beziehungsweise
+`INVENTORY_ITEM_REMOVED`. Der Szenenbegleiter zeigt das aktuelle Inventar der
+beteiligten Charaktere kompakt an.
+
 Ein Charakter kann nicht über die URL einer anderen Kampagne geladen oder verändert werden.
 
 ## Validierung
@@ -31,6 +40,8 @@ Ein Charakter kann nicht über die URL einer anderen Kampagne geladen oder verä
 - Eigenschaften: 1 bis 3 Einträge, jeweils höchstens 60 Zeichen und ohne Duplikate
 - Schwäche: optional, höchstens 120 Zeichen
 - Notizen: optional, höchstens 4.000 Zeichen
+- Inventarmenge: 1 bis 999
+- Inventarnotiz: optional, höchstens 1.000 Zeichen
 
 Eingaben werden getrimmt. Leere optionale Felder werden stabil normalisiert, sodass eine erneute Validierung bereits geprüfter Daten dasselbe Ergebnis liefert.
 
@@ -40,7 +51,6 @@ Die folgenden Bestandteile des Zielmodells werden in eigenen vertikalen Arbeitsp
 
 - konfigurierbare Ressourcen und aktuelle Ressourcenwerte
 - Zustände und deren Schwere
-- Inventar
 - Fortschritt und Entwicklungen
 - Verknüpfung des Charakters mit Würfelproben und Szenen
 - kampagnenspezifische Anzeigenamen für Archetypen
