@@ -267,6 +267,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     hasText: "Der verborgene Durchgang",
   });
   await expect(suggestionCard).toBeVisible();
+  await suggestionCard.getByText("Vorschlag anpassen", { exact: true }).click();
+  await suggestionCard.getByLabel("Name").fill("Der Durchgang hinter dem Archiv");
   await suggestionCard.getByRole("button", { name: "Übernehmen" }).click();
   await expect(suggestionCard).toBeHidden();
   const aiMessageEdit = aiMessage.locator("details.journal-entry-edit");

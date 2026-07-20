@@ -1,4 +1,7 @@
-import type { SceneWorldSuggestion } from "@/domain/scene-world-suggestion";
+import type {
+  SceneWorldSuggestion,
+  SceneWorldSuggestionDraft,
+} from "@/domain/scene-world-suggestion";
 import type { WorldEntityDraft, WorldEntityType } from "@/domain/world-entity";
 import type { PrismaClient } from "@/generated/prisma/client";
 import type { SceneWorldSuggestionRepository } from "@/repositories/scene-world-suggestion-repository";
@@ -60,13 +63,14 @@ export class PrismaSceneWorldSuggestionRepository
     campaignId: string,
     sceneId: string,
     suggestionId: string,
+    editedDraft: SceneWorldSuggestionDraft,
   ): Promise<SceneWorldSuggestion | null> {
     return this.client.$transaction(async (transaction) => {
       const suggestion = await transaction.sceneWorldSuggestion.findFirst({
         where: { id: suggestionId, campaignId, sceneId, status: "pending" },
       });
       if (!suggestion) return null;
-      const draft = sceneWorldSuggestionDraftSchema.parse(suggestion);
+      const draft = sceneWorldSuggestionDraftSchema.parse(editedDraft);
       const entityDraft = worldEntityDraftSchema.parse({
         ...draft,
         description: null,
@@ -83,6 +87,9 @@ export class PrismaSceneWorldSuggestionRepository
           status: "accepted",
           createdEntityId: entity.id,
           resolvedAt: new Date(),
+          type: draft.type,
+          name: draft.name,
+          summary: draft.summary,
         },
       });
       await transaction.campaignEvent.create({

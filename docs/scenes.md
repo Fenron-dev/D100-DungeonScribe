@@ -23,7 +23,8 @@ Die KI-Erzählung wird nur durch eine bewusste Benutzeraktion ausgelöst. Eine S
 Eine validierte KI-Erzählantwort darf zusätzlich bis zu drei knappe Vorschläge
 für neu eingeführte Personen, Orte, Fraktionen oder Gegenstände enthalten. Diese
 Vorschläge sind kein Kampagnenwissen und zunächst ausdrücklich unverbindlich.
-Sie erscheinen oberhalb des Journals als prüfbare Karten. **Übernehmen** legt das
+Sie erscheinen oberhalb des Journals als prüfbare Karten. Typ, Name und
+Kurzbeschreibung lassen sich vor der Bestätigung bearbeiten. **Übernehmen** legt das
 Weltobjekt atomar mit einem nachvollziehbaren `ENTITY_CREATED`-Ereignis an;
 **Verwerfen** entfernt nur die offene Karte. Eine neue Erzählvariante ersetzt
 noch offene Vorschläge der vorherigen Variante. Bereits bestätigte Einträge

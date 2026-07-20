@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { SceneWorldSuggestion } from "@/domain/scene-world-suggestion";
+import type {
+  SceneWorldSuggestion,
+  SceneWorldSuggestionDraft,
+} from "@/domain/scene-world-suggestion";
 import type { SceneWorldSuggestionRepository } from "@/repositories/scene-world-suggestion-repository";
 import {
   SceneWorldSuggestionNotFoundError,
@@ -27,10 +30,16 @@ class MemorySuggestionRepository implements SceneWorldSuggestionRepository {
     return this.suggestion?.status === "pending" ? [this.suggestion] : [];
   }
 
-  public async accept(): Promise<SceneWorldSuggestion | null> {
+  public async accept(
+    _campaignId: string,
+    _sceneId: string,
+    _suggestionId: string,
+    draft: SceneWorldSuggestionDraft,
+  ): Promise<SceneWorldSuggestion | null> {
     if (!this.suggestion || this.suggestion.status !== "pending") return null;
     this.suggestion = {
       ...this.suggestion,
+      ...draft,
       status: "accepted",
       createdEntityId: "entity-1",
       resolvedAt: new Date("2026-07-20T10:01:00.000Z"),
@@ -54,10 +63,18 @@ describe("SceneWorldSuggestionService", () => {
     const repository = new MemorySuggestionRepository();
     const service = new SceneWorldSuggestionService(repository);
     await expect(
-      service.accept("campaign-1", "scene-1", "suggestion-1"),
-    ).resolves.toMatchObject({ status: "accepted", createdEntityId: "entity-1" });
+      service.accept("campaign-1", "scene-1", "suggestion-1", {
+        type: "location",
+        name: "Geheimer Durchgang",
+        summary: "Ein angepasster Weg mit unbekanntem Ziel.",
+      }),
+    ).resolves.toMatchObject({
+      status: "accepted",
+      createdEntityId: "entity-1",
+      name: "Geheimer Durchgang",
+    });
     await expect(
-      service.accept("campaign-1", "scene-1", "suggestion-1"),
+      service.accept("campaign-1", "scene-1", "suggestion-1", pendingSuggestion),
     ).rejects.toBeInstanceOf(SceneWorldSuggestionNotFoundError);
   });
 

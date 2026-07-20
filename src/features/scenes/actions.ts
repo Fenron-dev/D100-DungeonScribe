@@ -11,6 +11,7 @@ import type {
   SceneJournalFormState,
 } from "@/features/scenes/form-state";
 import { sceneCompletionInputSchema, sceneDraftSchema } from "@/schemas/scene";
+import { sceneWorldSuggestionDraftSchema } from "@/schemas/scene-world-suggestion";
 import {
   diceRollDraftSchema,
   sceneMessageContentSchema,
@@ -277,11 +278,20 @@ export async function acceptSceneWorldSuggestionAction(
   campaignId: string,
   sceneId: string,
   suggestionId: string,
-  _formData: FormData,
+  formData: FormData,
 ): Promise<void> {
-  void _formData;
   try {
-    await sceneWorldSuggestionService.accept(campaignId, sceneId, suggestionId);
+    const draft = sceneWorldSuggestionDraftSchema.parse({
+      type: readText(formData, "type"),
+      name: readText(formData, "name"),
+      summary: readText(formData, "summary"),
+    });
+    await sceneWorldSuggestionService.accept(
+      campaignId,
+      sceneId,
+      suggestionId,
+      draft,
+    );
   } catch (error) {
     reportPersistenceError("update", error);
   }

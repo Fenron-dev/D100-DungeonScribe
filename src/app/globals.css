@@ -2306,6 +2306,38 @@ h2 {
   margin: 0;
 }
 
+.scene-suggestion-review {
+  margin-top: 0.15rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.scene-suggestion-review summary {
+  padding: 0.45rem 0 0;
+  color: var(--color-accent-strong);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.scene-suggestion-review > div {
+  display: grid;
+  gap: 0.3rem;
+  padding-top: 0.5rem;
+}
+
+.scene-suggestion-review label {
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.scene-suggestion-review input,
+.scene-suggestion-review select,
+.scene-suggestion-review textarea {
+  min-height: 2.2rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.82rem;
+}
+
 .scene-suggestion-card h3 {
   font-family: var(--font-body);
   font-size: 0.98rem;

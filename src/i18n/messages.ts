@@ -409,6 +409,10 @@ export interface MessageCatalog {
     suggestionTypes: Record<"npc" | "location" | "faction" | "item", string>;
     acceptSuggestionAction: string;
     dismissSuggestionAction: string;
+    editSuggestionAction: string;
+    suggestionTypeLabel: string;
+    suggestionNameLabel: string;
+    suggestionSummaryLabel: string;
     expectedSetupTitle: string;
     actualSetupTitle: string;
     objectiveTitle: string;
@@ -1109,6 +1113,10 @@ const germanMessages = {
     },
     acceptSuggestionAction: "Übernehmen",
     dismissSuggestionAction: "Verwerfen",
+    editSuggestionAction: "Vorschlag anpassen",
+    suggestionTypeLabel: "Art",
+    suggestionNameLabel: "Name",
+    suggestionSummaryLabel: "Kurzbeschreibung",
     expectedSetupTitle: "Erwartete Situation",
     actualSetupTitle: "Aktueller Szenenbeginn",
     objectiveTitle: "Ziel",
@@ -1905,6 +1913,10 @@ const englishMessages = {
     },
     acceptSuggestionAction: "Accept",
     dismissSuggestionAction: "Dismiss",
+    editSuggestionAction: "Edit suggestion",
+    suggestionTypeLabel: "Type",
+    suggestionNameLabel: "Name",
+    suggestionSummaryLabel: "Short description",
     expectedSetupTitle: "Expected situation",
     actualSetupTitle: "Current scene opening",
     objectiveTitle: "Objective",

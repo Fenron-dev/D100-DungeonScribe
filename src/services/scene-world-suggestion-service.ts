@@ -2,7 +2,10 @@ import type { SceneWorldSuggestion } from "@/domain/scene-world-suggestion";
 import type { SceneWorldSuggestionRepository } from "@/repositories/scene-world-suggestion-repository";
 import { campaignIdSchema } from "@/schemas/campaign";
 import { sceneIdSchema } from "@/schemas/scene";
-import { sceneWorldSuggestionIdSchema } from "@/schemas/scene-world-suggestion";
+import {
+  sceneWorldSuggestionDraftSchema,
+  sceneWorldSuggestionIdSchema,
+} from "@/schemas/scene-world-suggestion";
 
 export class SceneWorldSuggestionNotFoundError extends Error {
   public constructor() {
@@ -30,11 +33,13 @@ export class SceneWorldSuggestionService {
     campaignId: string,
     sceneId: string,
     suggestionId: string,
+    input: unknown,
   ): Promise<SceneWorldSuggestion> {
     const suggestion = await this.repository.accept(
       campaignIdSchema.parse(campaignId),
       sceneIdSchema.parse(sceneId),
       sceneWorldSuggestionIdSchema.parse(suggestionId),
+      sceneWorldSuggestionDraftSchema.parse(input),
     );
     if (!suggestion) throw new SceneWorldSuggestionNotFoundError();
     return suggestion;

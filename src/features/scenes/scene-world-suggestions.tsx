@@ -1,4 +1,5 @@
 import type { SceneWorldSuggestion } from "@/domain/scene-world-suggestion";
+import { worldEntityTypes } from "@/domain/world-entity";
 import {
   acceptSceneWorldSuggestionAction,
   dismissSceneWorldSuggestionAction,
@@ -32,6 +33,7 @@ export function SceneWorldSuggestions({
       </header>
       <div className="scene-suggestion-grid">
         {suggestions.map((suggestion) => {
+          const acceptFormId = `accept-scene-suggestion-${suggestion.id}`;
           const acceptAction = acceptSceneWorldSuggestionAction.bind(
             null,
             campaignId,
@@ -51,8 +53,52 @@ export function SceneWorldSuggestions({
               </span>
               <h3>{suggestion.name}</h3>
               <p>{suggestion.summary}</p>
+              <details className="scene-suggestion-review">
+                <summary>{copy.editSuggestionAction}</summary>
+                <div>
+                  <label htmlFor={`${suggestion.id}-type`}>
+                    {copy.suggestionTypeLabel}
+                  </label>
+                  <select
+                    defaultValue={suggestion.type}
+                    form={acceptFormId}
+                    id={`${suggestion.id}-type`}
+                    name="type"
+                  >
+                    {worldEntityTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {copy.suggestionTypes[type]}
+                      </option>
+                    ))}
+                  </select>
+                  <label htmlFor={`${suggestion.id}-name`}>
+                    {copy.suggestionNameLabel}
+                  </label>
+                  <input
+                    defaultValue={suggestion.name}
+                    form={acceptFormId}
+                    id={`${suggestion.id}-name`}
+                    maxLength={100}
+                    name="name"
+                    required
+                    type="text"
+                  />
+                  <label htmlFor={`${suggestion.id}-summary`}>
+                    {copy.suggestionSummaryLabel}
+                  </label>
+                  <textarea
+                    defaultValue={suggestion.summary}
+                    form={acceptFormId}
+                    id={`${suggestion.id}-summary`}
+                    maxLength={500}
+                    name="summary"
+                    required
+                    rows={3}
+                  />
+                </div>
+              </details>
               <div className="scene-suggestion-actions">
-                <form action={acceptAction}>
+                <form action={acceptAction} id={acceptFormId}>
                   <button className="button button-primary" type="submit">
                     {copy.acceptSuggestionAction}
                   </button>

@@ -1,4 +1,7 @@
-import type { SceneWorldSuggestion } from "@/domain/scene-world-suggestion";
+import type {
+  SceneWorldSuggestion,
+  SceneWorldSuggestionDraft,
+} from "@/domain/scene-world-suggestion";
 
 export interface SceneWorldSuggestionRepository {
   listPending(
@@ -9,6 +12,7 @@ export interface SceneWorldSuggestionRepository {
     campaignId: string,
     sceneId: string,
     suggestionId: string,
+    draft: SceneWorldSuggestionDraft,
   ): Promise<SceneWorldSuggestion | null>;
   dismiss(
     campaignId: string,
