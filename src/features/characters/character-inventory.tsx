@@ -73,7 +73,7 @@ export function CharacterInventory({
                   </label>
                   <button className="button button-secondary" type="submit">{copy.inventoryUpdateAction}</button>
                 </form>
-                <form action={removeAction}>
+                <form action={removeAction} className="inventory-remove-form">
                   <button className="text-button danger-text" type="submit">{copy.inventoryRemoveAction}</button>
                 </form>
               </article>
