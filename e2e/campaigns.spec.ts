@@ -137,6 +137,8 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
 
   await page.getByRole("link", { name: "Weltregister öffnen" }).click();
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
+  await expect(page.getByLabel("Typ")).toBeVisible();
+  await page.waitForTimeout(1_000);
   await page.getByLabel("Typ").selectOption("item");
   await page.getByLabel("Name").fill("Messingkompass");
   await page.getByLabel("Zweck").fill("Weist durch übernatürlichen Nebel");
