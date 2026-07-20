@@ -139,8 +139,6 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByRole("link", { name: "Weltobjekt erstellen" }).click();
   await page.getByLabel("Typ").selectOption("item");
   await page.getByLabel("Name").fill("Messingkompass");
-  await page.getByLabel("Zweck").fill("Zeigt auf verborgene Wege");
-  await page.getByLabel("Seltenheit").fill("Ungewöhnlich");
   await page.getByLabel("Kurzfassung").fill("Ein Kompass, dessen Nadel dem Nebel widerspricht.");
   await page.getByRole("button", { name: "Weltobjekt speichern" }).click();
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
