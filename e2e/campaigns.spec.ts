@@ -365,7 +365,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText(/2[45] Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/2[67] Ereignisse/)).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
   await expect(page.getByText(/1[34] Ereignisse/)).toBeVisible();
