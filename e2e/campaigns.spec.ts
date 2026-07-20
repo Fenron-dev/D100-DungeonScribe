@@ -154,7 +154,9 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByLabel("Inventarnotiz").fill("Am Gürtel befestigt");
   await page.getByRole("button", { name: "Zum Inventar hinzufügen" }).click();
   const inventoryCard = page.getByRole("article").filter({ hasText: "Messingkompass" });
-  await expect(inventoryCard.getByText("Ausgerüstet", { exact: true })).toBeVisible();
+  await expect(
+    inventoryCard.locator(".status-badge").getByText("Ausgerüstet", { exact: true }),
+  ).toBeVisible();
   await inventoryCard.getByLabel("Anzahl").fill("3");
   await inventoryCard.getByRole("button", { name: "Inventar aktualisieren" }).click();
   await expect(inventoryCard.getByLabel("Anzahl")).toHaveValue("3");
