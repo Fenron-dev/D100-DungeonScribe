@@ -1,16 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { Campaign, CampaignDraft } from "@/domain/campaign";
+import type { Campaign } from "@/domain/campaign";
 import type { LibraryWorldEntity } from "@/domain/library-world-entity";
 import type {
   WorldEntity,
   WorldEntityDraft,
   WorldEntityRelation,
-  WorldEntityRelationDraft,
 } from "@/domain/world-entity";
-import type {
-  CampaignListOptions,
-  CampaignRepository,
-} from "@/repositories/campaign-repository";
+import type { CampaignRepository } from "@/repositories/campaign-repository";
 import type { LibraryWorldEntityRepository } from "@/repositories/library-world-entity-repository";
 import type { WorldEntityRepository } from "@/repositories/world-entity-repository";
 import {
@@ -138,11 +134,7 @@ class MemoryWorldEntityRepository implements WorldEntityRepository {
     return null;
   }
 
-  public async createRelation(
-    _campaignId: string,
-    _sourceEntityId: string,
-    _draft: WorldEntityRelationDraft,
-  ): Promise<WorldEntityRelation | null> {
+  public async createRelation(): Promise<WorldEntityRelation | null> {
     return null;
   }
 
@@ -158,7 +150,7 @@ class MemoryWorldEntityRepository implements WorldEntityRepository {
 class MemoryCampaignRepository implements CampaignRepository {
   public campaign: Campaign | null = activeCampaign;
 
-  public async create(_draft: CampaignDraft): Promise<Campaign> {
+  public async create(): Promise<Campaign> {
     return activeCampaign;
   }
 
@@ -166,7 +158,7 @@ class MemoryCampaignRepository implements CampaignRepository {
     return this.campaign?.id === id ? this.campaign : null;
   }
 
-  public async list(_options: CampaignListOptions): Promise<Campaign[]> {
+  public async list(): Promise<Campaign[]> {
     return this.campaign ? [this.campaign] : [];
   }
 
