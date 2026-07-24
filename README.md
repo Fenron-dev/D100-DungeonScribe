@@ -66,6 +66,7 @@ Vor jedem Upload prüft `npm run security:scan` die versionierten Textdateien au
 - [Solo-Orakel](docs/oracle.md)
 - [Entwicklungsprozess](docs/development-process.md)
 - [macOS-Testbuild](docs/macos-test-build.md)
+- [Abhängigkeitssicherheit](docs/dependency-security.md)
 - [Verbindliche Regeln für Codex](AGENTS.md)
 
 ## Geplante Befehle
