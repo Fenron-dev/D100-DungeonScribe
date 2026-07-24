@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { WorldEntity } from "@/domain/world-entity";
+import {
+  removeWorldEntityFromLibraryAction,
+  saveWorldEntityToLibraryAction,
+} from "@/features/library/actions";
 import { getMessages } from "@/i18n/messages";
 import { worldEntityFilterSchema } from "@/schemas/world-entity";
 import { campaignService } from "@/services/campaign-service-instance";
+import { libraryWorldEntityService } from "@/services/library-world-entity-service-instance";
 import { worldEntityService } from "@/services/world-entity-service-instance";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +24,20 @@ function firstValue(value: SearchValue): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-function WorldEntityCard({ entity }: { entity: WorldEntity }) {
+function WorldEntityCard({
+  entity,
+  savedInLibrary,
+}: {
+  entity: WorldEntity;
+  savedInLibrary: boolean;
+}) {
   const copy = getMessages().worldEntities;
   const details = getDetails(entity);
+  const libraryAction = (
+    savedInLibrary
+      ? removeWorldEntityFromLibraryAction
+      : saveWorldEntityToLibraryAction
+  ).bind(null, entity.campaignId, entity.id);
 
   return (
     <article className="world-entity-card">
@@ -54,12 +70,26 @@ function WorldEntityCard({ entity }: { entity: WorldEntity }) {
           ))}
         </ul>
       ) : null}
-      <Link
-        className="text-link"
-        href={`/campaigns/${entity.campaignId}/world/${entity.id}/edit`}
-      >
-        {copy.editLink}
-      </Link>
+      <div className="entity-card-actions">
+        <Link
+          className="text-link"
+          href={`/campaigns/${entity.campaignId}/world/${entity.id}/edit`}
+        >
+          {copy.editLink}
+        </Link>
+        <form action={libraryAction}>
+          <button className="text-button" type="submit">
+            {savedInLibrary
+              ? copy.removeFromLibraryAction
+              : copy.saveToLibraryAction}
+          </button>
+        </form>
+        {savedInLibrary ? (
+          <span className="status-badge status-active">
+            {copy.savedInLibrary}
+          </span>
+        ) : null}
+      </div>
     </article>
   );
 }
@@ -103,6 +133,11 @@ export default async function WorldRegistryPage({
   });
   const filter = parsedFilter.success ? parsedFilter.data : {};
   const entities = await worldEntityService.list(campaign.id, filter);
+  const savedSourceIds = new Set(
+    await libraryWorldEntityService.listSavedSourceIds(
+      entities.map(({ id }) => id),
+    ),
+  );
   const copy = getMessages().worldEntities;
   const hasFilter = Boolean(filter.query || filter.type);
 
@@ -162,7 +197,11 @@ export default async function WorldRegistryPage({
       {entities.length > 0 ? (
         <div className="world-entity-grid">
           {entities.map((entity) => (
-            <WorldEntityCard entity={entity} key={entity.id} />
+            <WorldEntityCard
+              entity={entity}
+              key={entity.id}
+              savedInLibrary={savedSourceIds.has(entity.id)}
+            />
           ))}
         </div>
       ) : (

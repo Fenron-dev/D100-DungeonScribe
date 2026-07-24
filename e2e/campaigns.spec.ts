@@ -162,6 +162,33 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await expect(inventoryCard.getByLabel("Anzahl")).toHaveValue("3");
   await page.getByRole("link", { name: "Zur Kampagne" }).click();
 
+  await page.getByRole("link", { name: "Weltregister öffnen" }).click();
+  const itemWorldCard = page
+    .getByRole("article")
+    .filter({ hasText: "Messingkompass" })
+    .first();
+  await itemWorldCard
+    .getByRole("button", { name: "Für Bibliothek merken" })
+    .click();
+  await expect(
+    itemWorldCard.getByText("In Bibliothek", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Bibliothek" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Bibliothek" }),
+  ).toBeVisible();
+  const libraryCard = page
+    .getByRole("article")
+    .filter({ hasText: "Messingkompass" });
+  await libraryCard
+    .getByLabel("In Kampagne übernehmen")
+    .selectOption({ label: "Die Straßen im Nebel" });
+  await libraryCard.getByRole("button", { name: "Kopie anlegen" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Messingkompass" }),
+  ).toHaveCount(2);
+  await page.getByRole("link", { name: "Zur Kampagne" }).click();
+
   await page.getByRole("link", { name: "Wissen öffnen" }).click();
   await page.getByRole("link", { name: "Wissenseintrag erstellen" }).click();
   await page.getByLabel("Wissensart").selectOption("secret");
@@ -393,7 +420,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Chronik öffnen" }).click();
-  await expect(page.getByText(/(?:29|30) Ereignisse/)).toBeVisible();
+  await expect(page.getByText(/(?:30|31) Ereignisse/)).toBeVisible();
   await page.getByLabel("Chronik filtern").selectOption("scenes");
   await page.getByRole("button", { name: "Filtern" }).click();
   await expect(page.getByText(/1[34] Ereignisse/)).toBeVisible();

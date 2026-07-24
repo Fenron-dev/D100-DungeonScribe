@@ -14,6 +14,16 @@ model AppSetting {
   updatedAt DateTime @updatedAt
 }
 
+model LibraryWorldEntity {
+  id             String   @id @default(cuid())
+  sourceEntityId String   @unique
+  draft          Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([updatedAt])
+}
+
 model Campaign {
   id         String   @id @default(cuid())
   name       String

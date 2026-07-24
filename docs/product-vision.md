@@ -81,6 +81,11 @@ Orte, Fraktionen sowie Orakeltabellen können als Favoriten markiert und in
 anderen Kampagnen wiederverwendet werden. Die KI darf passende Favoriten
 vorschlagen, übernimmt sie aber nicht ungefragt.
 
+Der erste umgesetzte Bibliotheksbaustein speichert Personen, Orte, Fraktionen
+und Gegenstände als unabhängige Momentaufnahme. Die bewusste Übernahme legt in
+einer aktiven Zielkampagne eine neue Kopie an; Beziehungen werden wegen ihrer
+Kampagnenbindung nicht mitkopiert.
+
 ## Abenteuermodule
 
 Ein späterer Import liest ein vom Nutzer selbst ausgewähltes PDF, Dokument oder

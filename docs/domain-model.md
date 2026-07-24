@@ -38,6 +38,19 @@ Die vertikalen Weltobjektbausteine unterstützen die Typen `npc`, `location`, `f
 
 Weltobjektbeziehungen sind gerichtete Datensätze mit Quelle, Ziel, stabilem Typ, optionaler Beschreibung und Status. Beide Enden müssen zur gleichen Kampagne gehören; Selbstbeziehungen und doppelte Kombinationen aus Quelle, Ziel und Typ sind unzulässig. Erstellen und Entfernen werden atomar als eigene Kampagnenereignisse protokolliert.
 
+### LibraryWorldEntity
+
+Ein Bibliotheksweltobjekt ist eine kampagnenunabhängige, validierte
+Momentaufnahme eines Weltobjektentwurfs. Es speichert die Ursprungs-ID nur zur
+eindeutigen Favoritenverwaltung, besitzt jedoch bewusst keine
+Fremdschlüsselbeziehung zur Ursprungskampagne. Dadurch überlebt der Favorit
+spätere Änderungen, Archivierung oder Löschung seines Originals.
+
+Die Übernahme in eine aktive Kampagne erzeugt ein neues `WorldEntity` mit neuer
+Identität und einem normalen `ENTITY_CREATED`-Ereignis. Beziehungen und
+Inventarzuordnungen werden nicht kopiert, da sie nur innerhalb ihrer
+Ursprungskampagne gültig sind.
+
 ### KnowledgeEntry
 
 Trennt Weltwahrheit von bekanntem oder vermutetem Wissen. Ein Eintrag besitzt Typ, Wahrheitsstatus, Wissende, Beziehungen, Quelle und Sperrstatus.

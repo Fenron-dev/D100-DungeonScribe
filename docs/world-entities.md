@@ -43,6 +43,14 @@ Die deutsch- und englischsprachige Oberfläche übersetzt nur die stabilen Schl�
 
 Das kampagnengebundene Weltregister durchsucht Namen, Kurzfassungen und Tags ohne Beachtung der Großschreibung. Zusätzlich kann nach einem der vier Typen gefiltert werden. Die Filterung verändert keine Daten und benötigt keinen externen Dienst.
 
+## Persönliche Bibliothek
+
+Jedes Weltobjekt kann direkt im Weltregister als Favorit gespeichert und dort
+auch wieder entfernt werden. Der Favorit ist eine eigenständige Momentaufnahme
+ohne Kampagnenbeziehungen. In der Bibliothek kann der Nutzer ihn bewusst als
+neues Weltobjekt in eine aktive Kampagne kopieren. Einzelheiten und
+Abgrenzungen stehen in [Persönliche Bibliothek](library.md).
+
 ## Persistenz und Ereignisse
 
 Weltobjekte können nur innerhalb ihrer Kampagne geladen und verändert werden. Folgende Zustandsänderungen werden zusammen mit dem aktuellen Zustand in einer Datenbanktransaktion gespeichert:

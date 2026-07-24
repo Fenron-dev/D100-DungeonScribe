@@ -287,6 +287,24 @@ export interface MessageCatalog {
     backToRegistry: string;
     validationMessage: string;
     saveError: string;
+    saveToLibraryAction: string;
+    savedInLibrary: string;
+    removeFromLibraryAction: string;
+  };
+  library: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    worldEntitiesTitle: string;
+    worldEntitiesDescription: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    targetCampaignLabel: string;
+    targetCampaignPlaceholder: string;
+    copyAction: string;
+    removeAction: string;
+    noActiveCampaigns: string;
+    sourceHint: string;
   };
   knowledge: {
     sectionTitle: string;
@@ -983,6 +1001,27 @@ const germanMessages = {
     backToRegistry: "Zum Weltregister",
     validationMessage: "Bitte prüfe die markierten Felder.",
     saveError: "Das Weltobjekt konnte nicht gespeichert werden.",
+    saveToLibraryAction: "Für Bibliothek merken",
+    savedInLibrary: "In Bibliothek",
+    removeFromLibraryAction: "Aus Bibliothek entfernen",
+  },
+  library: {
+    eyebrow: "Persönliche Bausteine",
+    title: "Bibliothek",
+    description:
+      "Bewahre bewährte Weltobjekte kampagnenunabhängig auf und übernimm sie später bewusst in eine andere Geschichte.",
+    worldEntitiesTitle: "Wiederverwendbare Weltobjekte",
+    worldEntitiesDescription:
+      "Favoriten sind eigenständige Schnappschüsse. Spätere Änderungen am Original verändern sie nicht.",
+    emptyTitle: "Noch keine Favoriten",
+    emptyDescription:
+      "Merke dir eine Person, einen Ort, eine Fraktion oder einen Gegenstand direkt im Weltregister.",
+    targetCampaignLabel: "In Kampagne übernehmen",
+    targetCampaignPlaceholder: "Aktive Kampagne auswählen",
+    copyAction: "Kopie anlegen",
+    removeAction: "Favorit entfernen",
+    noActiveCampaigns: "Es gibt keine aktive Zielkampagne.",
+    sourceHint: "Gespeicherter Schnappschuss",
   },
   knowledge: {
     sectionTitle: "Kampagnenwissen",
@@ -1816,6 +1855,27 @@ const englishMessages = {
     backToRegistry: "Back to world registry",
     validationMessage: "Please check the highlighted fields.",
     saveError: "The world entity could not be saved.",
+    saveToLibraryAction: "Save to library",
+    savedInLibrary: "In library",
+    removeFromLibraryAction: "Remove from library",
+  },
+  library: {
+    eyebrow: "Personal building blocks",
+    title: "Library",
+    description:
+      "Keep proven world entities independently of a campaign and consciously copy them into another story later.",
+    worldEntitiesTitle: "Reusable world entities",
+    worldEntitiesDescription:
+      "Favorites are independent snapshots. Later changes to the original do not alter them.",
+    emptyTitle: "No favorites yet",
+    emptyDescription:
+      "Save a person, location, faction, or item directly from a campaign's world registry.",
+    targetCampaignLabel: "Copy to campaign",
+    targetCampaignPlaceholder: "Choose an active campaign",
+    copyAction: "Create copy",
+    removeAction: "Remove favorite",
+    noActiveCampaigns: "There is no active target campaign.",
+    sourceHint: "Saved snapshot",
   },
   knowledge: {
     sectionTitle: "Campaign knowledge",

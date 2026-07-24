@@ -3,6 +3,7 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaCharacterRepository } from "./prisma-character-repository";
 import { PrismaCampaignRepository } from "./prisma-campaign-repository";
+import { PrismaLibraryWorldEntityRepository } from "./prisma-library-world-entity-repository";
 import { PrismaWorldEntityRepository } from "./prisma-world-entity-repository";
 import { defaultCampaignStyle } from "@/domain/campaign-style";
 
@@ -18,6 +19,7 @@ const client = new PrismaClient({
 const repository = new PrismaCampaignRepository(client);
 const characterRepository = new PrismaCharacterRepository(client);
 const worldEntityRepository = new PrismaWorldEntityRepository(client);
+const libraryWorldEntityRepository = new PrismaLibraryWorldEntityRepository(client);
 
 const draft = {
   name: "Die Straßen im Nebel",
@@ -31,6 +33,7 @@ const draft = {
 
 describe("PrismaCampaignRepository", () => {
   beforeEach(async () => {
+    await client.libraryWorldEntity.deleteMany();
     await client.campaign.deleteMany();
   });
 
@@ -183,6 +186,25 @@ describe("PrismaCampaignRepository", () => {
         expect.objectContaining({ name: "Die Nebelwacht", type: "location" }),
       ]),
     );
+    await expect(
+      libraryWorldEntityRepository.save(entity.id, {
+        ...entityDraft,
+        name: "Die Nebelwacht",
+      }),
+    ).resolves.toMatchObject({
+      sourceEntityId: entity.id,
+      draft: { name: "Die Nebelwacht", type: "location" },
+    });
+    await expect(
+      libraryWorldEntityRepository.listSourceEntityIds([
+        entity.id,
+        "entity-missing",
+      ]),
+    ).resolves.toEqual([entity.id]);
+    await expect(libraryWorldEntityRepository.list()).resolves.toHaveLength(1);
+    await expect(
+      libraryWorldEntityRepository.removeBySourceEntityId(entity.id),
+    ).resolves.toBe(true);
     const eventTypes = await client.campaignEvent.findMany({
       where: { campaignId: campaign.id },
       orderBy: { timestampReal: "asc" },
