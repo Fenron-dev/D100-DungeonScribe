@@ -169,7 +169,7 @@ jobs:
           shasum -a 256 "$ARCHIVE_NAME.tar.gz" >"$ARCHIVE_NAME.tar.gz.sha256"
 
       - name: Upload macOS test package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: D100-DungeonScribe-macOS-Apple-Silicon
           path: |
