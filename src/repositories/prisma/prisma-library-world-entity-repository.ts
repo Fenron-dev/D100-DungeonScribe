@@ -1,12 +1,16 @@
 import type { LibraryWorldEntity } from "@/domain/library-world-entity";
 import type { WorldEntityDraft } from "@/domain/world-entity";
-import type { PrismaClient } from "@/generated/prisma/client";
+import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import type { LibraryWorldEntityRepository } from "@/repositories/library-world-entity-repository";
 import { worldEntityDraftSchema } from "@/schemas/world-entity";
 
 type LibraryRow = Awaited<
   ReturnType<PrismaClient["libraryWorldEntity"]["findUnique"]>
 >;
+
+function toPrismaJson(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
 
 function mapLibraryWorldEntity(
   row: NonNullable<LibraryRow>,
@@ -31,8 +35,8 @@ export class PrismaLibraryWorldEntityRepository
   ): Promise<LibraryWorldEntity> {
     const row = await this.client.libraryWorldEntity.upsert({
       where: { sourceEntityId },
-      create: { sourceEntityId, draft },
-      update: { draft },
+      create: { sourceEntityId, draft: toPrismaJson(draft) },
+      update: { draft: toPrismaJson(draft) },
     });
     return mapLibraryWorldEntity(row);
   }
