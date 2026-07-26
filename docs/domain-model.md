@@ -51,6 +51,15 @@ Identität und einem normalen `ENTITY_CREATED`-Ereignis. Beziehungen und
 Inventarzuordnungen werden nicht kopiert, da sie nur innerhalb ihrer
 Ursprungskampagne gültig sind.
 
+### CampaignStylePreset
+
+Eine persönliche Spielgefühl-Vorlage speichert einen eindeutigen Namen, eine
+optionale Beschreibung, eine mitgelieferte Ausgangsvorlage und eine vollständig
+validierte `CampaignStyle`-Momentaufnahme. Sie besitzt keine Beziehung zu einer
+Kampagne. Bei der Auswahl werden ihre Werte nur in den bearbeitbaren
+Kampagnenentwurf kopiert; spätere Änderungen oder das Löschen der Vorlage
+wirken nicht rückwirkend.
+
 ### KnowledgeEntry
 
 Trennt Weltwahrheit von bekanntem oder vermutetem Wissen. Ein Eintrag besitzt Typ, Wahrheitsstatus, Wissende, Beziehungen, Quelle und Sperrstatus.

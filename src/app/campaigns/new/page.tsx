@@ -3,10 +3,21 @@ import { createCampaignAction } from "@/features/campaigns/actions";
 import { CampaignCreationStudio } from "@/features/campaigns/campaign-creation-studio";
 import { getMessages } from "@/i18n/messages";
 import { getCreativeDraftProviderMode } from "@/services/creative-draft-service-instance";
+import { campaignStylePresetService } from "@/services/campaign-style-preset-service-instance";
+
+export const dynamic = "force-dynamic";
 
 export default async function NewCampaignPage() {
   const messages = getMessages();
   const copy = messages.campaigns;
+  const stylePresets = (await campaignStylePresetService.list()).map(
+    ({ id, name, baseTemplateId, style }) => ({
+      id,
+      name,
+      baseTemplateId,
+      style,
+    }),
+  );
 
   return (
     <div className="form-page">
@@ -22,6 +33,7 @@ export default async function NewCampaignPage() {
         action={createCampaignAction}
         messages={messages}
         providerMode={await getCreativeDraftProviderMode()}
+        stylePresets={stylePresets}
       />
     </div>
   );

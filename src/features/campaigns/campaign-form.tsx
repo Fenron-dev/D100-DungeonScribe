@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import type { CampaignDraft } from "@/domain/campaign";
+import type { CampaignStylePresetOption } from "@/domain/campaign-style-preset";
 import {
   campaignStyleTemplates,
   campaignTemplateIds,
@@ -36,6 +37,7 @@ interface CampaignFormProps {
   campaign?: CampaignDraft;
   messages: Messages;
   mode: "create" | "edit";
+  stylePresets: readonly CampaignStylePresetOption[];
 }
 
 function ErrorList({ errors }: { errors: string[] }) {
@@ -57,6 +59,7 @@ export function CampaignForm({
   campaign,
   messages,
   mode,
+  stylePresets,
 }: CampaignFormProps) {
   const [state, formAction, isPending] = useActionState(
     action,
@@ -67,13 +70,23 @@ export function CampaignForm({
   const [templateId, setTemplateId] = useState<CampaignTemplateId>(
     campaign?.templateId ?? "balanced",
   );
+  const [templateSelection, setTemplateSelection] = useState(
+    `built-in:${campaign?.templateId ?? "balanced"}`,
+  );
   const [style, setStyle] = useState<CampaignStyle>(
     campaign?.style ?? defaultCampaignStyle,
   );
 
   function applyTemplate(nextTemplateId: CampaignTemplateId): void {
     setTemplateId(nextTemplateId);
+    setTemplateSelection(`built-in:${nextTemplateId}`);
     setStyle({ ...campaignStyleTemplates[nextTemplateId] });
+  }
+
+  function applyPersonalTemplate(preset: CampaignStylePresetOption): void {
+    setTemplateId(preset.baseTemplateId);
+    setTemplateSelection(`personal:${preset.id}`);
+    setStyle({ ...preset.style });
   }
 
   function changeStyle(key: StyleKey, value: number): void {
@@ -172,19 +185,40 @@ export function CampaignForm({
           <label htmlFor="campaign-template">{copy.templateLabel}</label>
           <select
             id="campaign-template"
-            name="templateId"
-            value={templateId}
+            value={templateSelection}
             onChange={(event) => {
-              const nextTemplateId = campaignTemplateIds.find(
-                (id) => id === event.target.value,
+              const selection = event.target.value;
+              if (selection.startsWith("built-in:")) {
+                const nextTemplateId = campaignTemplateIds.find(
+                  (id) => `built-in:${id}` === selection,
+                );
+                if (nextTemplateId) applyTemplate(nextTemplateId);
+                return;
+              }
+              const preset = stylePresets.find(
+                ({ id }) => `personal:${id}` === selection,
               );
-              if (nextTemplateId) applyTemplate(nextTemplateId);
+              if (preset) applyPersonalTemplate(preset);
             }}
           >
-            {campaignTemplateIds.map((id) => (
-              <option key={id} value={id}>{copy.templates[id]}</option>
-            ))}
+            <optgroup label={copy.builtInTemplatesGroup}>
+              {campaignTemplateIds.map((id) => (
+                <option key={id} value={`built-in:${id}`}>
+                  {copy.templates[id]}
+                </option>
+              ))}
+            </optgroup>
+            {stylePresets.length > 0 ? (
+              <optgroup label={copy.personalTemplatesGroup}>
+                {stylePresets.map((preset) => (
+                  <option key={preset.id} value={`personal:${preset.id}`}>
+                    {preset.name}
+                  </option>
+                ))}
+              </optgroup>
+            ) : null}
           </select>
+          <input name="templateId" type="hidden" value={templateId} />
           <p className="field-hint">{copy.templateHint}</p>
           <ErrorList errors={state.errors.templateId} />
         </div>
@@ -252,7 +286,7 @@ export function CampaignForm({
   );
 }
 
-function StyleSlider({
+export function StyleSlider({
   axis,
   balancedValue,
   name,

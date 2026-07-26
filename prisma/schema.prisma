@@ -24,6 +24,18 @@ model LibraryWorldEntity {
   @@index([updatedAt])
 }
 
+model CampaignStylePreset {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  description    String?
+  baseTemplateId String
+  style          Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([updatedAt])
+}
+
 model Campaign {
   id         String   @id @default(cuid())
   name       String

@@ -4,6 +4,7 @@ import { updateCampaignAction } from "@/features/campaigns/actions";
 import { CampaignForm } from "@/features/campaigns/campaign-form";
 import { getMessages } from "@/i18n/messages";
 import { campaignService } from "@/services/campaign-service-instance";
+import { campaignStylePresetService } from "@/services/campaign-style-preset-service-instance";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,14 @@ export default async function EditCampaignPage({
   const messages = getMessages();
   const copy = messages.campaigns;
   const updateAction = updateCampaignAction.bind(null, campaign.id);
+  const stylePresets = (await campaignStylePresetService.list()).map(
+    ({ id, name, baseTemplateId, style }) => ({
+      id,
+      name,
+      baseTemplateId,
+      style,
+    }),
+  );
 
   return (
     <div className="form-page">
@@ -39,6 +48,7 @@ export default async function EditCampaignPage({
         campaign={campaign}
         messages={messages}
         mode="edit"
+        stylePresets={stylePresets}
       />
     </div>
   );

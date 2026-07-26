@@ -86,6 +86,11 @@ und Gegenstände als unabhängige Momentaufnahme. Die bewusste Übernahme legt i
 einer aktiven Zielkampagne eine neue Kopie an; Beziehungen werden wegen ihrer
 Kampagnenbindung nicht mitkopiert.
 
+Zusätzlich können eigene Kombinationen aller Spielgefühl-Regler benannt und in
+der Bibliothek gespeichert werden. Sie erscheinen beim Erstellen und Bearbeiten
+einer Kampagne neben den mitgelieferten Vorlagen und bleiben von bereits
+gespeicherten Kampagnenzuständen unabhängig.
+
 ## Abenteuermodule
 
 Ein späterer Import liest ein vom Nutzer selbst ausgewähltes PDF, Dokument oder

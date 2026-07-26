@@ -124,6 +124,8 @@ jobs:
 
           TEST_DATABASE="$TEST_HOME/Library/Application Support/D100 DungeonScribe/dungeonscribe.db"
           CAMPAIGN_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Campaign;')"
+          STYLE_PRESET_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignStylePreset;')"
+          CAMPAIGN_LOOT_AMOUNT="$(sqlite3 "$TEST_DATABASE" "SELECT json_extract(style, '$.lootAmount') FROM Campaign LIMIT 1;")"
           CHARACTER_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM Character;')"
           INVENTORY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CharacterInventoryEntry;')"
           ENTITY_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM WorldEntity;')"
@@ -142,6 +144,8 @@ jobs:
           RANDOM_EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM OracleRandomEvent;')"
           EVENT_COUNT="$(sqlite3 "$TEST_DATABASE" 'SELECT COUNT(*) FROM CampaignEvent;')"
           test "$CAMPAIGN_COUNT" = "1"
+          test "$STYLE_PRESET_COUNT" = "1"
+          test "$CAMPAIGN_LOOT_AMOUNT" = "4"
           test "$CHARACTER_COUNT" = "1"
           test "$INVENTORY_COUNT" = "1"
           test "$ENTITY_COUNT" = "5"

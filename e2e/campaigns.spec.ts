@@ -12,6 +12,21 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     await page.getByRole("button", { name: "Entsperren" }).click();
   }
   await expect(page.getByRole("link", { name: "Neue Kampagne" }).first()).toBeVisible();
+  await page.getByRole("link", { name: "Bibliothek" }).click();
+  await page.getByText("Neue Vorlage anlegen", { exact: true }).click();
+  await page.getByLabel("Vorlagenname").fill("Düstere Schatzjagd");
+  await page
+    .getByLabel("Beschreibung", { exact: true })
+    .fill("Viele Funde, aber jeder Weg bleibt gefährlich.");
+  await page
+    .getByLabel("Ausgangspunkt")
+    .selectOption({ label: "Lootreiches Actionabenteuer" });
+  await page.getByLabel("Lootmenge").fill("4");
+  await page.getByRole("button", { name: "Vorlage speichern" }).click();
+  await expect(page.getByText("Die Vorlage wurde gespeichert.")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Düstere Schatzjagd" }),
+  ).toBeVisible();
   await page.goto("/");
   const homeTitle = page.getByRole("heading", {
     level: 1,
@@ -37,6 +52,11 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
     page.getByText("Der Entwurf steht jetzt in den Formularfeldern.", { exact: false }),
   ).toBeVisible({ timeout: 15_000 });
   await expect(page.getByLabel("Name")).not.toHaveValue("");
+
+  await page
+    .getByLabel("Vorlage")
+    .selectOption({ label: "Düstere Schatzjagd" });
+  await expect(page.getByLabel("Lootmenge")).toHaveValue("4");
 
   await page.getByLabel("Name").fill("Die Straßen im Nebel");
   await page

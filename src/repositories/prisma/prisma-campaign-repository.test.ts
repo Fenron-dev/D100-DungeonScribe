@@ -3,6 +3,7 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaCharacterRepository } from "./prisma-character-repository";
 import { PrismaCampaignRepository } from "./prisma-campaign-repository";
+import { PrismaCampaignStylePresetRepository } from "./prisma-campaign-style-preset-repository";
 import { PrismaLibraryWorldEntityRepository } from "./prisma-library-world-entity-repository";
 import { PrismaWorldEntityRepository } from "./prisma-world-entity-repository";
 import { defaultCampaignStyle } from "@/domain/campaign-style";
@@ -17,6 +18,7 @@ const client = new PrismaClient({
   adapter: new PrismaBetterSqlite3({ url: testDatabaseUrl }),
 });
 const repository = new PrismaCampaignRepository(client);
+const stylePresetRepository = new PrismaCampaignStylePresetRepository(client);
 const characterRepository = new PrismaCharacterRepository(client);
 const worldEntityRepository = new PrismaWorldEntityRepository(client);
 const libraryWorldEntityRepository = new PrismaLibraryWorldEntityRepository(client);
@@ -33,6 +35,7 @@ const draft = {
 
 describe("PrismaCampaignRepository", () => {
   beforeEach(async () => {
+    await client.campaignStylePreset.deleteMany();
     await client.libraryWorldEntity.deleteMany();
     await client.campaign.deleteMany();
   });
@@ -57,6 +60,26 @@ describe("PrismaCampaignRepository", () => {
         reversible: false,
       },
     ]);
+  });
+
+  it("persists independent campaign style presets", async () => {
+    const preset = await stylePresetRepository.create({
+      name: "Düstere Schatzjagd",
+      description: "Viele Funde mit hoher Gefahr.",
+      baseTemplateId: "loot",
+      style: { ...defaultCampaignStyle, danger: 5, lootAmount: 4 },
+    });
+
+    await expect(stylePresetRepository.list()).resolves.toMatchObject([
+      {
+        id: preset.id,
+        name: "Düstere Schatzjagd",
+        baseTemplateId: "loot",
+        style: { danger: 5, lootAmount: 4 },
+      },
+    ]);
+    await expect(stylePresetRepository.remove(preset.id)).resolves.toBe(true);
+    await expect(stylePresetRepository.list()).resolves.toEqual([]);
   });
 
   it("updates and archives with traceable events", async () => {

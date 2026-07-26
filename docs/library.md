@@ -3,9 +3,14 @@
 ## Ziel
 
 Die Bibliothek bewahrt wiederverwendbare Bausteine unabhängig von einer
-einzelnen Kampagne auf. Der erste vertikale Baustein unterstützt Personen, Orte,
-Fraktionen und Gegenstände aus dem Weltregister. Regeln, Kampagnenvorlagen und
-Orakeltabellen können später demselben Muster folgen.
+einzelnen Kampagne auf. Sie unterstützt Personen, Orte, Fraktionen und
+Gegenstände aus dem Weltregister sowie persönliche Spielgefühl-Vorlagen.
+Regeln und Orakeltabellen können später demselben Muster folgen.
+
+Spielgefühl-Vorlagen speichern ausschließlich einen Namen, eine optionale
+Beschreibung, die mitgelieferte Ausgangsvorlage und alle neun Reglerwerte.
+Weitere Einzelheiten stehen in
+[Persönliche Spielgefühl-Vorlagen](campaign-style-presets.md).
 
 ## Schnappschüsse statt Verknüpfungen
 

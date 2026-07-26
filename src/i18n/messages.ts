@@ -145,6 +145,8 @@ export interface MessageCatalog {
     setupDescription: string;
     templateLabel: string;
     templateHint: string;
+    builtInTemplatesGroup: string;
+    personalTemplatesGroup: string;
     templates: Record<
       "balanced" | "mythic" | "dungeon" | "cozy" | "survival" | "loot",
       string
@@ -305,6 +307,22 @@ export interface MessageCatalog {
     removeAction: string;
     noActiveCampaigns: string;
     sourceHint: string;
+    stylePresetsTitle: string;
+    stylePresetsDescription: string;
+    createPresetTitle: string;
+    createPresetDescription: string;
+    presetNameLabel: string;
+    presetDescriptionLabel: string;
+    baseTemplateLabel: string;
+    savePresetAction: string;
+    savingPresetAction: string;
+    presetSaved: string;
+    presetValidation: string;
+    presetSaveError: string;
+    removePresetAction: string;
+    noPresetsTitle: string;
+    noPresetsDescription: string;
+    presetBaseLabel: string;
   };
   knowledge: {
     sectionTitle: string;
@@ -834,6 +852,8 @@ const germanMessages = {
       "Wähle eine Vorlage und passe nur an, was dir wichtig ist. Alle Einstellungen lassen sich später ändern.",
     templateLabel: "Vorlage",
     templateHint: "Die Vorlage stellt die Regler ein. Danach kannst du jeden Wert einzeln verändern.",
+    builtInTemplatesGroup: "Mitgelieferte Vorlagen",
+    personalTemplatesGroup: "Meine Vorlagen",
     templates: {
       balanced: "Ausgewogenes Abenteuer",
       mythic: "Mythische epische Fantasy",
@@ -1022,6 +1042,26 @@ const germanMessages = {
     removeAction: "Favorit entfernen",
     noActiveCampaigns: "Es gibt keine aktive Zielkampagne.",
     sourceHint: "Gespeicherter Schnappschuss",
+    stylePresetsTitle: "Meine Spielgefühl-Vorlagen",
+    stylePresetsDescription:
+      "Speichere Reglerkombinationen für Ton, Tempo, Kämpfe, Gefahr und Loot und wähle sie beim Kampagnenstart aus.",
+    createPresetTitle: "Neue Vorlage anlegen",
+    createPresetDescription:
+      "Beginne mit einer mitgelieferten Vorlage und passe danach jeden Regler an.",
+    presetNameLabel: "Vorlagenname",
+    presetDescriptionLabel: "Beschreibung",
+    baseTemplateLabel: "Ausgangspunkt",
+    savePresetAction: "Vorlage speichern",
+    savingPresetAction: "Vorlage wird gespeichert …",
+    presetSaved: "Die Vorlage wurde gespeichert.",
+    presetValidation: "Bitte prüfe die Angaben der Vorlage.",
+    presetSaveError:
+      "Die Vorlage konnte nicht gespeichert werden. Verwende einen eindeutigen Namen.",
+    removePresetAction: "Vorlage löschen",
+    noPresetsTitle: "Noch keine eigene Vorlage",
+    noPresetsDescription:
+      "Lege eine Reglerkombination an, die du in mehreren Kampagnen wiederverwenden möchtest.",
+    presetBaseLabel: "Basiert auf",
   },
   knowledge: {
     sectionTitle: "Kampagnenwissen",
@@ -1688,6 +1728,8 @@ const englishMessages = {
       "Choose a template and only adjust what matters to you. Every setting can be changed later.",
     templateLabel: "Template",
     templateHint: "The template sets the sliders. You can then change every value individually.",
+    builtInTemplatesGroup: "Built-in templates",
+    personalTemplatesGroup: "My templates",
     templates: {
       balanced: "Balanced adventure",
       mythic: "Mythic epic fantasy",
@@ -1876,6 +1918,26 @@ const englishMessages = {
     removeAction: "Remove favorite",
     noActiveCampaigns: "There is no active target campaign.",
     sourceHint: "Saved snapshot",
+    stylePresetsTitle: "My play-style templates",
+    stylePresetsDescription:
+      "Save slider combinations for tone, pace, combat, danger, and loot and select them when starting a campaign.",
+    createPresetTitle: "Create a template",
+    createPresetDescription:
+      "Start with a built-in template and then adjust every slider.",
+    presetNameLabel: "Template name",
+    presetDescriptionLabel: "Description",
+    baseTemplateLabel: "Starting point",
+    savePresetAction: "Save template",
+    savingPresetAction: "Saving template …",
+    presetSaved: "The template was saved.",
+    presetValidation: "Please check the template details.",
+    presetSaveError:
+      "The template could not be saved. Use a unique name.",
+    removePresetAction: "Delete template",
+    noPresetsTitle: "No personal template yet",
+    noPresetsDescription:
+      "Create a slider combination that you want to reuse across campaigns.",
+    presetBaseLabel: "Based on",
   },
   knowledge: {
     sectionTitle: "Campaign knowledge",
