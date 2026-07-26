@@ -16,7 +16,7 @@ test("creates, edits, and archives a campaign", async ({ page }) => {
   await page.getByText("Neue Vorlage anlegen", { exact: true }).click();
   await page.getByLabel("Vorlagenname").fill("Düstere Schatzjagd");
   await page
-    .getByLabel("Beschreibung", { exact: true })
+    .getByLabel("Beschreibung (optional)")
     .fill("Viele Funde, aber jeder Weg bleibt gefährlich.");
   await page
     .getByLabel("Ausgangspunkt")
