@@ -31,21 +31,21 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.1",
-    "@testing-library/dom": "10.4.1",
-    "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.2",
+    "@playwright/test": "1.63.0",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
     "@types/better-sqlite3": "7.6.13",
-    "@types/node": "26.1.1",
+    "@types/node": "26.5.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.2.11",
-    "jsdom": "29.1.1",
-    "prisma": "7.9.0",
-    "tsx": "4.23.1",
-    "typescript": "6.0.3",
-    "vitest": "4.1.10"
+    "eslint": "10.10.0",
+    "eslint-config-next": "16.3.5",
+    "jsdom": "30.0.1",
+    "prisma": "7.10.0",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vitest": "5.0.0"
   },
   "overrides": {
     "find-my-way": "9.7.0",
